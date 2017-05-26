@@ -1,23 +1,14 @@
 # Analysis of Software Carpentry's Post-Workshop Surveys
-__Author__: [Kari L. Jordan](https://github.com/kariljordan)
-__Published__: April 2017
+__Project Lead__: [Kari L. Jordan](https://github.com/kariljordan)
+__Work Cycle__: Phobos
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
-```
-For nearly 20 years, Software Carpentry has developed material and trained instructors to teach computing skills to researchers in science, medicine, engineering, and other disciplines. This report is an analysis of the post-workshop survey responses collected for Software Carpentry's workshops from March 2015 through March 2017. In this two year period, 3265 responses were collected.
+library(knitr)
+opts_chunk$set(echo = FALSE,
+               message = FALSE,
+               warning = FALSE)
 
-A [PDF](https://github.com/carpentries/public-survey-info/blob/master/documents/surveys/2017-03-15-SwC-postworkshop-survey.pdf) of the survey questions, the data used in this analysis, and full R code are located on the [public-survey-info](https://github.com/carpentries/public-survey-info) repo on GitHub. Feel free to use the data and [tell us](mailto: kariljordan@carpentries.org) about your findings.
-
-```{r include=FALSE}
-# install.packages("ggmap", type = "source")
-# install.packages("likert")
-# install.packages("purrr")
-# install.packages("mapproj")
-# install.packages("ggplot2")
-# install.packages("dplyr")
-# install.packages("knitr")
-# install.packages("RColorBrewer")
+library(tidyr)
 library(ggmap)
 library(likert)
 library(purrr)
@@ -26,28 +17,37 @@ library(ggplot2)
 library(dplyr)
 library(knitr)
 library(RColorBrewer)
-display.brewer.all()
-update.packages(repos = "https://cloud.r-project.org")
+library(readr)
 ```
-```{r include=FALSE, purl=TRUE}
-download.file("https://raw.githubusercontent.com/carpentries/public-survey-info/master/data/public_data/swc_postworkshop_data_archived_scrubbedMarch2017.csv", "swc_postworkshop_data_archived_scrubbedMarch2017.csv")
+For nearly 20 years, Software Carpentry has developed material and trained instructors to teach computing skills to researchers in science, medicine, engineering, and other disciplines. This report is an analysis of the post-workshop survey responses collected for Software Carpentry's workshops from March 2015 through July 2017. In this two year period, XXX responses were collected.
 
-data <- read.csv("swc_postworkshop_data_archived_scrubbedMarch2017.csv", na.strings = "")
+A [PDF](https://github.com/kariljordan/carpentry-community-assessment-projects/blob/master/software-carpentry-projects/survey-postworkshop.pdf) of the survey questions, the data used in this analysis, and full R code are located on the [carpentry-community-assessment-projects](https://github.com/kariljordan/carpentry-community-assessment-projects) repo on GitHub. 
+
+Community members were invited to contribute code to this analysis. Feel free to use the data and [tell us](mailto: kariljordan@carpentries.org) about your findings.
+
+```{r include=FALSE}
+data <- read.csv("https://raw.githubusercontent.com/kariljordan/carpentry-community-assessment-projects/master/software-carpentry-projects/data-postworkshop.csv", na.strings = "")
 ```
 ### Respondent Demographics
-A host of initiatives have been developed and implemented globally to address gender disparities in computing. Software Carpentry's volunteer instructors have hosted hundreds of events since 1998, and the post-workshop survey data shows __parity__ in attendance of males compared to females.
+A host of initiatives have been developed and implemented globally to address gender disparities in computing. Software Carpentry's volunteer instructors have hosted hundreds of workshops since 1998, and the post-workshop survey data shows __parity__ in attendance of males compared to females.
 ```{r}
-data_gender_tally <- 
-  data %>% 
-  group_by(Gender) %>% 
-  tally() %>% 
-  filter(!is.na(Gender)) 
+# This code block provides a breakdown by gender.
+# Are there better ways to represent this data? Go for it!
+gender = c("Female", "Male", "Other", "Prefer not to say")
+gender = factor (gender)
 
-kable(data_gender_tally)
+data$Gender = factor (data$Gender, levels = gender)
+
+Gender <- round(prop.table(table(data$Gender)) * 100)
+
+kable(Gender, format = "markdown", row.names = FALSE, col.names = c("Gender", "%"))
 ```
 
-The majority of Software Carpentry learners are __Graduate Students__. A breakdown of Software Carpentry's learners by __status__ is provided below.
+A breakdown of Software Carpentry's learners by __status__ is provided below.
 ```{r echo=FALSE}
+# Code chunk for Status of Respondents
+# Only 3 status levels (undergrad, grad, faculty) are showing up on the plot.
+# Ideas for how to fix this?
 status = c("Undergraduate Student", "Graduate Student", "Post-Doctoral Researcher", "Faculty", "Research Staff (including research programmer)", "Support Staff (including technical support)", "Librarian/Archivist", "Commercial Software Developer", "Other")
 status = factor(status)
 
@@ -57,54 +57,61 @@ data_status_tally <-
   data %>% 
   group_by(Status) %>% 
   tally() %>% 
-  filter(!is.na(Status)) 
-
-kable(data_status_tally)
+  filter(!is.na(Status))  
 
 ggplot(data_status_tally, 
-       aes(Status, n)) +
+       aes(Status, y = 100 * (n/sum(n)),
+           n)) +
   geom_bar(stat = "identity", fill="orange") +
+  geom_text(aes(label=n), size= 4) +
   scale_x_discrete(labels = function(x) lapply(strwrap(x, width = 10, simplify = FALSE), paste, collapse="\n")) +
   theme_classic() +
-  xlab("") +
-  ylab("") +
-  ggtitle("Breakdown of Respondents by Status") +
+  xlab("Status") +
+  ylab("% Respondents") +
+  ggtitle("Majority of Respondents were Graduate Students") +
   theme(plot.title = element_text(hjust = 0.5)) +
   theme_classic(base_size = 14)
 ```
 
+```{r include=FALSE}
+# Code chunk to include data in markdown report
+Status <- round(prop.table(table(data$Status)) * 100)
+Status
+```
+
+`r Status[2]`% of Software Carpentry's post-workshop survey respondents are __Graduate Students__. 
+
 ### Respondent Perception of Workshop Content and Atmosphere
 Software Carpentry has developed an interactive instructional approach that includes direct instruction (i.e. explicit teaching and demonstrations), indirect instruction (i.e. problem solving and discovery), and experiential learning. Respondents have mixed feelings about the pace of the workshop they attended, as outlined below.
-```{r include=FALSE}
-table(data$Pace)
-```
+
 ```{r}
-pace <- matrix(c(1101,876,616,137,140),ncol=1,byrow=TRUE)
-colnames(pace) <-("Respondents Perception of Workshop Pace")
-rownames(pace) <-c("Just right",
-                        "Slightly fast",
-                        "Slightly slow",
-                        "Too fast",
-                        "Too slow")
-kable(pace)
+# Code chunk for workshop pace.
+# Are there better ways to represent this data? Go for it!
+pace = c("Just right", "Slightly fast", "Slightly slow", "Too fast", "Too slow")
+pace = factor (pace)
+
+data$Pace = factor (data$Pace, levels = pace)
+
+Pace <- round(prop.table(table(data$Pace)) * 100)
+
+kable(Pace, format = "markdown", row.names = FALSE, col.names = c("Workshop Pace", "%"))
 ```
 
 
-
-
-```{r include=FALSE}
-table(data$Balance)
-```
 ```{r}
-balance <- matrix(c(49,301,2318,169,34),ncol=1,byrow=TRUE)
-colnames(balance) <-("Balance of Lecture to Hands-On Work")
-rownames(balance) <-c("Too much lecture",
-                        "Slightly too much lecture",
-                        "Balanced (lecture/hands-on",
-                        "Slightly too much hands-on",
-                        "Too much hands-on")
-kable(balance)
+# Code chunk for balance of lecture to hands-on work.
+# Are there better ways to represent this data? Go for it!
+balance = c("Too much lecture", "Slightly too much lecture", "Balanced (lecture/hands-on)","Slightly too much hands-on", "Too much hands-on")
+balance = factor (balance)
+
+data$Balance = factor (data$Balance, levels = balance)
+
+Balance <- round(prop.table(table(data$Balance)) * 100)
+
+kable(Balance, format = "markdown", row.names = FALSE, col.names = c("Balance: Lecture to Hands-On Work", "%"))
 ```
+
+`r Balance[3]`% of respondents felt the workshop they attended was well balanaced between lecture and hands-on learning.
 
 Learners were asked to rate their level of agreement on a scale of 1 (Strongly Disagree) to 5 (Strongly Agree) for the following statements regarding the atmosphere and content of the workshop they attended:  
 * __Atmosphere__: The overall atmosphere of the workshop was welcoming.     
@@ -114,33 +121,42 @@ Learners were asked to rate their level of agreement on a scale of 1 (Strongly D
 * __Skills__: I learned skills that I will be able to use in my research/work.     
 * __Information__: The amount of information covered at the workshop was reasonable for allotted time.   
 
-Using the [Likert](http://jason.bryer.org/likert/) package, the following chart is an analysis of learner responses to the statements above. The code chunk is shown once here, and hidden for all subsequent plots.
+Using the [Likert](http://jason.bryer.org/likert/) package, the following chart is an analysis of learner responses to the statements above. 
 ```{r}
+# Code chunk for Likert plot (perception of workshop atmosphere)
+# How do we change the y axis labels?
+# The percentages on this plot are the exact same percentages from the long-term
+# assessment survey likert plot. I copied and pasted the code thinking it would
+# translate properly. Can someone find the bug?
+
 cols_with_Agree <- map_lgl(data, ~`%in%`("Agree", .x))
 data_agree <-  data[ , cols_with_Agree]
+
+levels = c("Strongly disagree", "Disagree", "Neutral", "Agree", "Strongly agree")
+
+
+# factorfunction <- function(mydata, factlevel){
+#  factor(mydata, 
+#         levels=factlevel, 
+#         ordered = TRUE)
+#    fct_unify(mydata, 
+#              levels=factlevel)}
  
-order = c("Strongly Disagree", "Disagree", "Neither Agree nor Disagree", "Agree", "Strongly Agree")
- 
-print(class(data_agree))
-data_agree <- map_if(data_agree,
+data_agree_likert <- likert(data.frame(lapply(data_agree, factor, levels, ordered=TRUE)))
+
+ for(i in seq_along(data_agree)) {
+                data_agree[[i]] <- factor(data_agree[[i]], levels=order)}
+
+title <- "Workshops Atmosphere & Content"
+ theme_update(plot.title = element_text(hjust = 0.5))
+plot(data_agree_likert) + ggtitle(title) 
+
+ data_agree <- map_if(data_agree,
                      is.character,
                      as.factor)
- 
-# Thanks [Elizabeth Wickes](hhttps://github.com/elliewix) for the tip!
-for(i in seq_along(data_agree)) {
-                data_agree[[i]] <- factor(data_agree[[i]], levels=order)
-}
+``` 
 
-print(levels(data_agree))
-title <- "Learner Perception of Workshop Content & Atmosphere"
-data_agree_likert <-  likert(as.data.frame(data_agree))
-theme_update(plot.title = element_text(hjust = 0.5))
- 
-plot(data_agree_likert) + ggtitle(title)
-
-```
-
-The data strongly suggests that Software Carpentry provides a welcoming environment for its learners where the material not only matches the workshop description, but is worth the time learners spend learning it. Learners acquire skills they are able to apply to their research or job function in the time alloted over the two-day period. Lastly, learners feel impressed to recommend the workshop to a friend or colleague.
+The data strongly suggests that Software Carpentry provides a welcoming environment for its learners where the material not only matches the workshop description, but is worth the time learners spend learning it. Learners acquire skills they are able to apply to their research and/or job function in the time alloted over the two-day period. Lastly, learners feel impressed to recommend the workshop to a friend or colleague.
 
 ### Respondent Perception of Workshop Instructors and Helpers
 A strength of Software Carpentry's ecosystem is its instructors and helpers. Learners who responded to Software Carpentry's post-workshop survey were asked to rate how they felt instructors and helpers worked as a team based on the following criteria:  
@@ -154,12 +170,15 @@ A strength of Software Carpentry's ecosystem is its instructors and helpers. Lea
 * __Instructors.Considerate__: Instructors were considerate.
   
 ```{r echo=FALSE}
+# Code chunk for likert plot (perception of workshop instructors/helpers)
+# How do we change the y axis labels?
+# Are we sure this plot is correct (i.e. does it include all of the responses?)
 cols_with_Often <- map_lgl(data, ~`%in%`("Often", .x))
 data_often <-  data[ , cols_with_Often]
 
 order = c("Never", "Rarely", "Sometimes", "Often", "All of the time")
 
-print(class(data_often))
+#print(class(data_often))
 data_often <- map_if(data_often, 
                      is.character, 
                      as.factor)
@@ -183,6 +202,9 @@ Software Carpentry workshops are self-organized, and each workshop includes the 
 Learners were asked to indicate their level of knowledge of the Unix shell, R, Python, Git, and SQL prior to attending a Software Carpentry workshop.
 
 ```{r}
+# Code chunk for Likert plot (self-reported knowledge of tools covered.)
+# How do I change the y axis labels?
+# Is there a better way to show this information?
 cols_with_Little <- map_lgl(data, ~`%in%`("Little or no knowledge of topic", .x))
 data_little <-  data[ , cols_with_Little]
 
@@ -216,4 +238,3 @@ Now let's take a look at learners' prior experience with the tools covered in th
 
 
 
-__Contributors__: [Ben Marwick](https://github.com/benmarwick), and [Tracy Teal](https://github.com/tkteal)

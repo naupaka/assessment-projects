@@ -1,10 +1,26 @@
 #' ---
 #' title: "Analysis of Software Carpentry's Post-Workshop Surveys"
-#' author: "Kari L. Jordan"
-#' contributor: Ben Marwick
-#' date: "April 2017"
+#' project lead: "Kari L. Jordan"
+#' work cycle: "Phobos"
 #' ---
+```{r setup, include=FALSE}
+# To comment out a block of code, highlight the block and use CTRL + SHIFT + C  
+library(knitr)
+opts_chunk$set(echo = FALSE,
+               message = FALSE,
+               warning = FALSE)
 
+library(tidyr)
+library(ggmap)
+library(likert)
+library(purrr)
+library(mapproj)
+library(ggplot2)
+library(dplyr)
+library(knitr)
+library(RColorBrewer)
+library(readr)
+```
 # The following is an analysis of the post-workshop survey data collected for Software 
 # Carpentry workshops from March 2015 through March 2017
 
