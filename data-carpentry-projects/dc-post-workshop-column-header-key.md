@@ -16,6 +16,7 @@ Is this your first time in a Data Carpentry workshop as a learner? | First-Time
 | Compared to before the workshop I have a better understanding of how to: Do initial visualizations in R. | Visualizations-in-R      |  
 | Compared to before the workshop I have a better understanding of how to: Construct a SQL query statement. | Construct-SQL      |  
 | Compared to before the workshop I have a better understanding of how to: Use the command line. | Use-command-line      |  
+| Please rate your level of data management and analysis skills prior to the workshop. | Skill-Level-Prior      | 
 | Please rate your level of data management and analysis skills following the workshop. | Skill-Level-Following      |  
 | Please rate your level of agreement with the following statements: Data organization is a fundamental component of effective and reproducible research. | Data-Organization      |  
 | Please rate your level of agreement with the following statements: Using a scripting language like R or Python can ultimately improve my analysis efficiency. | Using-Scripting-Language      |  
