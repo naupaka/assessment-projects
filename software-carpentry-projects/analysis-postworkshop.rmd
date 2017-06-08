@@ -26,7 +26,7 @@ A [PDF](https://github.com/kariljordan/carpentry-community-assessment-projects/b
 Community members were invited to contribute code to this analysis. Feel free to use the data and [tell us](mailto: kariljordan@carpentries.org) about your findings.
 
 ```{r include=FALSE}
-data <- read.csv("https://raw.githubusercontent.com/kariljordan/carpentry-community-assessment-projects/master/software-carpentry-projects/public_swc_preworkshop_data_archivedJune2017.csv", na.strings = "")
+data <- read.csv("https://raw.githubusercontent.com/kariljordan/carpentry-community-assessment-projects/master/software-carpentry-projects/public_swc_postworkshop_data_archivedJune2017.csv", na.strings = "")
 ```
 ### Respondent Demographics
 A host of initiatives have been developed and implemented globally to address gender disparities in computing. Software Carpentry's volunteer instructors have hosted hundreds of workshops since 1998, and the post-workshop survey data shows __parity__ in attendance of males compared to females.
@@ -48,7 +48,7 @@ A breakdown of Software Carpentry's learners by __status__ is provided below.
 # Code chunk for Status of Respondents
 # Only 3 status levels (undergrad, grad, faculty) are showing up on the plot.
 # Ideas for how to fix this?
-status = c("Undergraduate Student", "Graduate Student", "Post-Doctoral Researcher", "Faculty", "Research Staff (including research programmer)", "Support Staff (including technical support)", "Librarian/Archivist", "Commercial Software Developer", "Other")
+status = c("Undergraduate Student", "Graduate Student", "Post-doctoral researcher", "Faculty", "Research staff (including research programmer)", "Support staff (including technical support)", "Librarian/archivist", "Commercial software developer", "Other (please specify)")
 status = factor(status)
 
 data$Status = factor(data$Status, levels = status)
@@ -62,7 +62,7 @@ data_status_tally <-
 ggplot(data_status_tally, 
        aes(Status, y = 100 * (n/sum(n)),
            n)) +
-  geom_bar(stat = "identity", fill="orange") +
+  geom_bar(stat = "identity", fill="magenta") +
   geom_text(aes(label=n), size= 4) +
   scale_x_discrete(labels = function(x) lapply(strwrap(x, width = 10, simplify = FALSE), paste, collapse="\n")) +
   theme_classic() +
