@@ -26,7 +26,7 @@ A [PDF](https://github.com/kariljordan/carpentry-community-assessment-projects/b
 Community members were invited to contribute code to this analysis. Feel free to use the data and [tell us](mailto: kariljordan@carpentries.org) about your findings.
 
 ```{r include=FALSE}
-data <- read.csv("https://raw.githubusercontent.com/kariljordan/carpentry-community-assessment-projects/master/software-carpentry-projects/data-postworkshop.csv", na.strings = "")
+data <- read.csv("https://raw.githubusercontent.com/kariljordan/carpentry-community-assessment-projects/master/software-carpentry-projects/public_swc_preworkshop_data_archivedJune2017.csv", na.strings = "")
 ```
 ### Respondent Demographics
 A host of initiatives have been developed and implemented globally to address gender disparities in computing. Software Carpentry's volunteer instructors have hosted hundreds of workshops since 1998, and the post-workshop survey data shows __parity__ in attendance of males compared to females.
@@ -125,9 +125,8 @@ Using the [Likert](http://jason.bryer.org/likert/) package, the following chart 
 ```{r}
 # Code chunk for Likert plot (perception of workshop atmosphere)
 # How do we change the y axis labels?
-# The percentages on this plot are the exact same percentages from the long-term
-# assessment survey likert plot. I copied and pasted the code thinking it would
-# translate properly. Can someone find the bug?
+# The percentages on this plot are not showing correctly. Can someone fix it
+# and show me what I did wrong?
 
 cols_with_Agree <- map_lgl(data, ~`%in%`("Agree", .x))
 data_agree <-  data[ , cols_with_Agree]
@@ -144,8 +143,8 @@ levels = c("Strongly disagree", "Disagree", "Neutral", "Agree", "Strongly agree"
  
 data_agree_likert <- likert(data.frame(lapply(data_agree, factor, levels, ordered=TRUE)))
 
- for(i in seq_along(data_agree)) {
-                data_agree[[i]] <- factor(data_agree[[i]], levels=order)}
+# for(i in seq_along(data_agree)) {
+#                data_agree[[i]] <- factor(data_agree[[i]], levels=order)}
 
 title <- "Workshops Atmosphere & Content"
  theme_update(plot.title = element_text(hjust = 0.5))
