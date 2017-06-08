@@ -36,7 +36,7 @@ A host of initiatives have been developed and implemented globally to address ge
 gender = c("Female", "Male", "Other", "Prefer not to say")
 gender = factor (gender)
 
-data$Gender = factor (data$Gender, levels = gender)
+data$Gender = factor(data$Gender, levels = gender)
 
 Gender <- round(prop.table(table(data$Gender)) * 100)
 
@@ -46,8 +46,6 @@ kable(Gender, format = "markdown", row.names = FALSE, col.names = c("Gender", "%
 A breakdown of Software Carpentry's learners by __status__ is provided below.
 ```{r echo=FALSE}
 # Code chunk for Status of Respondents
-# Only 3 status levels (undergrad, grad, faculty) are showing up on the plot.
-# Ideas for how to fix this?
 status = c("Undergraduate Student", "Graduate Student", "Post-doctoral researcher", "Faculty", "Research staff (including research programmer)", "Support staff (including technical support)", "Librarian/archivist", "Commercial software developer", "Other (please specify)")
 status = factor(status)
 
@@ -62,7 +60,7 @@ data_status_tally <-
 ggplot(data_status_tally, 
        aes(Status, y = 100 * (n/sum(n)),
            n)) +
-  geom_bar(stat = "identity", fill="magenta") +
+  geom_bar(stat = "identity", fill="salmon1") +
   geom_text(aes(label=n), size= 4) +
   scale_x_discrete(labels = function(x) lapply(strwrap(x, width = 10, simplify = FALSE), paste, collapse="\n")) +
   theme_classic() +
@@ -72,6 +70,26 @@ ggplot(data_status_tally,
   theme(plot.title = element_text(hjust = 0.5)) +
   theme_classic(base_size = 14)
 ```
+
+```{r}
+# Code chunk for breakdown by domain of research/work/study.
+# Data in columns `Research.Domain.1` through `Research.Domain.16`
+# Since we used `gather` to pull information from multiple columns into this table,
+# how would I go about calculating the percentage of respondents who selected
+# these options? Respondents were asked to check all that apply.
+Research_Domain <- 
+data %>%
+  select(`Research.Domain.1`:`Research.Domain.16`) %>% 
+  gather(col, Research_Domain) %>% 
+  group_by(Research_Domain) %>% 
+  tally() %>% 
+  filter(!is.na(Research_Domain)) %>% 
+  arrange(desc(n)) %>% 
+  rename(`Self-Reported Research Domain` = Research_Domain)
+
+kable(Research_Domain, format = "markdown", row.names = FALSE, col.names = c("Research Domain", "n"))
+```
+
 
 ```{r include=FALSE}
 # Code chunk to include data in markdown report
@@ -204,6 +222,7 @@ Learners were asked to indicate their level of knowledge of the Unix shell, R, P
 # Code chunk for Likert plot (self-reported knowledge of tools covered.)
 # How do I change the y axis labels?
 # Is there a better way to show this information?
+# Are we sure this plot is correct?
 cols_with_Little <- map_lgl(data, ~`%in%`("Little or no knowledge of topic", .x))
 data_little <-  data[ , cols_with_Little]
 
