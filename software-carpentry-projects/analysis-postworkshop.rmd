@@ -131,7 +131,8 @@ kable(Balance, format = "markdown", row.names = FALSE, col.names = c("Balance: L
 
 `r Balance[3]`% of respondents felt the workshop they attended was well balanaced between lecture and hands-on learning.
 
-Learners were asked to rate their level of agreement on a scale of 1 (Strongly Disagree) to 5 (Strongly Agree) for the following statements regarding the atmosphere and content of the workshop they attended:  
+Learners were asked to rate their level of agreement on a scale of 1 (Strongly Disagree) to 5 (Strongly Agree) for the following statements regarding the atmosphere and content of the workshop they attended:
+
 * __Atmosphere__: The overall atmosphere of the workshop was welcoming.     
 * __Recommend__: I would recommend this workshop to a friend/colleague.     
 * __Material__: The material presented matched the workshop description.     
@@ -180,11 +181,12 @@ The data strongly suggests that Software Carpentry provides a welcoming environm
 
 ### Respondent Perception of Workshop Instructors and Helpers
 A strength of Software Carpentry's ecosystem is its instructors and helpers. Learners who responded to Software Carpentry's post-workshop survey were asked to rate how they felt instructors and helpers worked as a team based on the following criteria:  
+
 * __Instructors.Communicators__: Instructors were good communicators.    
 * __Helpers.Clear.Answers__: Helpers gave clear answers to your questions.    
 * __Helpers.Communicators__: Instructors were good communicators.    
 * __Helpers Enthusiastic__: Helpers were enthusiastic.    
-* __Instructors.Clear.Answers__: Instructors gave clear answers to your questions.    
+* __Instructors.Clear.Answers__: Instructors gave clear answers to your questions.  
 * __Instructors.Enthusiastic__: Instructors were enthusiastic.    
 * __Helpers.Considerate__: Helpers were considerate.  
 * __Instructors.Considerate__: Instructors were considerate.
@@ -216,7 +218,6 @@ The data suggests that both Software Carpentry's workshop instructors and helper
 ```{r include=FALSE}
 # Code chunk to include data in markdown report
 Enough_Helpers <- round(prop.table(table(data$Enough.Helpers)) * 100)
-Enough_Helpers
 ```
 
 `r Enough_Helpers[3]`% of respondents felt there were enough helpers in the workshop they attended.
@@ -262,10 +263,11 @@ ggplot(data_new_information_tally,
 # Code chunk to include data in markdown report
 New_Information <- round(prop.table(table(data$New.Information)) * 100)
 ```
-`r New_Information[4]`% of respondents reported that most of the information they learned in the workshop they attended was new to them.
+
+Though some learners had prior knowledge of the tools covered in the workshop they attended, the majority had little to no knowledge of the topics covered, especially for SQL and Git. `r New_Information[4]`% of respondents reported that most of the information they learned in the workshop they attended was new to them. 
 
 ```{r}
-# Code chunk for Likert plot (self-reported knowledge of tools covered.)
+# Code chunk for Likert plot pre-workshop knowledge
 # How do I change the y axis labels?
 # Is there a better way to show this information?
 # Are we sure this plot is correct?
@@ -284,12 +286,27 @@ title <- "Self-Reported Knowledge of Tools Covered"
 data_little_likert <-  likert(as.data.frame(data_little))
 plot(data_little_likert) + ggtitle(title)
 ```
+```{r}
+# Code chunk for Likert plot perception about the topics
+# How do I change the y axis labels?
+# Is there a better way to show this information?
+# Are we sure this plot is correct?
+cols_with_Little <- map_lgl(data, ~`%in%`("Very intimidating to me", .x))
+data_little <-  data[ , cols_with_Little]
 
-Though some learners had prior knowledge of the tools covered in the workshop they attended, the majority had little to no knowledge of the topics covered, especially for SQL and Git. The following table shows a breakdown of how much information was new to learners attending a Software Carpentry workshop.
+order = c("Never", "Rarely", "Sometimes", "Often", "All of the time")
 
-```{r echo=FALSE}
-table(data$New.Information)
+data_little <- map_if(data_little, 
+                      is.character, 
+                      as.factor)
+for(i in seq_along(data_agree)) {
+                data_agree[[i]] <- factor(data_agree[[i]], levels=order)
+}
+title <- "Self-Reported Knowledge of Tools Covered"
+data_little_likert <-  likert(as.data.frame(data_little))
+plot(data_little_likert) + ggtitle(title)
 ```
+ 
 
 Now let's take a look at learners' prior experience with the tools covered in the workshop they attended, and their knowledge and perception after the workshop. This section will be divided by tool:  
 * Unix shell  
