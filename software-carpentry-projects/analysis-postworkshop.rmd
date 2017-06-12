@@ -333,7 +333,7 @@ Now let's take a look at learners' prior experience with the tools covered in th
 * R  
 * SQL  
 
-### Learners' Prior Experience and Knowledge Post-Workshop: Unix Shell 
+### Respondent Knowledge and Perception Pre and Post-Workshop 
 
 ```{r}
 # Pre/Post plots for knowledge and perception of tools covered
