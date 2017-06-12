@@ -325,15 +325,13 @@ title <- "Self-Reported Knowledge Increase Post-Workshop"
 data_increase_likert <-  likert(as.data.frame(data_increase))
 plot(data_increase_likert) + ggtitle(title)
 ```
-
+### Respondent Knowledge and Perception Pre and Post-Workshop
 Now let's take a look at learners' prior experience with the tools covered in the workshop they attended, and their knowledge and perception after the workshop. This section will be divided by tool:  
 * Unix shell  
 * Git  
 * Python  
 * R  
 * SQL  
-
-### Respondent Knowledge and Perception Pre and Post-Workshop 
 
 ```{r}
 # Pre/Post plots for knowledge and perception of tools covered
@@ -383,5 +381,46 @@ data %>%
     theme(plot.title = element_text(hjust = 0.5)) +
     theme_classic(base_size = 14)
 ```
+### Motivation to Learn Post-Workshop
+```{r}
+# Code block for question 14
+# I created a plot showing motivation to learn Unix shell post workshop
+# Instead of creating a plot for each tool, how can we put all of the bars on one
+# plot?
+# The column names are `After.Unix.Shell.Motivation`, `After.Git.Motivation`
+# `After.Python.Motivation`, `After.R.Motivation`, `After.SQL.Motivation`
+# Also, is this the best way to show this information?
+# Lastly, how do we not include the NAs on the plot?
 
+motivation = c("Less motivated", "Slightly less motivated", "No changes in motivation", "More motivated", "Much more motivated", "N/A - Topic not covered")
+motivation = factor(motivation)
+
+data$After.Unix.Shell.Motivation = factor(data$After.Unix.Shell.Motivation, levels = motivation)
+
+data_motivation_tally <- 
+  data %>% 
+  group_by(After.Unix.Shell.Motivation) %>% 
+  tally() %>% 
+  filter(!is.na(After.Unix.Shell.Motivation)) 
+
+ggplot(data_motivation_tally, 
+         aes(After.Unix.Shell.Motivation, y = 100 * (n/sum(n)),
+           n)) +
+    geom_bar(stat = "identity", 
+             position = "dodge", fill = "orange") +
+    geom_text(aes(label=n), size= 4) +
+    scale_x_discrete(labels = function(x) lapply(strwrap(x,
+                                                         width = 10,
+                                                         simplify = FALSE),
+                                                 paste,
+                                                 collapse = "\n")) +
+    theme_classic() +
+    xlab("Programming Usage") +
+    ylab("% Respondents") +
+    ggtitle("Respondents' Motivation to Learn Unix Shell Increased") +
+    theme(plot.title = element_text(hjust = 0.5)) +
+    theme_classic(base_size = 14)
+```
+
+### Question 15
 
