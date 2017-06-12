@@ -264,7 +264,7 @@ ggplot(data_new_information_tally,
 New_Information <- round(prop.table(table(data$New.Information)) * 100)
 ```
 
-Though some learners had prior knowledge of the tools covered in the workshop they attended, the majority had little to no knowledge of the topics covered, especially for SQL and Git. `r New_Information[4]`% of respondents reported that most of the information they learned in the workshop they attended was new to them. 
+Though some learners had prior knowledge of the tools covered in the workshop they attended, the majority had little to no knowledge of the topics covered, especially for SQL and Git. `r New_Information[4]`% of respondents reported that most of the information they learned in the workshop they attended was new to them, while `r New_Information[5]`% reported that all of the information they learned was new. 
 
 ```{r}
 # Code chunk for Likert plot pre-workshop knowledge
@@ -279,10 +279,11 @@ order = c("Never", "Rarely", "Sometimes", "Often", "All of the time")
 data_little <- map_if(data_little, 
                       is.character, 
                       as.factor)
-for(i in seq_along(data_agree)) {
-                data_agree[[i]] <- factor(data_agree[[i]], levels=order)
-}
-title <- "Self-Reported Knowledge of Tools Covered"
+# Do I need the line of code that's commented out below?
+#for(i in seq_along(data_little)) {
+#                data_little[[i]] <- factor(data_little[[i]], levels=order)
+#}
+title <- "Self-Reported Knowledge of Tools Covered Pre-Workshop"
 data_little_likert <-  likert(as.data.frame(data_little))
 plot(data_little_likert) + ggtitle(title)
 ```
@@ -291,6 +292,8 @@ plot(data_little_likert) + ggtitle(title)
 # How do I change the y axis labels?
 # Is there a better way to show this information?
 # Are we sure this plot is correct?
+# How do I remove the NA's? NA was selected if a tool wasn't covered during the 
+# workshop
 cols_with_Little <- map_lgl(data, ~`%in%`("Very intimidating to me", .x))
 data_little <-  data[ , cols_with_Little]
 
@@ -299,14 +302,29 @@ order = c("Never", "Rarely", "Sometimes", "Often", "All of the time")
 data_little <- map_if(data_little, 
                       is.character, 
                       as.factor)
-for(i in seq_along(data_agree)) {
-                data_agree[[i]] <- factor(data_agree[[i]], levels=order)
-}
-title <- "Self-Reported Knowledge of Tools Covered"
+
+title <- "Perception of Tools Covered Pre-Workshop"
 data_little_likert <-  likert(as.data.frame(data_little))
 plot(data_little_likert) + ggtitle(title)
 ```
- 
+```{r}
+# Code chunk for Likert plot post-workshop knowledge
+# How do I change the y axis labels?
+# Is there a better way to show this information?
+# Are we sure this plot is correct?
+cols_with_Increase <- map_lgl(data, ~`%in%`("No increase in my knowledge", .x))
+data_increase <-  data[ , cols_with_Increase]
+
+order = c("Never", "Rarely", "Sometimes", "Often", "All of the time")
+
+data_increase <- map_if(data_increase, 
+                      is.character, 
+                      as.factor)
+
+title <- "Self-Reported Knowledge Increase Post-Workshop"
+data_increase_likert <-  likert(as.data.frame(data_increase))
+plot(data_increase_likert) + ggtitle(title)
+```
 
 Now let's take a look at learners' prior experience with the tools covered in the workshop they attended, and their knowledge and perception after the workshop. This section will be divided by tool:  
 * Unix shell  
@@ -317,5 +335,53 @@ Now let's take a look at learners' prior experience with the tools covered in th
 
 ### Learners' Prior Experience and Knowledge Post-Workshop: Unix Shell 
 
+```{r}
+# Pre/Post plots for knowledge and perception of tools covered
+# I would like to do a pre/post bar chart for Questions 12 and 13.
+# The issue is that factor levels for the pre question aren't the same as the post 
+# question 
+# Also, it should not include the NAs
+knowledge_pre = c("Little or no knowledge of the topic", "Some knowledge of the topic", "Extensive knowledge of the topic")
+
+# knowledge_post = c("No increase in my knowledge", "Knowledge increased slightly", # "Knowledge increased a little", "Knowledge increased a great deal", "N/A - Not 
+# covered at this workshop")
+
+data$`Unix.Shell.Pre` <- 
+  factor(data$`Unix.Shell.Pre``, 
+         levels = knowledge_pre)
+
+pre_and_post_knowledge <- 
+data %>%
+  select(`Unix.Shell.Pre`, 
+          `Unix.Shell.Knowledge.Increase`) %>%
+  gather() %>%
+  group_by(key, value) %>%
+  tally() %>%
+  mutate( perc = 100 * (n/sum(n))) %>%
+  filter(!is.na(key),
+         !is.na(value)) 
+
+  ggplot(pre_and_post_knowledge, 
+         aes(x = factor(value, 
+                        levels = programming), 
+             y = perc, 
+             fill = key)) +
+    geom_bar(stat = "identity", 
+             position = "dodge") +
+    geom_text(aes(label=n), size= 4) +
+    scale_x_discrete(labels = function(x) lapply(strwrap(x,
+                                                         width = 10,
+                                                         simplify = FALSE),
+                                                 paste,
+                                                 collapse = "\n")) +
+    theme_classic() +
+    xlab("Programming Usage") +
+    ylab("% Respondents") +
+    scale_fill_discrete(name = "",
+                        labels = c("Before Workshop", "After Workshop")) +
+    ggtitle("Respondents' Programming Knowledge Increased") +
+    theme(plot.title = element_text(hjust = 0.5)) +
+    theme_classic(base_size = 14)
+```
 
 
