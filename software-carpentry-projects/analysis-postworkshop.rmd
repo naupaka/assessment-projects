@@ -415,7 +415,7 @@ ggplot(data_motivation_tally,
                                                  paste,
                                                  collapse = "\n")) +
     theme_classic() +
-    xlab("Programming Usage") +
+    xlab("Motivation Post-Workshop") +
     ylab("% Respondents") +
     ggtitle("Respondents' Motivation to Learn Unix Shell Increased") +
     theme(plot.title = element_text(hjust = 0.5)) +
