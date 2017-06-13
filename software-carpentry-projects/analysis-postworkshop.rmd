@@ -7,17 +7,18 @@ library(knitr)
 opts_chunk$set(echo = FALSE,
                message = FALSE,
                warning = FALSE)
-
-library(tidyr)
-library(ggmap)
-library(likert)
-library(purrr)
-library(mapproj)
+library(tidyverse)
 library(ggplot2)
 library(dplyr)
-library(knitr)
-library(RColorBrewer)
+library(tidyr)
 library(readr)
+library(purrr)
+library(tibble)
+library(DBI)
+library(ggmap)
+library(likert)
+library(mapproj)
+library(RColorBrewer)
 ```
 For nearly 20 years, Software Carpentry has developed material and trained instructors to teach computing skills to researchers in science, medicine, engineering, and other disciplines. This report is an analysis of the post-workshop survey responses collected for Software Carpentry's workshops from March 2015 through July 2017. In this two year period, XXX responses were collected.
 
@@ -312,18 +313,23 @@ plot(data_little_likert) + ggtitle(title)
 # How do I change the y axis labels?
 # Is there a better way to show this information?
 # Are we sure this plot is correct?
-cols_with_Increase <- map_lgl(data, ~`%in%`("No increase in my knowledge", .x))
-data_increase <-  data[ , cols_with_Increase]
+# I commented out the code below because I got an error message that said:
+# Error in likert(as.data.frame(data_increase)) : 
+# All items (columns) must have the same number of levels
 
-order = c("Never", "Rarely", "Sometimes", "Often", "All of the time")
+#cols_with_Increase <- map_lgl(data, ~`%in%`("No increase in my knowledge", .x))
+#data_increase <-  data[ , cols_with_Increase]
 
-data_increase <- map_if(data_increase, 
-                      is.character, 
-                      as.factor)
+#order = c("Never", "Rarely", "Sometimes", "Often", "All of the time")
 
-title <- "Self-Reported Knowledge Increase Post-Workshop"
-data_increase_likert <-  likert(as.data.frame(data_increase))
-plot(data_increase_likert) + ggtitle(title)
+#data_increase <- map_if(data_increase, 
+#                      is.character, 
+#                      as.factor)
+
+#title <- "Self-Reported Knowledge Increase Post-Workshop"
+
+#data_increase_likert <-  likert(as.data.frame(data_increase))
+#plot(data_increase_likert) + ggtitle(title)
 ```
 ### Respondent Knowledge and Perception Pre and Post-Workshop
 Now let's take a look at learners' prior experience with the tools covered in the workshop they attended, and their knowledge and perception after the workshop. This section will be divided by tool:  
@@ -339,48 +345,148 @@ Now let's take a look at learners' prior experience with the tools covered in th
 # The issue is that factor levels for the pre question aren't the same as the post 
 # question 
 # Also, it should not include the NAs
-knowledge_pre = c("Little or no knowledge of the topic", "Some knowledge of the topic", "Extensive knowledge of the topic")
+#knowledge_pre = c("Little or no knowledge of the topic", "Some knowledge of the topic", "Extensive #knowledge of the topic")
 
 # knowledge_post = c("No increase in my knowledge", "Knowledge increased slightly", # "Knowledge increased a little", "Knowledge increased a great deal", "N/A - Not 
 # covered at this workshop")
 
-data$`Unix.Shell.Pre` <- 
-  factor(data$`Unix.Shell.Pre``, 
-         levels = knowledge_pre)
+#data$`Unix.Shell.Pre` <- 
+#  factor(data$`Unix.Shell.Pre``, 
+#         levels = knowledge_pre)
 
-pre_and_post_knowledge <- 
+#pre_and_post_knowledge <- 
+#data %>%
+#  select(`Unix.Shell.Pre`, 
+#          `Unix.Shell.Knowledge.Increase`) %>%
+#  gather() %>%
+#  group_by(key, value) %>%
+#  tally() %>%
+#  mutate( perc = 100 * (n/sum(n))) %>%
+#  filter(!is.na(key),
+#         !is.na(value)) 
+
+#  ggplot(pre_and_post_knowledge, 
+#         aes(x = factor(value, 
+#                        levels = programming), 
+#             y = perc, 
+#             fill = key)) +
+#    geom_bar(stat = "identity", 
+#             position = "dodge") +
+#    geom_text(aes(label=n), size= 4) +
+#    scale_x_discrete(labels = function(x) lapply(strwrap(x,
+#                                                         width = 10,
+#                                                         simplify = FALSE),
+#                                                 paste,
+#                                                 collapse = "\n")) +
+#    theme_classic() +
+#    xlab("Programming Usage") +
+#    ylab("% Respondents") +
+#    scale_fill_discrete(name = "",
+#                        labels = c("Before Workshop", "After Workshop")) +
+#    ggtitle("Respondents' Programming Knowledge Increased") +
+#    theme(plot.title = element_text(hjust = 0.5)) +
+#    theme_classic(base_size = 14)
+```
+
+```{r}
+# Ben Marwick's tip to use grid.arrange(), nest(), and map() to combine the pre/post plots
+knowledge_pre <-
+    c(
+    "Little or no knowledge of topic",
+    "Some knowledge of topic",
+    "Extensive knowledge of topic"
+    )
+
+knowledge_post <- 
+  c("No increase in my knowledge", 
+    "Knowledge increased slightly", 
+    "Knowledge increased a little", 
+    "Knowledge increased a great deal")
+
+# let's compute for all tools...
+
+# before the workshop
+pre_knowledge <- 
 data %>%
-  select(`Unix.Shell.Pre`, 
-          `Unix.Shell.Knowledge.Increase`) %>%
-  gather() %>%
-  group_by(key, value) %>%
-  tally() %>%
-  mutate( perc = 100 * (n/sum(n))) %>%
-  filter(!is.na(key),
-         !is.na(value)) 
+  select(contains("-Pre")) %>% 
+  gather() %>% 
+  filter(value %in% knowledge_pre) %>% 
+  nest(-key) %>% 
+  mutate(tallies = purrr::map(data, ~tally_and_perc(.x, value))) %>% 
+  unnest(tallies) %>% 
+  mutate(key = gsub("-Pre", "", key))
 
-  ggplot(pre_and_post_knowledge, 
-         aes(x = factor(value, 
-                        levels = programming), 
-             y = perc, 
-             fill = key)) +
-    geom_bar(stat = "identity", 
-             position = "dodge") +
-    geom_text(aes(label=n), size= 4) +
+# after the workshop
+post_knowledge <- 
+data %>%
+  select(contains("Knowledge-Increase")) %>% 
+  gather() %>% 
+  filter(value %in% knowledge_post) %>% 
+  nest(-key) %>% 
+  mutate(tallies = purrr::map(data, ~tally_and_perc(.x, value)))  %>% 
+  unnest(tallies) %>% 
+  mutate(key = gsub("-Knowledge-Increase", "", key))
+
+# let's plot before and after as two grouped bar plots, then combine...
+
+tools_before <- 
+   ggplot(pre_knowledge, 
+         aes(x = key,
+             y = `%`,
+             fill = fct_relevel(value, 
+                             knowledge_pre))) +
+    geom_col(position = "dodge") +
+    geom_text(aes(label=n), 
+              size= 4, 
+              position=position_dodge(width=1)) +
     scale_x_discrete(labels = function(x) lapply(strwrap(x,
                                                          width = 10,
                                                          simplify = FALSE),
                                                  paste,
                                                  collapse = "\n")) +
     theme_classic() +
-    xlab("Programming Usage") +
+    xlab("") +
     ylab("% Respondents") +
-    scale_fill_discrete(name = "",
-                        labels = c("Before Workshop", "After Workshop")) +
-    ggtitle("Respondents' Programming Knowledge Increased") +
+    ggtitle("Knowledge before workshop") +
     theme(plot.title = element_text(hjust = 0.5)) +
-    theme_classic(base_size = 14)
+    theme_classic(base_size = 14) +
+    theme(legend.position = "bottom", 
+          legend.title=element_blank()) 
+
+tools_after <- 
+   ggplot(post_knowledge, 
+         aes(x = key,
+             y = `%`,
+             fill = fct_rev(fct_relevel(value, 
+                             (knowledge_pre))))) +
+    geom_col(position = "dodge") +
+    geom_text(aes(label=n), 
+              size= 4,
+              position=position_dodge(width=1)) +
+    scale_x_discrete(labels = function(x) lapply(strwrap(x,
+                                                         width = 10,
+                                                         simplify = FALSE),
+                                                 paste,
+                                                 collapse = "\n")) +
+    theme_classic() +
+    xlab("") +
+    ylab("% Respondents") +
+    ggtitle("Knowledge after workshop") +
+    theme(plot.title = element_text(hjust = 0.5)) +
+    theme_classic(base_size = 14) +
+    theme(legend.position = "bottom", 
+          legend.title=element_blank())
+          
+  
+# put the two plots together
+library(gridExtra)
+grid.arrange(tools_before, 
+             tools_after,
+             ncol = 1)
+
+
 ```
+
 ### Motivation to Learn Post-Workshop
 ```{r}
 # Code block for question 14
