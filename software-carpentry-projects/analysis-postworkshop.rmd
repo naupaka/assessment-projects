@@ -27,7 +27,7 @@ A [PDF](https://github.com/kariljordan/carpentry-community-assessment-projects/b
 Community members were invited to contribute code to this analysis. Feel free to use the data and [tell us](mailto: kariljordan@carpentries.org) about your findings.
 
 ```{r include=FALSE}
-data <- read.csv("https://raw.githubusercontent.com/kariljordan/carpentry-community-assessment-projects/master/software-carpentry-projects/public_swc_postworkshop_data_archivedJune2017.csv", na.strings = "")
+data <- readr::read_csv("https://raw.githubusercontent.com/kariljordan/carpentry-community-assessment-projects/master/software-carpentry-projects/public_swc_postworkshop_data_archivedJune2017.csv")
 ```
 ### Respondent Demographics
 A host of initiatives have been developed and implemented globally to address gender disparities in computing. Software Carpentry's volunteer instructors have hosted hundreds of workshops since 1998, and the post-workshop survey data shows __parity__ in attendance of males compared to females.
@@ -83,13 +83,13 @@ Status
 A breakdown of respondents by research domain/field of work or study is provided below. Respondents were asked to check all that apply.
 ```{r}
 # Code chunk for breakdown by domain of research/work/study.
-# Data in columns `Research.Domain.1` through `Research.Domain.16`
+# Data in columns `Research-Domain-1` through `Research-Domain-16`
 # Since we used `gather` to pull information from multiple columns into this table,
 # how would I go about calculating the percentage of respondents who selected
 # these options? Respondents were asked to check all that apply.
 Research_Domain <- 
 data %>%
-  select(`Research.Domain.1`:`Research.Domain.16`) %>% 
+  select(`Research-Domain-1`:`Research-Domain-16`) %>% 
   gather(col, Research_Domain) %>% 
   group_by(Research_Domain) %>% 
   tally() %>% 
@@ -218,7 +218,7 @@ The data suggests that both Software Carpentry's workshop instructors and helper
 
 ```{r include=FALSE}
 # Code chunk to include data in markdown report
-Enough_Helpers <- round(prop.table(table(data$Enough.Helpers)) * 100)
+Enough_Helpers <- round(prop.table(table(data$`Enough-Helpers`)) * 100)
 ```
 
 `r Enough_Helpers[3]`% of respondents felt there were enough helpers in the workshop they attended.
@@ -239,16 +239,16 @@ Firstly, a breakdown of how much of the information presented was new to the res
 new_information = c("None of it", "Some of it", "About half of it", "Most of it", "All of it")
 new_information = factor(new_information)
 
-data$New.Information = factor(data$New.Information, levels = new_information)
+data$`New-Information` = factor(data$`New-Information`, levels = new_information)
 
 data_new_information_tally <- 
   data %>% 
-  group_by(New.Information) %>% 
+  group_by(`New-Information`) %>% 
   tally() %>% 
-  filter(!is.na(New.Information))  
+  filter(!is.na(`New-Information`))  
 
 ggplot(data_new_information_tally, 
-       aes(New.Information, y = 100 * (n/sum(n)),
+       aes(`New-Information`, y = 100 * (n/sum(n)),
            n)) +
   geom_bar(stat = "identity", fill="salmon1") +
   geom_text(aes(label=n), size= 4) +
@@ -262,7 +262,7 @@ ggplot(data_new_information_tally,
 ```
 ```{r include=FALSE}
 # Code chunk to include data in markdown report
-New_Information <- round(prop.table(table(data$New.Information)) * 100)
+New_Information <- round(prop.table(table(data$`New-Information`)) * 100)
 ```
 
 Though some learners had prior knowledge of the tools covered in the workshop they attended, the majority had little to no knowledge of the topics covered, especially for SQL and Git. `r New_Information[4]`% of respondents reported that most of the information they learned in the workshop they attended was new to them, while `r New_Information[5]`% reported that all of the information they learned was new. 
@@ -272,21 +272,43 @@ Though some learners had prior knowledge of the tools covered in the workshop th
 # How do I change the y axis labels?
 # Is there a better way to show this information?
 # Are we sure this plot is correct?
-cols_with_Little <- map_lgl(data, ~`%in%`("Little or no knowledge of topic", .x))
-data_little <-  data[ , cols_with_Little]
 
-order = c("Never", "Rarely", "Sometimes", "Often", "All of the time")
+ordered_little <-
+  c("Little or no knowledge of topic",
+    "Some knowledge of topic",        
+    "Extensive knowledge of topic")
 
-data_little <- map_if(data_little, 
-                      is.character, 
-                      as.factor)
-# Do I need the line of code that's commented out below?
-#for(i in seq_along(data_little)) {
-#                data_little[[i]] <- factor(data_little[[i]], levels=order)
-#}
-title <- "Self-Reported Knowledge of Tools Covered Pre-Workshop"
-data_little_likert <-  likert(as.data.frame(data_little))
-plot(data_little_likert) + ggtitle(title)
+likert_cols_little <- 
+ data %>% 
+   select(which(map_lgl(data, ~`%in%`("Little or no knowledge of topic", .x)))) %>% 
+   mutate_if(is.character, as.factor) %>% 
+   mutate_all(funs(fct_relevel(., ordered_little))) %>% 
+  filter_all(all_vars(!is.na(.)))
+
+# To relabel the y-axis, we can remove the '-Pre like this:"
+
+names(likert_cols_little) <- gsub("-Pre", "", names(likert_cols_little) )
+
+lc_little <- likert(data.frame(likert_cols_little))
+
+# looks right!
+plot(lc_little) +
+  ggtitle("Self-Reported Knowledge of Tools Covered Pre-Workshop")
+
+# let's double check the plot with a table:
+xx <- 
+likert_cols_little %>% 
+  gather(key, value) %>% 
+  group_by(key, value) %>% 
+  tally() %>% 
+  mutate(perc = round(n / sum(n) * 100, 1)) %>% 
+  select(-n) %>% 
+  spread(key, perc) %>% 
+  slice(match(ordered_little,
+              value))
+
+# don't show the table in the report
+## kable(xx)
 ```
 ```{r}
 # Code chunk for Likert plot perception about the topics
