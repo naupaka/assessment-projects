@@ -162,7 +162,7 @@ balanced <-
   pull(`%`)
 ```
 
-`r balanced`% of respondents felt the workshop they attended was well balanaced between lecture and hands-on learning.
+`r balanced`% of respondents felt the workshop they attended was well balanced between lecture and hands-on learning.
 
 Learners were asked to rate their level of agreement on a scale of 1 (Strongly Disagree) to 5 (Strongly Agree) for the following statements regarding the atmosphere and content of the workshop they attended:
 
@@ -223,7 +223,7 @@ likert_cols %>%
               value))
 ``` 
 
-The data strongly suggests that Software Carpentry provides a welcoming environment for its learners where the material not only matches the workshop description, but is worth the time learners spend learning it. Learners acquire skills they are able to apply to their research and/or job function in the time alloted over the two-day period. Lastly, learners feel impressed to recommend the workshop to a friend or colleague.
+The data strongly suggests that Software Carpentry provides a welcoming environment for its learners where the material not only matches the workshop description, but is worth the time learners spend learning it. Learners acquire skills they are able to apply to their research and/or job function in the time allotted over the two-day period. Lastly, learners feel impressed to recommend the workshop to a friend or colleague.
 
 ### Respondent Perception of Workshop Instructors and Helpers
 A strength of Software Carpentry's ecosystem is its instructors and helpers. Learners who responded to Software Carpentry's post-workshop survey were asked to rate how they felt instructors and helpers worked as a team based on the following criteria:  
@@ -317,6 +317,7 @@ Additionally, `r Enough_Helpers`% of respondents felt there were enough helpers 
 
 ### Respondent Self-Reported Knowledge of Tools Covered
 Software Carpentry seeks to know more about learners' experience with the tools covered in their workshop before attending, and after attending the workshop. A series of questions were developed around learners' prior knowledge and perception of the tools they learned. Workshops are self-organized, and each workshop includes the following __core topics__:  
+
 * Automating tasks using the Unix shell;  
 * Structured programming in Python, R, or MATLAB; and  
 * Version control using Git or Mercurial.  
@@ -422,6 +423,7 @@ likert_cols_little %>%
 # Code chunk to include data in markdown report
 Knowledge_SQL <- round(prop.table(table(data$`SQL-Pre`)) * 100)
 Knowledge_Git <- round(prop.table(table(data$`Git-Pre`)) * 100)
+Knowledge_Git
 Knowledge_R <- round(prop.table(table(data$`R-Pre`)) * 100)
 Knowledge_Unix_Shell <- round(prop.table(table(data$`Unix-Shell-Pre`)) * 100)
 Knowledge_Python <- round(prop.table(table(data$`Python-Pre`)) * 100)
@@ -430,6 +432,7 @@ Knowledge_Python <- round(prop.table(table(data$`Python-Pre`)) * 100)
 An interesting result is the percentage of learners who had little or no knowledge of Git and SQL (`r Knowledge_Git[2]`% and `r Knowledge_SQL[2]`% respectively). Additionally, `r Knowledge_R[3]`%, `r Knowledge_Unix_Shell[3]`%, and `r Knowledge_Python[3]`% of respondents already had some knowledge of R, the Unix shell, and/or Python, respectively.
 
 Individuals who are new to computer programming tend to be intimidated for lack of familiarity with syntax and terms. As Software Carpentry learners have varying knowledge levels of the tools covered pre-workshop, we are interested in understanding learners self-reported feeling of intimidation with these tools. The Likert plot below provides a breakdown by tool (Git, SQL, etc.).
+
 ```{r}
 # Code chunk for Likert plot perception of how intimidating the topics were
 ordered_intim <-
@@ -455,7 +458,7 @@ names(likert_cols_intim) <- gsub(".Perception", "", names(likert_cols_intim))
 lc_intim <- likert(data.frame(likert_cols_intim))
 
 plot(lc_intim) +
-  ggtitle("Self-Reported Feeling of Intimidation Pre-Workshop")
+  ggtitle("Self-Reported Feeling of Intimidation Pre-Workshop") 
 
 # Double check the plot with a table:
 xx <- 
@@ -483,12 +486,13 @@ Perception_Python <- round(prop.table(table(data$`Python-Perception`)) * 100)
 #Perception_Python
 ```
 
-Taking a closer look at responses by percentage, we see that...
+Taking a closer look at the responses by percentage in the table below, we see that at least 44.5% of respondents felt at least one of the tools covered in the workshop they attended was either slightly or very intimidating.
 ```{r}
 kable(xx, row.names = FALSE, col.names = c("Perception", "Git", "Python", "R", "SQL", "Shell"))
 ```
 
-
+### Self-Reported Knowledge Increase
+Software Carpentry is not only interested in creating an atmosphere where learning programming becomes less intimidating, but we want for learners to leave with increased knowledge of the tools that were covered in their workshop. The Likert plot below provides a breakdown of respondents' self-reported knowledge increase.
 ```{r}
 # Code chunk for knowledge increase post workshop
 ordered_icre <-
@@ -538,14 +542,26 @@ likert_cols_incre %>%
   slice(match(ordered_icre,
               value))
 ```
+```{r}
+# Code chunk to include data in markdown report
+Knowledge_Increase_SQL <- round(prop.table(table(data$`SQL-Knowledge-Increase`)) * 100)
+#Knowledge_Increase_SQL
+Knowledge_Increase_Git <- round(prop.table(table(data$`Git-Knowledge-Increase`)) * 100)
+#Knowledge_Increase_Git
+Knowledge_Increase_R <- round(prop.table(table(data$`R-Knowledge-Increase`)) * 100)
+#Knowledge_Increase_R
+Knowledge_Increase_Unix_Shell <- round(prop.table(table(data$`Unix-Shell-Knowledge-Increase`)) * 100)
+#Knowledge_Increase_Unix_Shell
+Knowledge_Increase_Python <- round(prop.table(table(data$`Python-Knowledge-Increase`)) * 100)
+#Knowledge_Increase_Python
+```
 
-### Respondent Knowledge and Perception Pre and Post-Workshop
-Now let's take a look at learners' prior experience with the tools covered in the workshop they attended, and their knowledge and perception after the workshop. This section will be divided by tool:  
-* Unix shell  
-* Git  
-* Python  
-* R  
-* SQL  
+One thing to note is that SQL is not covered in all workshops (`r Knowledge_Increase_SQL[4]`% of respondents said this was not covered). This explains the large portion of respondents that had no increase in their knowledge of SQL.
+
+`r Knowledge_Increase_Git[4]`% of respondents said their knowledge of Git increased a great deal. This is great news, as `r Knowledge_Git[2]`% of respondents reported having little or no knowledge of Git before attending a Software Carpentry workshop!
+
+### Self-Reported Knowledge Increase: Pre/Post Comparison
+Now let's take another look at learners' prior knowledge with the tools covered in the workshop they attended, compared to after the workshop. The grid below provides the breakdown by tool   
 
 ```{r}
 # Code chunk for Pre/Post plots for knowledge and perception of tools covered
@@ -600,7 +616,7 @@ tools_before <-
                              knowledge_pre))) +
     geom_col(position = "dodge") +
     geom_text(aes(label=n), 
-              size= 4, 
+              size= 4,
               position=position_dodge(width=1)) +
     scale_x_discrete(labels = function(x) lapply(strwrap(x,
                                                          width = 10,
@@ -614,7 +630,7 @@ tools_before <-
     theme(plot.title = element_text(hjust = 0.5)) +
     theme_classic(base_size = 14) +
     theme(legend.position = "bottom", 
-          legend.title=element_blank()) 
+          legend.title=element_blank())
 
 tools_after <- 
    ggplot(post_knowledge, 
@@ -649,6 +665,7 @@ grid.arrange(tools_before,
 ```
 
 ### Motivation to Learn Post-Workshop
+Another goal of Software Carpentry is for learners to leave the workshop motivated to continue their learning. From the figure below, we see that learners are more motivated to continue learning and improving upon the skills that were covered in their workshop.
 ```{r}
 # Code chunk for motivation to learn post-workshop
 # Same concept as previous chunk
@@ -698,6 +715,17 @@ data %>%
 ```
 
 ### Respondent Ability to Perform Computing Tasks
+Motivation is important, but being confident in your ability to complete specific computing tasks is an equally important goal of Software Carpentry. The grid below shows respondents' self-reported ability to complete tasks including: 
+
+* Using pipes to connect shell commands 
+* Writing a 'for loop' to automate tasks   
+* Initializing a repository with git 
+* Writing a function 
+* Importing a library or package in R or Python 
+* Writing a unit test in Python or R 
+* Writing an SQL query 
+
+It also provides their self-reported level of confidence in being able to complete the tasks above after completing the workshop.
 ```{r}
 # Code chunk for ability to perform various computing tasks
 computing_pre <-
@@ -796,3 +824,19 @@ grid.arrange(computing_before,
              ncol = 1)
 ```
 
+Let's take a closer look with a table. The data shows an increase in confidence for nearly all of the computing tasks outlined above.
+```{r}
+kable(pre_computing, col.names = c("Skill", "Ability Pre-Workshop", "n", "%"))
+kable(post_computing, col.names = c("Skill", "Confidence Post-Workshop", "n", "%"))
+# How could I make a table that is more clear to show ability pre vs. confidence post?
+# Should I break it down by each computing task?
+```
+
+### Summary
+Software Carpentry workshops improve learner skill, ability, and confidence in using computing tools like Python, Git, and the Unix shell. Additionally, respondents are satisfied with the caliber of workshop instructors and helpers. To close out this report, I offer a list of interesting questions that could be answered with this data, and encourage community members to get involved by using the data in this analysis to answer these questions:
+
+* Are there differences in gender for confidence and motivation to use the tools post-workshop?
+
+Here are a few other questions for discussion: 
+
+* Why SQL is the least covered workshop topic?
