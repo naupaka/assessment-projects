@@ -835,8 +835,12 @@ kable(post_computing, col.names = c("Skill", "Confidence Post-Workshop", "n", "%
 ### Summary
 Software Carpentry workshops improve learner skill, ability, and confidence in using computing tools like Python, Git, and the Unix shell. Additionally, respondents are satisfied with the caliber of workshop instructors and helpers. To close out this report, I offer a list of interesting questions that could be answered with this data, and encourage community members to get involved by using the data in this analysis to answer these questions:
 
-* Are there differences in gender for confidence and motivation to use the tools post-workshop?
+* Are there differences in gender for intimidation, confidence, and/or motivation to use the tools post-workshop?
+* Is there a relationship between respondent confidence and their motivation to use the tools post-workshop?
+* Is there a relationship between respondent knowledge increase and their confidence and/or motivation post-workshop?
+* Is there a relationship between respondent intimidation pre-workshop and their confidence and/or motivation to use the tools post-workshop?
 
-Here are a few other questions for discussion: 
+What other questions can be answered from this data? Additionally, here are a few other questions that we can discuss as a community: 
 
-* Why SQL is the least covered workshop topic?
+* Why is SQL the least covered workshop topic?
+* Has your confidence and/or motivation to use the tools we teach changed as a result of being a member of Software Carpentry's community? How? Why?
