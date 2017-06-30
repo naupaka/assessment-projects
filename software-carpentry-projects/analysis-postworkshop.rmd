@@ -371,7 +371,7 @@ ggplot(data_new_information_tally,
   xlab("How Much Information Was New?") +
   ylab("% Respondents") +
   ggtitle(paste(perc_learned_new_info, # don't hard-code values! use a stored value
-                "Respondents Learned New Information")) +
+                "% Respondents Learned Mostly New Information")) +
   theme(plot.title = element_text(hjust = 0.5)) +
   theme_classic(base_size = 14)
 ```
