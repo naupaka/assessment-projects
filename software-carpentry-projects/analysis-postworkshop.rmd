@@ -21,11 +21,11 @@ library(mapproj)
 library(RColorBrewer)
 library(forcats)
 ```
-For nearly 20 years, Software Carpentry has developed material and trained instructors to teach computing skills to researchers in science, medicine, engineering, and other disciplines. This report is an analysis of the post-workshop survey responses collected for Software Carpentry's workshops from March 2015 through July 2017. In this two year period, XXX responses were collected.
+For nearly 20 years, Software Carpentry has developed material and trained instructors to teach computing skills to researchers in science, medicine, engineering, and other disciplines. This report is an analysis of the post-workshop survey responses collected for Software Carpentry's workshops from March 2015 through July 2017. In this two year period, nearly 4,000 responses were collected.
 
-A [PDF](https://github.com/kariljordan/carpentry-community-assessment-projects/blob/master/software-carpentry-projects/survey-postworkshop.pdf) of the survey questions, the data used in this analysis, and full R code are located on the [carpentry-community-assessment-projects](https://github.com/kariljordan/carpentry-community-assessment-projects) repo on GitHub. 
+A [PDF](https://github.com/kariljordan/carpentry-community-assessment-projects/blob/master/software-carpentry-projects/survey-postworkshop.pdf) of the survey questions, the data used in this analysis, and full R code are located on the [carpentry-community-assessment-projects](https://github.com/kariljordan/carpentry-community-assessment-projects) repo on GitHub. A special thank you goes to Ben Marwick, Naupaka Zimmerman, Erin Becker, and Jonah Duckles. These individuals made valuable contributions to the code that was used to create the figures in this report.
 
-Community members were invited to contribute code to this analysis. Feel free to use the data and [tell us](mailto: kariljordan@carpentries.org) about your findings.
+Community members are invited to contribute code to this analysis. Feel free to use the data and [tell us](mailto: kariljordan@carpentries.org) about your findings.
 
 ```{r include=FALSE}
 data <- readr::read_csv("https://raw.githubusercontent.com/kariljordan/carpentry-community-assessment-projects/master/software-carpentry-projects/public_swc_postworkshop_data_archivedJune2017.csv")
@@ -81,7 +81,7 @@ ggplot(data_status_tally,
            y = `%`,
            n)) +
   geom_bar(stat = "identity", 
-           fill = "salmon1") +
+           fill = "darkcyan") +
   geom_text(aes(label = n), 
             size= 4,
             nudge_y = 3) + ## This moves the numbers up a bit so they're easier to read. 
@@ -110,11 +110,10 @@ data_status_tally %>%
 
 `r Status[3]`% of Software Carpentry's post-workshop survey respondents are __Graduate Students__. 
 
-A breakdown of respondents by research domain/field of work or study is provided below. Respondents were asked to check all that apply.
+A breakdown of respondents by research domain/field of work or study is provided below. Respondents were asked to check all that apply. The majority of Software Carpentry learners work in __Life Sciences__.
 ```{r}
 # Code chunk for breakdown by domain of research/work/study.
 # Data in columns `Research-Domain-1` through `Research-Domain-16`
-# Code by Kari and Ben
 Research_Domain <- 
 data %>%
   select(`Research-Domain-1`:`Research-Domain-16`) %>% 
@@ -144,7 +143,6 @@ Respondents were asked to indicate their perception of the balance of lecture to
 
 ```{r}
 # Code chunk for balance of lecture to hands-on work.
-# Code from Kari and Ben
 ordered_balance <- c("Too much lecture", "Slightly too much lecture", "Balanced (lecture/hands-on)","Slightly too much hands-on", "Too much hands-on")
 
 balance_tally <- 
@@ -169,18 +167,16 @@ balanced <-
 Learners were asked to rate their level of agreement on a scale of 1 (Strongly Disagree) to 5 (Strongly Agree) for the following statements regarding the atmosphere and content of the workshop they attended:
 
 * __Atmosphere__: The overall atmosphere of the workshop was welcoming.     
+* __Material__: The material presented matched the workshop description.
 * __Recommend__: I would recommend this workshop to a friend/colleague.     
-* __Material__: The material presented matched the workshop description.     
-* __Worth__: The workshop was worth my time.     
 * __Skills__: I learned skills that I will be able to use in my research/work.     
+* __Worth__: The workshop was worth my time.     
 * __Information__: The amount of information covered at the workshop was reasonable for allotted time.   
 
-
-The following chart is an analysis of learner responses to the statements above. 
+The following Likert chart is an analysis of learner responses to the statements above. 
 ```{r}
 # Code chunk for Likert plot (perception of workshop atmosphere).
 # We used the Likert package (http://jason.bryer.org/likert/). 
-# Code by Kari and Ben
 ordered_agree <-
    c("Strongly Disagree",
    "Disagree",
@@ -201,16 +197,16 @@ lc <- likert(data.frame(likert_cols))
 # Can't seem to do anything about the periods between the words
 
 names(likert_cols) <- 
-  c("I got new information",
-    "Atmosphere was supportive",
-    "I got new skills",
-    "Material matched description",
-    "I recommend others",
-    "Worth my time"
+  c("Information",
+    "Atmosphere",
+    "Skills",
+    "Material",
+    "Recommend",
+    "Worth"
     )
 
 lc <- likert(data.frame(likert_cols))
-title <- "Workshops Atmosphere & Content"
+title <- "Perception of Workshop Atmosphere & Content"
  theme_update(plot.title = element_text(hjust = 0.5))
 plot(lc) + ggtitle(title)
 
@@ -232,18 +228,15 @@ The data strongly suggests that Software Carpentry provides a welcoming environm
 ### Respondent Perception of Workshop Instructors and Helpers
 A strength of Software Carpentry's ecosystem is its instructors and helpers. Learners who responded to Software Carpentry's post-workshop survey were asked to rate how they felt instructors and helpers worked as a team based on the following criteria:  
 
-* __Instructors.Communicators__: Instructors were good communicators.    
-* __Helpers.Clear.Answers__: Helpers gave clear answers to your questions.    
-* __Helpers.Communicators__: Instructors were good communicators.    
-* __Helpers Enthusiastic__: Helpers were enthusiastic.    
-* __Instructors.Clear.Answers__: Instructors gave clear answers to your questions.  
-* __Instructors.Enthusiastic__: Instructors were enthusiastic.    
-* __Helpers.Considerate__: Helpers were considerate.  
-* __Instructors.Considerate__: Instructors were considerate.
-  
+* __Considerate__: Instructors/Helpers were considerate.
+* __Enthusiastic__: Instructors/Helpers were enthusiastic. 
+* __Communicators__: Instructors/Helpers were good communicators.    
+* __Clear.Answers__: Instructors/Helpers gave clear answers to your questions.   
+
+The two Likert plots below provide an analysis of respondent answers.
+   
 ```{r echo=FALSE}
 # Code chunk for likert plot (perception of workshop instructors/helpers)
-# Code by Kari and Ben (but mostly Ben ha!)
 ordered_often <-
   c("Never", "Rarely", "Sometimes", "Often", "All of the time")
 
@@ -261,7 +254,7 @@ names(likert_cols_often_Inst) <-
 lc_often_inst <- likert(data.frame(likert_cols_often_Inst))
 
 plot(lc_often_inst) +
-  ggtitle("Perception of Instructors")
+  ggtitle("Perception of Workshop Instructors")
 
 # To relabel the y-axis, see the previous chunk
 
@@ -291,7 +284,7 @@ names(likert_cols_often_h) <-
 lc_often_h <- likert(data.frame(likert_cols_often_h))
 
 plot(lc_often_h) +
-  ggtitle("Perception of Helpers")
+  ggtitle("Perception of Workshop Helpers")
 
 # To relabel the y-axis, see the previous chunk
 
@@ -308,7 +301,7 @@ likert_cols_often_h %>%
               value))
 ```
 
-The data suggests that both Software Carpentry's workshop instructors and helpers create an environment where learners are able to receive clear answers to their questions. Additionally, instructors and helpers communicate clearly with learners and are both enthusiastic about the material being taught and considerate of Software Carpentry learners.
+Software Carpentry's workshop instructors and helpers create an environment where learners are able to receive clear answers to their questions. Additionally, instructors and helpers communicate clearly with learners and are both enthusiastic about the material being taught and considerate of Software Carpentry learners.
 
 ```{r include=FALSE}
 # Code chunk to include data in markdown report
@@ -320,22 +313,19 @@ data %>%
   pull(`%`)
 ```
 
-`r Enough_Helpers`% of respondents felt there were enough helpers in the workshop they attended.
+Additionally, `r Enough_Helpers`% of respondents felt there were enough helpers in the workshop they attended.
 
 ### Respondent Self-Reported Knowledge of Tools Covered
-Software Carpentry workshops are self-organized, and each workshop includes the following __core topics__:  
-* automating tasks using the Unix shell;  
-* structured programming in Python, R, or MATLAB; and  
-* version control using Git or Mercurial.  
+Software Carpentry seeks to know more about learners' experience with the tools covered in their workshop before attending, and after attending the workshop. A series of questions were developed around learners' prior knowledge and perception of the tools they learned. Workshops are self-organized, and each workshop includes the following __core topics__:  
+* Automating tasks using the Unix shell;  
+* Structured programming in Python, R, or MATLAB; and  
+* Version control using Git or Mercurial.  
 
-Learners were asked to indicate their level of knowledge of the Unix shell, R, Python, Git, and SQL prior to attending a Software Carpentry workshop.
-
-Software Carpentry seeks to know more about how learners feel about the tools covered in their workshop before attending, and after attending the workshop. A series of questions were developed around learner's prior knowledge and perception of the tools they learned.
+Learners were asked to indicate their level of knowledge of the Unix shell, R, Python, Git, and SQL prior to attending a Software Carpentry workshop. Not all workshops cover SQL.
 
 Firstly, a breakdown of how much of the information presented was new to the respondents is provided below.
 ```{r}
 # Code chunk of how much information presented at the workshop was new.
-# Code by Ben and Kari
 ordered_new_information <-
   c("None of it", 
     "Some of it", 
@@ -368,7 +358,7 @@ ggplot(data_new_information_tally,
            y = `%`,
            n)) +
   geom_bar(stat = "identity", 
-           fill="salmon1") +
+           fill="darkcyan") +
   geom_text(aes(label=n), 
             size= 4,
             nudge_y = 3) +
@@ -389,8 +379,9 @@ ggplot(data_new_information_tally,
 New_Information <- round(prop.table(table(data$`New-Information`)) * 100)
 ```
 
-Though some learners had prior knowledge of the tools covered in the workshop they attended, the majority had little to no knowledge of the topics covered, especially for SQL and Git. `r New_Information[4]`% of respondents reported that most of the information they learned in the workshop they attended was new to them, while `r New_Information[5]`% reported that all of the information they learned was new. 
+`r New_Information[3]`% of respondents said about half of the material they learned in a workshop was new to them, and `r New_Information[4]`% of respondents reported that most of the information they learned in the workshop they attended was new to them, while `r New_Information[5]`% reported that all of the information they learned was new. 
 
+Taking a look at each tool more closely, the Likert plot below provides a breakdown of respondents' self-reported knowledge of the tools covered before attending a workshop. From the figure we see that 
 ```{r}
 # Code chunk for Likert plot pre-workshop knowledge
 # Code by Ben and Kari
@@ -427,6 +418,18 @@ likert_cols_little %>%
   slice(match(ordered_little,
               value))
 ```
+```{r include=FALSE}
+# Code chunk to include data in markdown report
+Knowledge_SQL <- round(prop.table(table(data$`SQL-Pre`)) * 100)
+Knowledge_Git <- round(prop.table(table(data$`Git-Pre`)) * 100)
+Knowledge_R <- round(prop.table(table(data$`R-Pre`)) * 100)
+Knowledge_Unix_Shell <- round(prop.table(table(data$`Unix-Shell-Pre`)) * 100)
+Knowledge_Python <- round(prop.table(table(data$`Python-Pre`)) * 100)
+```
+
+An interesting result is the percentage of learners who had little or no knowledge of Git and SQL (`r Knowledge_Git[2]`% and `r Knowledge_SQL[2]`% respectively). Additionally, `r Knowledge_R[3]`%, `r Knowledge_Unix_Shell[3]`%, and `r Knowledge_Python[3]`% of respondents already had some knowledge of R, the Unix shell, and/or Python, respectively.
+
+Individuals who are new to computer programming tend to be intimidated for lack of familiarity with syntax and terms. As Software Carpentry learners have varying knowledge levels of the tools covered pre-workshop, we are interested in understanding learners self-reported feeling of intimidation with these tools. The Likert plot below provides a breakdown by tool (Git, SQL, etc.).
 ```{r}
 # Code chunk for Likert plot perception of how intimidating the topics were
 ordered_intim <-
@@ -435,8 +438,7 @@ ordered_intim <-
     "Neither intimidating nor unintimidating",
     "Slightly intimidating to me",
     "Very intimidating to me",        
-    "N/A or No opinion")  # again, yours doesn't match the data, 
-# that maybe why your plot is wrong
+    "N/A or No opinion")  
 
 likert_cols_intim <- 
  data %>% 
@@ -452,11 +454,10 @@ names(likert_cols_intim) <- gsub(".Perception", "", names(likert_cols_intim))
 
 lc_intim <- likert(data.frame(likert_cols_intim))
 
-# looks right!
 plot(lc_intim) +
-  ggtitle("Respondent Perception of How Intimidating the Tools Covered were: Pre-Workshop")
+  ggtitle("Self-Reported Feeling of Intimidation Pre-Workshop")
 
-# let's double check the plot with a table:
+# Double check the plot with a table:
 xx <- 
 likert_cols_intim %>% 
   gather(key, value) %>% 
@@ -468,6 +469,26 @@ likert_cols_intim %>%
   slice(match(ordered_intim,
               value))
 ```
+```{r}
+# Code chunk to include data in markdown report
+Perception_SQL <- round(prop.table(table(data$`SQL-Perception`)) * 100)
+#Perception_SQL
+Perception_Git <- round(prop.table(table(data$`Git-Perception`)) * 100)
+#Perception_Git
+Perception_R <- round(prop.table(table(data$`R-Perception`)) * 100)
+#Perception_R
+Perception_Unix_Shell <- round(prop.table(table(data$`Unix-Shell-Perception`)) * 100)
+#Perception_Unix_Shell
+Perception_Python <- round(prop.table(table(data$`Python-Perception`)) * 100)
+#Perception_Python
+```
+
+Taking a closer look at responses by percentage, we see that...
+```{r}
+kable(xx, row.names = FALSE, col.names = c("Perception", "Git", "Python", "R", "SQL", "Shell"))
+```
+
+
 ```{r}
 # Code chunk for knowledge increase post workshop
 ordered_icre <-
