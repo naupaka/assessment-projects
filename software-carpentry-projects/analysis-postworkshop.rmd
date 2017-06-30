@@ -375,15 +375,14 @@ ggplot(data_new_information_tally,
   theme(plot.title = element_text(hjust = 0.5)) +
   theme_classic(base_size = 14)
 ```
-```{r}
+```{r include=FALSE}
 # Code chunk to include data in markdown report
 New_Information <- round(prop.table(table(data$`New-Information`)) * 100)
-New_Information
 ```
 
 `r New_Information[1]`% of respondents said about half of the material they learned in a workshop was new to them, and `r New_Information[3]`% of respondents reported that most of the information they learned in the workshop they attended was new to them, while `r New_Information[2]`% reported that all of the information they learned was new. 
 
-Taking a look at each tool more closely, the Likert plot below provides a breakdown of respondents' self-reported knowledge of the tools covered before attending a workshop. From the figure we see that 
+Taking a look at each tool more closely, the Likert plot below provides a breakdown of respondents' self-reported knowledge of the tools covered before attending a workshop. From the figure we see that more than half of respondents had little or no knowledge of the tools covered in their workshop.
 ```{r}
 # Code chunk for Likert plot pre-workshop knowledge
 # Code by Ben and Kari
@@ -430,7 +429,7 @@ Knowledge_Unix_Shell <- round(prop.table(table(data$`Unix-Shell-Pre`)) * 100)
 Knowledge_Python <- round(prop.table(table(data$`Python-Pre`)) * 100)
 ```
 
-An interesting result is the percentage of learners who had little or no knowledge of Git and SQL (`r Knowledge_Git[2]`% and `r Knowledge_SQL[2]`% respectively). Additionally, `r Knowledge_R[3]`%, `r Knowledge_Unix_Shell[3]`%, and `r Knowledge_Python[3]`% of respondents already had some knowledge of R, the Unix shell, and/or Python, respectively.
+An interesting result is the percentage of learners who had little or no knowledge of Git and SQL (`r Knowledge_Git[2]`% and `r Knowledge_SQL[2]`% respectively). However, `r Knowledge_R[3]`%, `r Knowledge_Unix_Shell[3]`%, and `r Knowledge_Python[3]`% of respondents already had some knowledge of R, the Unix shell, and/or Python, respectively.
 
 Individuals who are new to computer programming tend to be intimidated for lack of familiarity with syntax and terms. As Software Carpentry learners have varying knowledge levels of the tools covered pre-workshop, we are interested in understanding learners self-reported feeling of intimidation with these tools. The Likert plot below provides a breakdown by tool (Git, SQL, etc.).
 
