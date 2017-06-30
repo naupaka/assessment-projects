@@ -371,16 +371,17 @@ ggplot(data_new_information_tally,
   xlab("How Much Information Was New?") +
   ylab("% Respondents") +
   ggtitle(paste(perc_learned_new_info, # don't hard-code values! use a stored value
-                "% of Respondents Learned New Information")) +
+                "Respondents Learned New Information")) +
   theme(plot.title = element_text(hjust = 0.5)) +
   theme_classic(base_size = 14)
 ```
-```{r include=FALSE}
+```{r}
 # Code chunk to include data in markdown report
 New_Information <- round(prop.table(table(data$`New-Information`)) * 100)
+New_Information
 ```
 
-`r New_Information[3]`% of respondents said about half of the material they learned in a workshop was new to them, and `r New_Information[4]`% of respondents reported that most of the information they learned in the workshop they attended was new to them, while `r New_Information[5]`% reported that all of the information they learned was new. 
+`r New_Information[1]`% of respondents said about half of the material they learned in a workshop was new to them, and `r New_Information[3]`% of respondents reported that most of the information they learned in the workshop they attended was new to them, while `r New_Information[2]`% reported that all of the information they learned was new. 
 
 Taking a look at each tool more closely, the Likert plot below provides a breakdown of respondents' self-reported knowledge of the tools covered before attending a workshop. From the figure we see that 
 ```{r}
