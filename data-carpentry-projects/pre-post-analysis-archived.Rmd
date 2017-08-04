@@ -31,17 +31,15 @@ Community members are invited to contribute code to this analysis. Feel free to 
 
 ```{r include=FALSE}
 # Load the pre- and post-workshop data into R
-data_pre <- readr::read_csv("https://raw.githubusercontent.com/carpentries/assessment-projects/master/data-carpentry-projects/preworkshop-public-archived.csv")
+predata <- readr::read_csv("https://raw.githubusercontent.com/carpentries/assessment-projects/master/data-carpentry-projects/preworkshop-public-archived.csv")
 
-data_post <- readr::read_csv("https://raw.githubusercontent.com/carpentries/public-survey-info/master/documents/reports/Data-Carpentry-Reports/postworkshop_data.csv")
+postdata <- readr::read_csv("https://raw.githubusercontent.com/carpentries/assessment-projects/master/data-carpentry-projects/postworkshop-public-archived.csv")
 ```
-### Respondent Demographics
+### Pre-Workshop Survey Demographics
 
-A breakdown of Data Carpentry's learners by __status__ is provided below.
+A breakdown of Data Carpentry's learners (pre-workshop) by __status__ is provided below.
 ```{r echo=FALSE}
-# Code chunk for Status of Respondents
-# Ben suggested using the forcats pkg to handle factors because it works well with dplyr.
-status = c(
+prestatus = c(
     "Undergraduate Student",
     "Graduate Student",
     "Post-doc",
@@ -50,37 +48,35 @@ status = c(
     "Staff",
     "Other (please specify)"
   )
-status = factor(status)
+prestatus = factor(prestatus)
 
-data$Status = factor(data$Status, levels = status)
+predata$Status = factor(predata$Status, levels = prestatus)
 
-data_status_tally <- 
+data_prestatus_tally <- 
   data %>% 
   group_by(Status) %>% 
   tally() %>% 
   filter(!is.na(Status)) 
 
-ggplot(data_status_tally, 
+ggplot(data_prestatus_tally, 
        aes(Status, y = 100 * (n/sum(n)),
            n)) +
   geom_bar(stat = "identity", fill="orange") +
   geom_text(aes(label=n), size= 4) +
   scale_x_discrete(labels = function(x) lapply(strwrap(x, width = 10, simplify = FALSE), paste, collapse="\n")) +
   theme_classic() +
-  xlab("Status") +
+  xlab("Status (Pre-Survey)") +
   ylab("% Respondents") +
-  ggtitle("Majority of Respondents were Graduate Students") +
+  ggtitle("TITLE") +
   theme(plot.title = element_text(hjust = 0.5)) +
   theme_classic(base_size = 14)
 ```
 
-```{r include=FALSE}
-# Code chunk to include data in markdown report
-# Using the dplyr method per Ben's suggestion
+```{r}
 Status <- round(prop.table(table(data$Status)) * 100)
 Status
 
-data_status_tally %>% 
+data_prestatus_tally %>% 
   setNames(c("Status", "n", "%")) %>% 
   kable
 ```
