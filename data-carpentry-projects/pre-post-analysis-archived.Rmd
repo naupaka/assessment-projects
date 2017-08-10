@@ -268,7 +268,8 @@ plot(postdata_agree_likert) + ggtitle(title)
 ```
 
 ```{r echo=FALSE}
-# KLJ Code chunk for likert plot (post-workshop perception of workshop instructors/helpers)
+### KLJ Code chunk for likert plot (post-workshop perception of workshop instructors/helpers)
+### KLJ This plot isn't working for some reason.
 ordered_often <-
   c("Never", "Rarely", "Sometimes", "Often", "All of the time")
 
