@@ -1,66 +1,77 @@
-# Analysis of the Carpentry's Long-Term Feedback Survey
-[Kari L. Jordan](https://github.com/kariljordan)  
-__May 2017__
+# Analysis of the Carpentries' Long-Term Feedback Survey
+Project Lead: [Kari L. Jordan](https://github.com/kariljordan)  
+Editor: [Belinda Weaver](https://github.com/weaverbel)  
+__August 2017__
 
 ```{r setup, include=FALSE}
-# To comment out a block of code, highlight the block and use CTRL + SHIFT + C  
 library(knitr)
 opts_chunk$set(echo = FALSE,
                message = FALSE,
                warning = FALSE)
-
-library(tidyr)
-library(ggmap)
-library(likert)
-library(purrr)
-library(mapproj)
+library(tidyverse)
 library(ggplot2)
 library(dplyr)
-library(knitr)
-library(RColorBrewer)
+library(tidyr)
 library(readr)
+library(purrr)
+library(tibble)
+library(DBI)
+library(ggmap)
+library(likert)
+library(mapproj)
+library(RColorBrewer)
+library(srvyr)
 ```
 
 # Introduction
-Data and Software Carpentry launched a [long-term assessment survey](https://www.surveymonkey.com/r/carpentrieslongtermassessment) in March 2017. The goal of this survey was to hear from our learners about what has transpired in their work and career since completing a Carpentry workshop. Read our about our long-term assessment strategy on our [blog](http://www.datacarpentry.org/blog/long-term-assessment-strategy/) and see how the community was involved with the development of this survey.
+Software Carpentry is a worldwide volunteer organization whose mission is to make scientists more productive, and their findings more reliable, by teaching them foundational computing skills. Established in 1998, it runs short, intensive workshops that cover task automation using the Unix shell, structured programming in Python and R, and version control using tools such as Git. Its sibling organization, Data Carpentry, teaches foundational data science skills. To date, the majority of Software and Data Carpentry workshops have been run in the United States, Canada and the UK. However, there is growing interest elsewhere, and there are active 'Carpentries' communities in Australia, New Zealand, South Africa, the Netherlands, Norway and in other countries in Africa and in Central and South America.
 
-A [PDF](https://github.com/carpentries/public-survey-info/blob/master/documents/surveys/2017-04-17-carpentry-long-term-feedback-survey.pdf) of the survey questions and the data used in this analysis are located in the [long-term feedback survey report](https://github.com/carpentries/public-survey-info/tree/master/documents/reports/Carpentry-Reports/Long-Term-Feedback-Survey-Report) folder on GitHub. We have already received several pull requests from community members interested in this data. Feel free to use the data and [tell us](mailto: kariljordan@carpentries.org) about your findings. 
+While most workshops are favorably assessed by attendees at the time of delivery, no systematic, long-term follow-up study has previously been done on the efficacy of the training delivered, nor of the short or longer term impact that such training might have had on attendees’ work practices, further skills acquisition, or subsequent career paths. There has also been no useful demographic profiling of attendees.
 
-This analysis includes 476 observations. Not all respondents answered each of the 26 questions.
+Why should that matter? Software and Data Carpentry are volunteer organizations. In order to continue our valuable work of teaching skills to researchers, we need supportive funding either from grant-making bodies or from member institutions, or - ideally - from both. Our case for funding is strengthened if we can point to impartial evidence that proves our workshops have the outcomes we claim. While it is wonderful to have amassed what must now amount to container-sized loads of positive sticky note workshop feedback over the years, funders generally require more solid evidence of achievement before they cut a check. Establishing value is not just important for funding though: it is important for our growing community of trainers, instructors, lesson maintainers and helpers, all of whom volunteer their time because they believe in the importance of what we do. We owe it to them to show that their time is not wasted - that we are genuinely furthering the cause of efficiently organised, reproducible science. And, lastly, we need to demonstrate to our learners that precious time carved out to master computational and data science skills will pay off many times over in time saved further down the track.
+
+Accordingly, Data Carpentry hired me, Dr. Kari L. Jordan, to lead assessment work across both Carpentries to help build an evidence base to complement the overwhelming anecdotal evidence already gathered that Carpentry-style training is both useful and effective in improving researchers' work practices.
+
+To gather the required evidence, Data and Software Carpentry launched a [long-term assessment survey](https://www.surveymonkey.com/r/carpentrieslongtermassessment) in March 2017. We first engaged in a community consultation to determine how best to design and word this survey. The responses from that consultation then guided the development of our long-term assessment strategy. You can read more about the consultation process in this [blog post](http://www.datacarpentry.org/blog/long-term-assessment-strategy/). The main goal of the resulting survey was to ask our learners to describe concrete changes they had implemented to their research practices as a result of completing a Carpentries workshop. We also asked whether they now had greater confidence in the tools they had been taught, and whether they had progressed in their careers as a result. The inclusion of multiple choice questions around programming in R or Python helped make the evidence of training efficacy more concrete, comparable and measurable, taking it out of the realm of 'opinion' or 'feeling', which, while interesting, is not as robust or reliable a marker of success as demonstrable evidence. For instance, 'I can write a FOR loop to rename and move a batch of files' is a much more reliable metric of achievement than 'I use the shell'.
+
+A [PDF](https://github.com/carpentries/public-survey-info/blob/master/documents/surveys/2017-04-17-carpentry-long-term-feedback-survey.pdf) of the survey questions and the data used in this analysis are located in the [long-term feedback survey report](https://github.com/carpentries/public-survey-info/tree/master/documents/reports/Carpentry-Reports/Long-Term-Feedback-Survey-Report) folder on GitHub. We have already received several pull requests from community members interested in this data. Feel free to use the data and [tell us](mailto: kariljordan@carpentries.org) about your findings.
+
+This analysis includes 476 observations. Not all respondents answered every one of the 26 questions.
 
 ```{r include=FALSE}
-data <- read.csv("https://raw.githubusercontent.com/carpentries/public-survey-info/master/documents/reports/Carpentry-Reports/Long-Term-Feedback-Survey-Report/2017-04-17-carpentry-long-term-assessment-survey-data-public.csv", na.strings = "")
+data <- readr::read_csv("https://raw.githubusercontent.com/carpentries/assessment-projects/master/joint-carpentry-projects/data.csv")
 ```
+
 ```{r include=FALSE}
 # Kari's code for highlights in the data
 # Use prop.table() to calculate percentages on a single column.
 
 #Change in Confidence
-Confidence_Change <- round(prop.table(table(data$Change.In.Confidence)) * 100)
+Confidence_Change <- round(prop.table(table(data$`Change-In-Confidence`)) * 100)
 Confidence_Change[3]
 
 #Programming Usage Before Workshop
-Programming_Usage_Before <- round(prop.table(table(data$Programming.Usage.Before.Workshop)) * 100)
+Programming_Usage_Before <- round(prop.table(table(data$`Programming-Usage-Before-Workshop`)) * 100)
 Programming_Usage_Before[6]
 
 #Programming Usage Since Workshop
-Programming_Usage_Since <- round(prop.table(table(data$Programming.Usage.Since.Workshop)) * 100)
+Programming_Usage_Since <- round(prop.table(table(data$`Programming-Usage-Since-Workshop`)) * 100)
 Programming_Usage_Since[6]
 
 #Motivated to Seek Knowledge
-Motivated_Seek_Knowledge <- round(prop.table(table(data$Motivated.Seek.Knowledge))* 100)
+Motivated_Seek_Knowledge <- round(prop.table(table(data$`Motivated-Seek-Knowledge`))* 100)
 Motivated_Seek_Knowledge
 
 #Made Analyses Reproducible
-Made_Analyses_Reproducible <- round(prop.table(table(data$Made.Analyses.Reproducible))* 100)
+Made_Analyses_Reproducible <- round(prop.table(table(data$`Made-Analyses-Reproducible`))* 100)
 Made_Analyses_Reproducible
 
 #Improved Coding Practices
-Improved_Coding_Practices <- round(prop.table(table(data$Improved.Coding.Practices))* 100)
+Improved_Coding_Practices <- round(prop.table(table(data$`Improved Coding Practices`))* 100)
 Improved_Coding_Practices
 
 #Gained Confidence with Data
-Gained_Confidence_Data <- round(prop.table(table(data$Gained.Confidence.With.Data))* 100)
+Gained_Confidence_Data <- round(prop.table(table(data$`Gained-Confidence-With-Data`))* 100)
 Gained_Confidence_Data
 
 #Recommend our Workshops
@@ -79,6 +90,7 @@ Provided below are a few highlights from the data.
 + `r Recommended[3]`% of our respondents have recommended our workshops to a friend or colleague.
 
 # Respondent Demographics
+Carpentry learners represent a wide range of disciplines ranging from the sciences to engineering. Respondents were asked to indicate their field of research, work, or study by checking all that apply from a list of various disciplines. A breakdown of their responses is provided in the table below. Many of the respondents work in Life Sciences.
 ```{r}
 # Ben's tip to use 'gather' to go from wide to long format
 # Responses are in columns 'Field' through 'Column12'
@@ -91,12 +103,9 @@ data %>%
   filter(!is.na(respondent_field)) %>% 
   arrange(desc(n)) %>%
   rename(`Field` = respondent_field)
-kable(respondent_field)
-
-# These numbers don't make sense. This means we had 622 respondents.
-# I figured out that they were told to check all that apply. How can I represent this?
+kable(respondent_field, format = "markdown", row.names = FALSE, col.names = c("Field", "n"), caption = "Table 1: Breakdown of Respondents by Field")
+#The caption isn't showing
 ```
-
 
 ```{r}
 # Code for Status of Respondents
@@ -111,8 +120,9 @@ data_position_tally <-
   tally() %>% 
   filter(!is.na(Position)) 
 
-# Use the line below to include a table (remove #)
-# kable(data_position_tally, format = "markdown", row.names = FALSE, col.names = c("Position", "# Respondents"))
+# Use the line below to include a table
+
+#kable(data_position_tally, format = "markdown", row.names = FALSE, col.names = c("Position", "n"))
 
 ggplot(data_position_tally, 
        aes(Position, y = 100 * (n/sum(n)),
@@ -127,41 +137,41 @@ ggplot(data_position_tally,
   theme(plot.title = element_text(hjust = 0.5)) +
   theme_classic(base_size = 14)
 ```
+
 ```{r include=FALSE}
 # Use code below for in-line text.
 # Graduate_Student<- data_position_tally[data_position_tally$Position == 'Graduate Student', ]$n
 Graduate_Student <- round(prop.table(table(data$Position))* 100)
 Graduate_Student
 ```
+Carpentries workshops are open to individuals from all backgrounds and fields. Attendees vary from students (undergraduate and graduate) and faculty to staff and persons working in industry. `r Graduate_Student[2]`% of our respondents were graduate students.
 
-Carpentry workshops are open to individuals from all backgrounds and fields. Attendees vary from students (undergraduate and graduate) and faculty to staff and persons working in industry. `r Graduate_Student[2]`% of our respondents were graduate students. 
+Provided is a breakdown of our respondents by the country in which they attended a Carpentries workshop.
  
 ```{r}
-data_country_tally <- 
+# Plot includes Ben's tip to add a percent column to the data_country_tally data frame 
+# before it goes into the ggplot() function. Then you should be able to use reorder on that column name in the ggplot() function
+data_country_tally <-
 data %>%
-  group_by(Country) %>% 
-  tally() %>% 
-   filter(!is.na(Country)) %>% 
-  arrange(desc(n)) 
+  group_by(Country) %>%
+  tally() %>%
+  mutate(perc = round(100 * (n/sum(n)), 1)) %>% # add the % col
+  filter(!is.na(Country)) %>%
+  arrange(desc(n))
 
-# kable(data_country_tally, caption = "Workshop Location")
-
-# Use this plot to show all countries
 ggplot(data_country_tally,
-       aes(Country, y = 100 * (n/sum(n)), 
-                   n))  +
-   geom_bar(stat = "identity", fill = "orange") + 
-   # Remove comment from line below to add counts to countries on bar plot
-   # geom_text(aes(label=n), size= 4) +
-   theme_classic() +
-   xlab("Country") +
-   ylab("% Respondents") +
-   coord_flip() +
+       aes(reorder(Country, perc),
+           perc)) +
+  geom_bar(stat = "identity", fill = "orange") +
+  theme_classic() +
+  xlab("") +
+  ylab("Percentage of all participants") +
+  coord_flip() +
   ggtitle("Carpentry Workshop Respondents by Country") +
   theme(plot.title = element_text(hjust = 0.5)) +
   theme_bw(base_size = 14)
 
-# Use code below for in-line text.
+#Use code below for in-line text.
 USA <- data_country_tally[data_country_tally$Country == 'USA', ]$n
 Canada <- data_country_tally[data_country_tally$Country == 'Canada', ]$n
 UK <- data_country_tally[data_country_tally$Country == 'UK', ]$n
@@ -195,28 +205,29 @@ Australia <- data_country_tally[data_country_tally$Country == 'Australia', ]$n
 Country <- round(prop.table(table(data$Country))* 100)
 Country
 ```
-Provided is a breakdown of our respondents by the Country where they attended a Carpentry workshop. A large portion of Carpentry learners responding to the survey attended a workshop in the United States (`r Country[22]`%), followed by Canada (`r Country[3]`%) the UK (`r Country[21]`%), and Australia (`r Country[1]`%).
+
+A large portion of Carpentry learners responding to the survey attended a workshop in the United States (`r Country[22]`%), followed by Canada (`r Country[3]`%) the UK (`r Country[21]`%), and Australia (`r Country[1]`%).
 
 ```{r include=FALSE}
 # If interested in seeing the open-ended responses for Position: Other, run this code.
 data_position_other_tally <- 
   data %>% 
-  group_by(Position.Other) %>% 
+  group_by(`Position-Other`) %>% 
   tally() %>% 
-  filter(!is.na(Position.Other))
+  filter(!is.na(`Position-Other`))
 kable(data_position_other_tally, format = "markdown", row.names = FALSE, col.names = c("Position", "# Respondents"))
 ```
 
-The Carpentries continue to endeavor to improve our workshop content and operations. We were therefore interested in knowing how many workshops respondents attended, and how long it has been since respondents completed a workshop. If there are spikes in the trends of our data, knowing when respondents completed a workshop will help us pinpoint whether or not our changes are related to learner responses in the data.
+The Carpentries constantly strive to improve our workshop content and operations, which means a workshop run today might be different in some ways from a workshop run six months ago or run last year. If we know how many workshops respondents attended, and how long it has been since they completed that workshop or workshops, we can take those changes into account when we assess learner responses. Locating workshops temporally allows us to account for spikes in data trends that may be a result of changes in our workshop operations.
 
 ```{r include=FALSE}
 #Code for in-line text
 #How long ago did respondents attend a workshop?
-How_Long_Ago <- round(prop.table(table(data$How.Long.Ago))* 100)
+How_Long_Ago <- round(prop.table(table(data$`How-Long-Ago`))* 100)
 How_Long_Ago
 
 #How many workshops have respondents attended?
-How_Many_Workshops <- round(prop.table(table(data$How.Many.Workshops))* 100)
+How_Many_Workshops <- round(prop.table(table(data$`How-Many-Workshops`))* 100)
 How_Many_Workshops
 ```
 `r How_Long_Ago[3]`% of respondents participated in a Carpentry workshop more than one year ago, and `r How_Many_Workshops[1]`% of respondents have attended only one Carpentry workshop. 
@@ -224,7 +235,7 @@ How_Many_Workshops
 ```{r include=FALSE}
 Carpentry_Involvement <- 
 data %>%
-  select(`Carpentry.Involvement`:Column51) %>% 
+  select(`Carpentry-Involvement`:Column51) %>% 
   gather(col, Carpentry_Involvement) %>% 
   group_by(Carpentry_Involvement) %>% 
   tally() %>% 
@@ -235,21 +246,20 @@ data %>%
 Carpentry_Involvement[1,2]
 ```
 
-The majority of respondents attending a workshop more than one year ago speaks to their level of involvement with the Carpentries (`r Carpentry_Involvement[1,2]` people responded having subscribed to the Carpentries newsletter). It can be difficult, in survey research, to collect responses from participants a year later. It is great to see that learners are still receptive to our e-mail communication and have taken time to complete our survey.
+The majority of respondents who attended a workshop more than a year ago speaks to their level of involvement with the Carpentries (`r Carpentry_Involvement[1,2]` people responded having subscribed to the Carpentries newsletter). In survey research, it can be difficult to collect responses from participants a whole year after their involvement in an event. It is great to see that learners feel positively enough about their experience to, firstly, be receptive to our email communication and, secondly, to have taken the time to complete the survey in full.
 
 ```{r}
  data_howlong_tally <- 
   data %>% 
-  group_by(How.Long.Ago) %>% 
+  group_by(`How-Long-Ago`) %>% 
   tally() %>% 
-  filter(!is.na(How.Long.Ago)) 
+  filter(!is.na(`How-Long-Ago`)) 
 
 # Use the code below to include a table of how long ago respondents attended a workshop
 # kable(data_howlong_tally, format = "markdown", row.names = FALSE, col.names = c("Time", "n"), caption = "How Recently Did Respondents Complete a Workshop?")
 
-
 ggplot(data_howlong_tally, 
-       aes(How.Long.Ago, y = 100 * (n/sum(n)),
+       aes(`How-Long-Ago`, y = 100 * (n/sum(n)),
            n)) +
   geom_bar(stat = "identity", fill="orange") +
   geom_text(aes(label=n), size= 4) +
@@ -264,17 +274,15 @@ ggplot(data_howlong_tally,
 ```{r}
 data_workshops_tally <- 
   data %>% 
-  group_by(`How.Many.Workshops`) %>% 
+  group_by(`How-Many-Workshops`) %>% 
   tally() %>% 
-  filter(!is.na(`How.Many.Workshops`)) # %>%
-  # Ben's tip for changing the column names below
-  # rename(`How Many Workshops` = `How.Many.Workshops`)
+  filter(!is.na(`How-Many-Workshops`))
 
 # Use the code below to include a table of the number of workshops respondents attended
-# kable(data_workshops_tally, format = "markdown", row.names = FALSE, col.names = c("# Wrkshps", "n"), caption = "Number of Workshops Attended")
+#kable(data_workshops_tally, format = "markdown", row.names = FALSE, col.names = c("# Wrkshps", "n"), caption = "Number of Workshops Attended")
 
 ggplot(data_workshops_tally, 
-       aes(How.Many.Workshops, y = 100 * (n/sum(n)),
+       aes(`How-Many-Workshops`, y = 100 * (n/sum(n)),
            n)) +
   geom_bar(stat = "identity", fill="orange") +
   geom_text(aes(label=n), size= 4) +
@@ -288,23 +296,25 @@ ggplot(data_workshops_tally,
 ```
 
 ### Workshop Content
-Data Carpentry's [lessons](http://www.datacarpentry.org/lessons/) include data organization in Spreadsheets, data cleaning with OpenRefine, data management with SQL, and data analysis and visualization in R and Python.
+Data Carpentry's [lessons](http://www.datacarpentry.org/lessons/) include data organization in spreadsheets, data cleaning with OpenRefine, data management with SQL, and data analysis and visualization in R and Python.
 
-Software Carpentry's [lessons](https://software-carpentry.org) include the Unix Shell, version control with Git and Mercurial, programming with Python, R, and MATLAB, databases with SQL, and Automation and Make. Provided below is a breakdown of the tools respondents identified being covered in the workshop they attended.
+Software Carpentry's [lessons](https://software-carpentry.org) include the Unix Shell, version control with Git and Mercurial, programming with Python, R, and MATLAB, databases with SQL, and Automation and Make. Provided below is a breakdown of the tools respondents identified as being taught in the workshop they attended.
 ```{r}
 # Responses are in columns 'Content' through 'Column22'
 # Ben's tip to use 'gather' to go from wide to long format
 workshop_tools <- 
-data %>%
-  select(`Content`:Column22) %>% 
-  gather(col, workshop_tools) %>% 
-  group_by(workshop_tools) %>% 
-  tally() %>% 
-  filter(!is.na(workshop_tools)) %>% 
-  arrange(desc(n)) %>%
-  rename(`Content` = workshop_tools)
+ data %>%
+ select(`Content`:Column22) %>% 
+ gather(col, workshop_tools) %>% 
+ group_by(workshop_tools) %>% 
+ tally() %>% 
+ filter(!is.na(workshop_tools)) %>% 
+ arrange(desc(n)) %>%
+ rename(`Content` = workshop_tools)
 
-kable(workshop_tools) #Add caption = "Tools Covered" to include a caption
+# Use the line below to provide a table of the tools covered. 
+# Respondents were asked to check all that apply.
+# kable(workshop_tools, caption = "Tools Covered") 
 
 # Ben's tip to use in-line text
 # This code produces results to use in the text of the report
@@ -318,49 +328,108 @@ Spreadsheets <- workshop_tools[workshop_tools$Content == 'Spreadsheets', ]$n
 Cloud_Computing <- workshop_tools[workshop_tools$Content == 'Cloud Computing', ]$n
 MATLAB <-  workshop_tools[workshop_tools$Content == 'MATLAB', ]$n
 Mercurial <-  workshop_tools[workshop_tools$Content == 'Mercurial', ]$n
-
 ```
 
-A large majority of respondents learned Git (n = `r Git`), Python (n = `r Python`), and Unix Shell (n = `r Unix_Shell`). On the low end were Spreadsheets (n = `r Spreadsheets`), Cloud Computing (n = `r Cloud_Computing`), MATLAB (n = `r MATLAB`), and Mercurial (n = `r Mercurial`). OpenRefine, Spreadsheets, and Cloud Computing being on the low end is an indicator that the majority of our respondents attended a Software Carpentry workshop. This makes sense as Software Carpentry has offered more workshops than Data Carpentry.
+A large majority of respondents learned Git (n = `r Git`), Python (n = `r Python`), and the Unix Shell (n = `r Unix_Shell`). On the low end were spreadsheets (n = `r Spreadsheets`), cloud computing (n = `r Cloud_Computing`), MATLAB (n = `r MATLAB`), and Mercurial (n = `r Mercurial`). The fact that OpenRefine, spreadsheets, and cloud computing were on the low end is an indicator that the majority of our respondents attended a Software Carpentry workshop. This makes sense as Software Carpentry has run many more workshops than Data Carpentry. 
+
+```{r}
+# The code segment below from Ben Marwick will show the most combinations of tools 
+# covered in our workshops.
+tools_cols <- 
+data %>%
+  select(Content:Column22)
+
+list_of_tools_per_person <- list()
+for(i in seq_len(nrow(tools_cols))) {
+  ii <- quo(i)
+  
+  list_of_tools_per_person[[i]] <- 
+  tools_cols %>% 
+    slice(!!ii) %>% 
+          c(., recursive=TRUE) %>%
+          unname %>% 
+    na.omit() %>% 
+    as.vector()
+}
+
+# The code segment below from Ben Marwick will get the tally of combinations of tools and produce a table.
+tool_combs <- 
+purrr::map_chr(list_of_tools_per_person,
+               ~paste0(.x, collapse = " "))
+
+tool_combs_df <- 
+tool_combs %>% 
+  as_data_frame() %>% 
+  group_by(value) %>% 
+  tally() %>% 
+  mutate(`%` = round(n / sum(n) * 100, 1)) %>% 
+  arrange(desc(n)) %>% 
+  filter(value != "")
+
+# Top combinations as entered by respondants
+colnames <- c("Tools", "n", "%")
+kable(tool_combs_df[1:10, ], row.names = NA, col.names = colnames, caption = "Combination of Tools Covered")
+```
+
+Taking a look at which combinations of tools covered stood out in the data, we see from the matrix below that Git was frequently covered alongside Python, R, and/or the Unix Shell. Additionally, SQL was often covered with Git and/or the Unix Shell. OpenRefine, Spreadsheets, and Cloud Computing being on the low end is an indicator that the majority of our respondents attended a Software Carpentry workshop. This makes sense as Software Carpentry has offered more workshops than Data Carpentry.
+
+```{r}
+# The code segment below from Ben Marwick will give a matrix of the combinations of tools used.
+m <- as.matrix(tools_cols) 
+# The unique values in the matrix
+vals <- sort(unique(as.vector(m)))
+
+# Rearrange the data so that each value is a column
+bigm <- t(apply(m, 1, function(row) match(vals, row, nomatch=0)))
+colnames(bigm) <- vals
+
+# Count the co-occurences of each value (diagonal is total number of rows with that value)
+tool_co_occurences  <- as.data.frame(crossprod(bigm>0))
+kable(tool_co_occurences, format = "markdown", row.names = TRUE, caption = "Table 3: Matrix of Common Tools Covered")
+# The caption isn't showing.
+```
+
 ```{r include=FALSE}
 # Data for in-line text on programming usage
-Programming_Usage_Before <- round(prop.table(table(data$Programming.Usage.Before)) * 100)
+Programming_Usage_Before <- round(prop.table(table(data$`Programming-Usage-Before-Workshop`)) * 100)
 Programming_Usage_Before
 
 #Programming Usage Since Workshop
-Programming_Usage_Since <- round(prop.table(table(data$Programming.Usage.Since.Workshop)) * 100)
+Programming_Usage_Since <- round(prop.table(table(data$`Programming-Usage-Since-Workshop`)) * 100)
 Programming_Usage_Since
 ```
 ### Programming Usage Pre- and Post Workshop
-A goal for this assessment is to understand respondents' programming usage before attending a Carpentry workshop compared to after. Our hope is that the workshop they attended influenced their usage of the programming tools they learned.
+Understanding respondents' programming usage before attending a Carpentries workshop, as compared to after, was one goal for this assessment. Our hope is that the workshop attended favorably influenced attendees' use of the programming tools they learned.
 
-`r Programming_Usage_Before[2]`% of the learners who responded to our survey had not been using the tools covered in their Carpentry workshop before completing. This decreased to `r Programming_Usage_Since[2]`% post-Carpentry workshop.
+`r Programming_Usage_Before[2]`% of the learners who responded to our survey had not been using the tools covered in their Carpentries workshop before the workshop. This decreased to `r Programming_Usage_Since[2]`% post-Carpentries workshop.
 
-The plot below is a comparison of respondents' usage of the tools covered in their workshop before completing the workshop versus after.
+The plot below is a comparison of respondents' usage of the tools covered in their workshop both pre- and post-workshop.
 
 ```{r include=FALSE}
+# The code below can be used to get a table and plot of the number of respondents for programming usage
+# pre workshop
 # Naupaka's tip so pre- and post-responses match
 data_paired_plot <- data
-levels(data$Programming.Usage.Before.Workshop)[2] <- "I have not been using tools like these."
+levels(data$`Programming-Usage-Before-Workshop`)[2] <- "I have not been using tools like these."
  
- # Programming Usage Pre-Carpentry Workshop [Absolute Plot]
-  programming = c("I had not been using tools like these.", "Less than once per year.", "Several times per year.", "Monthly.", "Weekly.", "Daily.")
-  programming = factor(programming)
+# Programming Usage Pre-Carpentry Workshop [Absolute Plot]
+programming = c("I had not been using tools like these.", "Less than once per year.", "Several times per year.", "Monthly.", "Weekly.", "Daily.")
+programming = factor(programming)
  
 # Do not include the next line when you take the comments out.
 # data$Programming.Usage.Before.Workshop = factor(data$Programming.Usage.Before.Workshop, levels = programming)
  
   data_usage_tally <- 
    data %>% 
-   group_by(Programming.Usage.Before.Workshop) %>% 
+   group_by(`Programming-Usage-Before-Workshop`) %>% 
    tally() %>% 
-   filter(!is.na(Programming.Usage.Before.Workshop)) # %>%
-   # rename(`Programming Usage Before Workshop` = `Programming.Usage.Before.Workshop`) #Ben's tip to change column name
+   filter(!is.na(`Programming-Usage-Before-Workshop`)) # %>%
+   #rename(`Programming Usage Before Workshop` = `Programming-Usage-Before-Workshop`) #Ben's tip to change column name
  
-  # kable(data_usage_tally, caption = "Prior Programming of Respondents")
+  kable(data_usage_tally, caption = "Prior Programming of Respondents")
  
   ggplot(data_usage_tally, 
-        aes(Programming.Usage.Before.Workshop, n)) +
+        aes(`Programming-Usage-Before-Workshop`, n)) +
    geom_bar(stat = "identity", fill="orange") +
    geom_text(aes(label=n), size= 4) +
    scale_x_discrete(labels = function(x) lapply(strwrap(x, width = 10, simplify = FALSE), paste, collapse="\n")) +
@@ -372,14 +441,15 @@ levels(data$Programming.Usage.Before.Workshop)[2] <- "I have not been using tool
    theme_classic(base_size = 14)
 ```
 ```{r include=FALSE}
-#Programming Pre-Carpentry Workshop [Percentage Plot]
+# The code below is for pre-workshop programming usage reported as a percentage.
+# Programming Pre-Carpentry Workshop [Percentage Plot]
  data %>%
-  select(Programming.Usage.Before.Workshop) %>%
-   group_by(Programming.Usage.Before.Workshop) %>%
+  select(`Programming-Usage-Before-Workshop`) %>%
+   group_by(`Programming-Usage-Before-Workshop`) %>%
    tally() %>%
-   filter(!is.na(Programming.Usage.Before.Workshop)) %>%
-   mutate(Programming.Usage.Before.Workshop = factor(Programming.Usage.Before.Workshop, levels = programming)) %>%
-   ggplot(aes(x = Programming.Usage.Before.Workshop, y = 100 * (n/sum(n)))) +
+   filter(!is.na(`Programming-Usage-Before-Workshop`)) %>%
+   mutate(`Programming-Usage-Before-Workshop` = factor(`Programming-Usage-Before-Workshop`, levels = programming)) %>%
+   ggplot(aes(x = `Programming-Usage-Before-Workshop`, y = 100 * (n/sum(n)))) +
      geom_bar(stat = "identity", position = "dodge", fill = "orange") +
      geom_text(aes(label=n), size= 4) +
      scale_x_discrete(labels = function(x) lapply(strwrap(x,
@@ -394,23 +464,25 @@ levels(data$Programming.Usage.Before.Workshop)[2] <- "I have not been using tool
      theme(plot.title = element_text(hjust = 0.5)) +
     theme_classic(base_size = 14)
 ```    
+
 ```{r include=FALSE}
+# The code below is for post-workshop programming usage (count)
 # Programming Usage Post-Carpentry Workshop [Absolute Plot]
   programming = c("I have not been using tools like these.", "Less than once per year.", "Several times per year.", "Monthly.", "Weekly.", "Daily.")
   programming = factor(programming)
  
- data$Programming.Usage.Since.Workshop = factor(data$Programming.Usage.Since.Workshop, levels = programming)
+ data$`Programming-Usage-Since-Workshop` = factor(data$`Programming-Usage-Since-Workshop`, levels = programming)
  
   data_usage_tally <- 
    data %>% 
-   group_by(Programming.Usage.Since.Workshop) %>% 
+   group_by(`Programming-Usage-Since-Workshop`) %>% 
    tally() %>% 
-   filter(!is.na(Programming.Usage.Since.Workshop)) 
+   filter(!is.na(`Programming-Usage-Since-Workshop`)) 
  
-# kable(data_usage_tally)
+ kable(data_usage_tally)
  
   ggplot(data_usage_tally, 
-        aes(Programming.Usage.Since.Workshop, n)) +
+        aes(`Programming-Usage-Since-Workshop`, n)) +
    geom_bar(stat = "identity", fill="orange") +
    geom_text(aes(label=n), size= 4) +
    scale_x_discrete(labels = function(x) lapply(strwrap(x, width = 10, simplify = FALSE), paste, collapse="\n")) +
@@ -422,14 +494,15 @@ levels(data$Programming.Usage.Before.Workshop)[2] <- "I have not been using tool
    theme_classic(base_size = 14)
 ```
 ```{r include=FALSE}
+# The code below is for post-workshop programming usage as a percent
 #Programming Usage Post-Carpentry Workshop [Percentage Plot]
 data %>%
-select(Programming.Usage.Since.Workshop) %>%
-group_by(Programming.Usage.Since.Workshop) %>%
+select(`Programming-Usage-Since-Workshop`) %>%
+group_by(`Programming-Usage-Since-Workshop`) %>%
 tally() %>%
-filter(!is.na(Programming.Usage.Since.Workshop)) %>%
-mutate(Programming.Usage.Since.Workshop = factor(Programming.Usage.Since.Workshop, levels = programming)) %>%
-ggplot(aes(x = Programming.Usage.Since.Workshop, y = 100 * (n/sum(n)))) +
+filter(!is.na(`Programming-Usage-Since-Workshop`)) %>%
+mutate(`Programming-Usage-Since-Workshop` = factor(`Programming-Usage-Since-Workshop`, levels = programming)) %>%
+ggplot(aes(x = `Programming-Usage-Since-Workshop`, y = 100 * (n/sum(n)))) +
 geom_bar(stat = "identity", position = "dodge", fill = "orange", na.rm = TRUE ) +
 geom_text(aes(label=n), size= 4) + # Adds count to top of bar
 scale_x_discrete(labels = function(x) lapply(strwrap(x,
@@ -446,21 +519,22 @@ scale_x_discrete(labels = function(x) lapply(strwrap(x,
 ```
 
 ```{r}
-# Pre/Post plots with tips from Ben and Naupaka 
+# The code below is for Pre/Post plots of programming usage
+# It includes tips from Ben and Naupaka 
 # Make the unique values the same
-data$`Programming.Usage.Before.Workshop` <- 
+data$`Programming-Usage-Before-Workshop` <- 
   gsub("I had not been using tools like these.",
        "I have not been using tools like these.", 
-       data$`Programming.Usage.Before.Workshop`)
+       data$`Programming-Usage-Before-Workshop`)
 
-data$`Programming.Usage.Before.Workshop` <- 
-  factor(data$`Programming.Usage.Before.Workshop`, 
+data$`Programming-Usage-Before-Workshop` <- 
+  factor(data$`Programming-Usage-Before-Workshop`, 
          levels = programming)
 
 pre_and_post_usage <- 
 data %>%
-  select(`Programming.Usage.Before.Workshop`, 
-          `Programming.Usage.Since.Workshop`) %>%
+  select(`Programming-Usage-Before-Workshop`, 
+          `Programming-Usage-Since-Workshop`) %>%
   gather() %>%
   group_by(key, value) %>%
   tally() %>%
@@ -490,7 +564,7 @@ data %>%
     theme(plot.title = element_text(hjust = 0.5)) +
     theme_classic(base_size = 14)
   
-# get some % change values to use in the text
+# Get some % change values to use in the text
 delta_pre_have_not_been_using <- 
   pre_and_post_usage %>% 
   filter(grepl("have", value)) %>% 
@@ -510,8 +584,9 @@ round(delta_pre_daily_using$perc[2] -
   delta_pre_daily_using$perc[1], 1)
 ```
 
-The most compelling change in responses was a decline in the percentage of respondents that 'have not been using these tools' (`r -delta_pre_have_not_been_using`%), and an increase in the percentage of those who now use the tools on daily basis (`r delta_pre_daily_using`%).
-```{r include=FALSE}
+The most compelling (and pleasing) change in responses was a decline in the percentage of respondents who 'have not been using these tools' (`r -delta_pre_have_not_been_using`%), and an increase in the percentage of those who now use the tools on a daily basis (`r delta_pre_daily_using`%).
+```{r}
+# The code below from Ben provides a chi-square plot of the pre/post residuals
 pre_and_post_test <- 
 pre_and_post_usage %>% 
   select(-perc) %>% 
@@ -532,7 +607,7 @@ stdres <- stdres[, c(2,3)]
 
 names(stdres) <- rev(c("Frequency", "Residual"))
 
-# large positive residuals means there were more xxx than the hypothesis of independence predicts. Where are out large +ve residuals?
+# large positive residuals means there were more xxx than the hypothesis of independence predicts. Where are our large +ve residuals?
 
 # Contribution in percentage (%)
 # The contribution (in %) of a given cell to the total Chi-square score is calculated as follows:
@@ -573,77 +648,66 @@ ggplot(stdres,
                  keyheight = 0.4,
                  default.unit = "inch")
       )
-#A chi-square test indicates that there is a significant difference in the frequencies of the pre- and post-workshop responses about #programming use. The chi-squared standardized residuals for the post-workshop values show that significantly more respondents do #programming daily after the workshop than expected if the workshop had no effect. Similarly, significantly fewer respondents program #less than once per year after the workshop.
 ```
 
-
+A chi-square test indicates that there is a significant difference in the frequencies of the pre- and post-workshop responses about #programming use. The chi-squared standardized residuals for the post-workshop values show that significantly more respondents do #programming daily after the workshop than expected if the workshop had no effect. Similarly, significantly fewer respondents program #less than once per year after the workshop.
 
 # Workshop Impact
-Respondents were asked to reflect on ways in which completing a Carpentry workshop may have impacted them by rating their level of agreement (1-Strongly disagree to 5-Strongly agree) with the following statements: 
+To help us measure the impact that completing a Carpentries' workshop may have had for attendees, survey respondents were asked to rate their level of agreement (1-Strongly disagree to 5-Strongly agree) with the following statements:
 
-+ I have used skills I learned at the workshop to advance my career.    
-+ I have been motivated to seek more knowledge about the tools I learned at the workshop.   
-+ I have made my analyses more reproducible as a result of completing the workshop.   
-+ I have received professional recognition for my work as a result of using the tools I learned at the workshop.   
-+ I have improved my coding practices as a result of completing the workshop.   
-+ My research productivity has improved as a result of completing the workshop.   
-+ I have gained confidence in working with data as a result of completing the workshop.   
++ I have used skills I learned at the workshop to advance my career.
++ I have been motivated to seek more knowledge about the tools I learned at the workshop.
++ I have made my analyses more reproducible as a result of completing the workshop.
++ I have received professional recognition for my work as a result of using the tools I learned at the workshop.
++ I have improved my coding practices as a result of completing the workshop.
++ My research productivity has improved as a result of completing the workshop.
++ I have gained confidence in working with data as a result of completing the workshop.
 
-The following plot was created using the [Likert](http://jason.bryer.org/likert/) package, and presents an analysis of learner responses to the statements above. We see an overwhelmingly positive indication that respondents left their workshop feeling motivated to seek more knowledge and having gained confidence in working with data. Additionally, more than 80% of respondents improved their coding practices, made their analyses reproducible, improved their research productivity, and believe the skills they learned helped them advance their career. Forty percent of our respondents have received professional recognition as a result of using the tools they learned in a Carpentry workshop.
+The following plot was created using the [Likert](http://jason.bryer.org/likert/) package, and presents an analysis of learner responses to the statements above. We see an overwhelmingly positive indication that respondents left their workshop feeling motivated to seek more knowledge and having gained confidence in working with data. Additionally, more than 80% of respondents improved their coding practices, made their analyses reproducible, improved their research productivity, and believe the skills they learned helped them advance their career. Forty percent of our respondents have received professional recognition as a result of using the tools they learned in a Carpentries workshop.
 
 ```{r echo=FALSE}
-# Jonah's fix to include the correct levels. Variable was renamed to 'levels' because
-# 'order' is the name of a function in R
+# Jonah's fix to include the correct levels. Variable was renamed to 'levels' #because 'order' is the name of a function in R.
+# I am still not sure if this plot is 100% correct -KLJ
 
 cols_with_Agree <- map_lgl(data, ~`%in%`("Agree", .x))
 data_agree <-  data[ , cols_with_Agree]
 
-levels = c("Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree")
+levels = c("Strongly disagree", "Disagree", "Neutral", "Agree", "Strongly agree")
 
 # Beth's tip to both order the factors based on levels and unify the factors
-# I don't know exactly how to use this yet or where to place it. Will come back to it.
-# factorfunction <- function(mydata, factlevel){
-#  factor(mydata, 
-#         levels=factlevel, 
-#         ordered = TRUE)
-#    fct_unify(mydata, 
-#              levels=factlevel) 
-# }
+ factorfunction <- function(mydata, factlevel){
+  factor(mydata, 
+         levels=factlevel, 
+         ordered = TRUE)
+    fct_unify(mydata, 
+              levels=factlevel)}
 # End tip 
+ 
 data_agree_likert <- likert(data.frame(lapply(data_agree, factor, levels, ordered=TRUE)))
-
-# print(class(data_agree))
-# data_agree <- map_if(data_agree,
-#                     is.character,
-#                     as.factor)
-
 # Elizabeth's tip on factors
-# for(i in seq_along(data_agree)) {
-#                data_agree[[i]] <- factor(data_agree[[i]], levels=order)}
+ #for(i in seq_along(data_agree)) {
+                #data_agree[[i]] <- factor(data_agree[[i]], levels=order)}
 
-# print(levels(data_agree))
+#print(levels(data_agree))
+ 
 title <- "Workshops are Welcoming & Useful"
-# data_agree_likert <-  likert(as.data.frame(data_agree)) 
  theme_update(plot.title = element_text(hjust = 0.5))
-
 plot(data_agree_likert) + ggtitle(title) 
+
+#print(class(data_agree))
+ data_agree <- map_if(data_agree,
+                     is.character,
+                     as.factor)
 ```
 
-```{r include=FALSE}  
-table(data$Activities)
-table(data$Column53)
-table(data$Column54)
-table(data$Column55)
-table(data$Column56)
-table(data$Column57)
-```
 ### Behaviors Adopted
 ```{r}
+# Code for behaviors adopted
 # Responses are in columns 'Behaviors-Adopted' through 'Column32'
 # Use 'gather' to go from wide to long format
 Behaviors <- 
 data %>%
-  select(`Behaviors.Adopted`:Column32) %>% 
+  select(`Behaviors-Adopted`:Column32) %>% 
   gather(col, Behaviors) %>% 
   group_by(Behaviors) %>% 
   tally() %>% 
@@ -655,36 +719,87 @@ data %>%
 #- used programming languages for automation : Column28
 #- used version control to manage code : Column30
 
-Behaviors_Adopted <-   select(data, `Behaviors.Adopted`:Column32)
+Behaviors_Adopted <-   select(data, `Behaviors-Adopted`:Column32)
 Behaviors_Adopted <- data.frame(apply(Behaviors_Adopted, 2, function(x) ifelse(x == "NA", 0, 1)))
 relevant_cols <- c("Behaviors.Adopted", "Column28", "Column30")
 Behaviors_Adopted <- Behaviors_Adopted[, names(Behaviors_Adopted) %in% relevant_cols]
 number_that_adopted_any_of_those_three <- sum(ifelse(rowSums(Behaviors_Adopted, na.rm = TRUE) >= 1, 1, 0))
 ```
 
-We asked respondents to identify the behaviors they adopted as a result of completing a Carpentry workshop. We are happy to report that more than half of the respondents who answered this question (n= `r number_that_adopted_any_of_those_three`) have improved their data management and project organization practices, used programming languages for automation, and used version control to manage code. Additionally, respondents are __more confident__ now in using the tools than before they completed a Carpentry workshop.
+We asked respondents to identify the behaviors they adopted as a result of completing a Carpentries workshop. We are happy to report that more than half the respondents who answered this question (n= `r number_that_adopted_any_of_those_three`) have improved their data management and project organization practices, have used programming languages for automation, and have used version control to manage code. Additionally, respondents are __more confident__ now in using the tools than before they completed the Carpentries workshop.
 ```{r}
-kable(Behaviors) # Use caption = "Behaviors Adopted by Respondents" to add a caption
+kable(Behaviors, format = "markdown", row.names = FALSE, caption = "Table 4: Behaviors Adopted by Respondents")
+```
+The matrix below shows a count of the highest combinations of behaviors adopted. It was interesting to see that 102 respondents who reported improving their data management and project organization also use version control to manage code.
+```{r}
+# Code for matrix of behaviors (thanks Ben for the tip!)
+# Combinations of behaviors adopted for individuals
+behaviors_cols <- 
+data %>%
+  select(`Behaviors-Adopted`:Column32)
+
+list_of_behaviors_per_person <- list()
+for(i in seq_len(nrow(behaviors_cols))) {
+  ii <- quo(i)
+  
+  list_of_behaviors_per_person[[i]] <- 
+  behaviors_cols %>% 
+    slice(!!ii) %>% 
+          c(., recursive=TRUE) %>%
+          unname %>% 
+    na.omit() %>% 
+    as.vector()
+}
+
+# Tally of combinations of behaviors adopted 
+behaviors_combs <- 
+purrr::map_chr(list_of_behaviors_per_person,
+               ~paste0(.x, collapse = " "))
+
+behaviors_combs_df <- 
+behaviors_combs %>% 
+  as_data_frame() %>% 
+  group_by(value) %>% 
+  tally() %>% 
+  mutate(`%` = round(n / sum(n) * 100, 1)) %>% 
+  arrange(desc(n)) %>% 
+  filter(value != "")
+
+# Matrix 
+m <- as.matrix(behaviors_cols) 
+# the unique values in the matrix
+vals <- sort(unique(as.vector(m)))
+
+# rearrange the data so that each value is a column
+bigm <- t(apply(m, 1, function(row) match(vals, row, nomatch=0)))
+colnames(bigm) <- vals
+
+# count the co-occurences of each value (diagonal is total number of rows with that value)
+behaviors_co_occurences  <- as.data.frame(crossprod(bigm>0))
+kable(behaviors_co_occurences, row.names = TRUE, caption = "Matrix of Common Behaviors Adopted Post-Workshop")
 ```
 
+
 ### Change in Confidence 
-Our goal is for learners to leave a workshop having an increase in their confidence to use the tools they learned. More than 75% of the respondents are more confident now in using the tools they learned than they were before attending a Carpentry workshop.
+Our goal is for learners to leave a workshop with increased confidence about using the tools they were taught. More than 75% of the respondents are now more confident in using the tools they learned than before attending the workshop.
 ```{r}
+# Code for change in confidence
 confidence = c("I'm less confident now.", "I'm equally confident now.", "I'm more confident now.")
 confidence = factor(confidence)
 
-data$Change.In.Confidence = factor(data$Change.In.Confidence, levels = confidence)
+data$`Change-In-Confidence` = factor(data$`Change-In-Confidence`, levels = confidence)
 
 data_change.in.confidence_tally <- 
   data %>% 
-  group_by(Change.In.Confidence) %>% 
+  group_by(`Change-In-Confidence`) %>% 
   tally() %>% 
-  filter(!is.na(Change.In.Confidence))
+  filter(!is.na(`Change-In-Confidence`))
 
-# kable(data_confidence_tally)
+# Use the code below for a table of the data.
+# kable(data_change.in.confidence_tally, format = "markdown", row.names = FALSE, col.names = c("Change in Confidence", "%"))
 
 ggplot(data_change.in.confidence_tally, 
-       aes(Change.In.Confidence, y = 100 * (n/sum(n)),
+       aes(`Change-In-Confidence`, y = 100 * (n/sum(n)),
            n)) +
    geom_bar(stat = "identity", fill = "orange") +
    geom_text(aes(label=n), size= 4) +
@@ -698,7 +813,7 @@ ggplot(data_change.in.confidence_tally,
 ```
 
 ### Usage of Tools for Research and/or Work
-We identified specific outcomes that learners may experience after completing a Carpentry workshop that are directly related to their research and/or work. Respondents have identified that the tools they learned improved their overall efficiency, and ability to manage and analyze data.  
+We identified specific outcomes directly related to research and/or work, and asked learners if they had achieved these outcomes post-workshop. Respondents reported that the tools they learned improved their overall efficiency, as well as their ability to manage and analyze data.  
 
 ```{r}
 # Data are in columns 'How.Tools.Learned.Help' through 'Column37'
@@ -710,7 +825,7 @@ We identified specific outcomes that learners may experience after completing a 
 # They are improving my ability to analyze data. : Column34
 # They are improving my ability to manage data. : Column35
 
-Tools_Learned <-   select(data, `How.Tools.Learned.Help`:Column35)
+Tools_Learned <-   select(data, `How-Tools-Learned-Help`:Column35)
 Tools_Learned <- data.frame(apply(Tools_Learned, 2, function(x) ifelse(x == "NA", 0, 1)))
 relevant_cols <- c("How.Tools.Learned.Help", "Column34", "Column35")
 Tools_Learned <- Tools_Learned[, names(Tools_Learned) %in% 
@@ -719,21 +834,21 @@ number_that_tools_helped <- sum(ifelse(rowSums(Tools_Learned, na.rm = TRUE) >= 1
 
 how_help <- 
 data %>%
-  select(`How.Tools.Learned.Help`:Column37) %>% 
+  select(`How-Tools-Learned-Help`:Column37) %>% 
   gather(col, how_help) %>% 
   group_by(how_help) %>% 
   tally() %>% 
   filter(!is.na(how_help)) %>% 
   arrange(desc(n)) %>% 
-  rename(`How.Tools.Learned.Help` = how_help)
+  rename(`How-Tools-Learned-Help` = how_help)
 
-# Grab data to use in-line
-not_helped <- how_help[how_help$How.Tools.Learned.Help == 'Column36', ]$n
-not_using  <- how_help[how_help$How.Tools.Learned.Help == 'Column37', ]$n
+# Data to use in-line
+no_help <- table(data$`Column36`)
+no_use <- table(data$`Column37`)
 
 tools_helped <- 
 data %>%
-  select(`How.Tools.Learned.Help`:Column37) %>% 
+  select(`How-Tools-Learned-Help`:Column37) %>% 
   gather(col, tools_helped) %>% 
   group_by(tools_helped) %>% 
   tally() %>% 
@@ -741,98 +856,181 @@ data %>%
   arrange(desc(n)) %>%
   rename(`How Tools Covered Have Helped` = tools_helped)
 
-kable(tools_helped)
+kable(tools_helped, format = "markdown", row.names = FALSE, caption = "Table 5: Self-Reported Perception of How Tools Help Respondents")
 ```
 
-Only (`r not_helped`) respondents said the tools they learned have not helped them, and (`r not_using`) respondents have not been using the tools that were covered in their workshop.
+Only `r no_help` respondents said the tools they learned have not helped them, and `r no_use` respondents have not been using the tools that were covered in their workshop.
 
 ### Contributions to Academic Writing
-Another possible outcome of attending a Carpentry workshop is that the tools learned may contribute to academic writing (i.e. grant proposal, journal article). 
+Another possible outcome of attending a Carpentries workshop is in the use of tools learned to contribute to academic writing (i.e. a grant proposal, journal article). 
 ```{r}
+# Code chunk for contributions to academic writing
 writing = c("No.", "Not sure.", "Yes.")
 writing = factor(writing)
 
-data$Contributed.To.Writing = factor(data$Contributed.To.Writing, levels = writing)
+data$Contributed.To.Writing = factor(data$`Contributed-To-Writing`, levels = writing)
 
-Contributed_Writing <- round(prop.table(table(data$Contributed.To.Writing)) * 100)
+Contributed_Writing <- round(prop.table(table(data$`Contributed-To-Writing`)) * 100)
 
-# data_writing_tally <- 
-#   data %>% 
-#   group_by(Contributed.To.Writing) %>% 
-#   tally() %>% 
-#   filter(!is.na(Contributed.To.Writing)) %>% 
-#   arrange(desc(n))
+ data_writing_tally <- 
+   data %>% 
+   group_by(Contributed.To.Writing) %>% 
+   tally() %>% 
+   filter(!is.na(Contributed.To.Writing)) %>% 
+   arrange(desc(n))
 
-kable(Contributed_Writing, format = "markdown", row.names = FALSE, col.names = c("Have the Tools Learned Contributed to Academic Writing?", "%"))
+# Use the code below for a table of the count of responses.
+#kable(data_writing_tally, format = "markdown", row.names = FALSE, col.names = c("Response?", "n"), caption = "Table 6: Respondents Perception of How Tools Contributed to Academic Writing")
+
+kable(Contributed_Writing, format = "markdown", row.names = FALSE, col.names = c("Response", "n"), caption = "Table 6: Respondents Perception of How Tools Contributed to Academic Writing")
 ```
 
-`r Contributed_Writing[1]`% of our respondents said that the tools they learned contributed to their academic writing.
+`r Contributed_Writing[1]` of our respondents said that the tools they learned contributed to their academic writing.
 
 ### Continuous Learning
 ```{r}
+# Code chunk for continuous learning 
 Learning_Activities <- 
 data %>%
-  select(Activities:Column57) %>% 
+  select(`Activities`:Column57) %>% 
   gather(col, Learning_Activities) %>% 
   group_by(Learning_Activities) %>% 
   tally() %>% 
   filter(!is.na(Learning_Activities)) %>% 
   arrange(desc(n)) %>% 
-  rename(`Learning Activities` = Learning_Activities)
+  rename(`Continuous Learning Post-Workshop` = Learning_Activities)
 
-self <- Learning_Activities %>% filter(`Learning Activities` == "Used self-guided Carpentry lesson material.") %>% 
-  collect() %>% 
-  .[["n"]]
+# To use code for Carpentry self-guided material in-line
+#carpentry_self_guided <- Learning_Activities %>% filter(`Learning_Activities` == "Used self-guided Carpentry lesson material.") %>% 
+#  collect() %>% 
+#  .[["n"]]
+carpentry_self_guided <- table(data$Column56)
 ```
-One of our primary outcomes is that learners continue on in their learning once they've completed a workshop. This can take many forms including participating in short-courses (in-person and online) and using self-guided material. We asked respondents to tell us which learning activities (for data management and analysis) they've participated in since completing a Carpentry workshop. The majority of respondents have used non-Carpentry self-guided material, though `r self` responded having used Carpentry self-guided material. Additionally, we see participation in meetups and in-person short courses.
+A key finding is that learners continue their learning after completing a workshop. This can take many forms, including participating in short courses (in-person and online) and using self-guided material. We asked respondents to tell us which learning activities (for data management and analysis) they have participated in since completing a Carpentries workshop. The majority of respondents have used non-Carpentries, self-guided material, though `r carpentry_self_guided` responded having used Carpentries' self-guided material. Additionally, greater participation in meetups and in-person short courses has been reported by respondents.
 ```{r}
-# Data in columns 'Activities' through Column57
-Continuous_Learning <- 
+# Code chunk for table of continuous learning activities
+kable(Learning_Activities, format = "markdown", row.names = FALSE, col.names = c("Continuous Learning", "n"), caption = "Table 7: Respondents Self-Reported Continuous Learning Activities")
+```
+The matrix below provides a breakdown of the combination of continuous learning activities respondents participated in. For example, 35 respondents have used both Carpentry and non-Carpentry self-guided material since attending a workshop.
+```{r}
+# Code for matrix of continuous learning (thanks Ben for the tip!)
+# Combinations of continuous learning for individual
+learning_cols <- 
 data %>%
-  select(`Activities`:Column57) %>% 
-  gather(col, Continuous_Learning) %>% 
-  group_by(Continuous_Learning) %>% 
+  select(`Activities`:Column57)
+
+list_of_learning_per_person <- list()
+for(i in seq_len(nrow(learning_cols))) {
+  ii <- quo(i)
+  
+  list_of_learning_per_person[[i]] <- 
+  learning_cols %>% 
+    slice(!!ii) %>% 
+          c(., recursive=TRUE) %>%
+          unname %>% 
+    na.omit() %>% 
+    as.vector()
+}
+
+# Tally of combinations of continuous learning 
+learning_combs <- 
+purrr::map_chr(list_of_learning_per_person,
+               ~paste0(.x, collapse = " "))
+
+learning_combs_df <- 
+learning_combs %>% 
+  as_data_frame() %>% 
+  group_by(value) %>% 
   tally() %>% 
-  filter(!is.na(Continuous_Learning)) %>% 
+  mutate(`%` = round(n / sum(n) * 100, 1)) %>% 
   arrange(desc(n)) %>% 
-  rename(`Continuous Learning Post-Workshop` = Continuous_Learning)
+  filter(value != "")
 
-kable(Continuous_Learning, format = "markdown", row.names = FALSE, col.names = c("Continuous Learning", "n"))
+# Matrix 
+m <- as.matrix(learning_cols) 
+# the unique values in the matrix
+vals <- sort(unique(as.vector(m)))
 
-#my.prop <- round(prop.table(n) * 100)
+# rearrange the data so that each value is a column
+bigm <- t(apply(m, 1, function(row) match(vals, row, nomatch=0)))
+colnames(bigm) <- vals
 
-#kable(my.prop, format = "markdown", row.names = TRUE, col.names = c("%"))
-#table(names,my.prop)
-
-#How do I change the row names in the output table from 1, 2, 3, 4, 6, 6 to names 
-#<- c("Used non-Carpentry self-guided material.", 
-#"Used self-guided Carpentry lesson material.", 
-#"Participated in an in-person short course.", 
-#"Participated in an online short course.", 
-#"Participated in a Meetup.", 
-#"Participated in a semester long course.")?
+# count the co-occurences of each value (diagonal is total number of rows with that value)
+learning_co_occurences  <- as.data.frame(crossprod(bigm>0))
+kable(learning_co_occurences, row.names = TRUE, caption = "Matrix of Common Continuous Learning Activities")
 ```
 
 ## Involvement in the Carpentries 
-Another outcome of attending a Carpentry workshop is that learners become involved with Software and/or Data Carpentry by way of joining a mentoring group, becoming a workshop helper, or even becoming an instructor. The table provided below shows how respondents have been involved with the Carpentries since completing a workshop. Respondents were asked to check all that apply.
+Learners often become actively involved with Software and/or Data Carpentry after completing a workshop. This involvement can take many forms - joining a mentoring group, becoming a workshop helper, or even becoming an instructor. The table provided below shows how respondents have involved themselves with the Carpentries since completing a workshop. Respondents were asked to check all that apply.
 
 ```{r}
+# Code chunk for involvement with the Carpentries
 # Data in columns 'Carpentry.Involvement through Column51
 Carpentry_Involvement <- 
 data %>%
-  select(`Carpentry.Involvement`:Column51) %>% 
+  select(`Carpentry-Involvement`:Column51) %>% 
   gather(col, Carpentry_Involvement) %>% 
   group_by(Carpentry_Involvement) %>% 
   tally() %>% 
   filter(!is.na(Carpentry_Involvement)) %>% 
   arrange(desc(n)) %>% 
-  rename(`Involvement Since Attending a Carpentry Workshop` = Carpentry_Involvement)
+  rename(`Involvement Post-Workshop` = Carpentry_Involvement)
 
-kable(Carpentry_Involvement) # Use caption = "How respondents became involved" to add caption
+kable(Carpentry_Involvement, row.names = FALSE, caption = "Respondents Self-Reported Inolvement in the Carpentries Post-Workshop")
 ```
 
+The matrix below is a look at the frequent combinations of involvement. For example, 16 of the respondents who became Carpentry instructors have attended at least one community call.
+```{r}
+# Code for matrix of involvement (thanks Ben for the tip!)
+# Combinations of tools for individual
+involvement_cols <- 
+data %>%
+  select(`Carpentry-Involvement`:Column51)
+
+list_of_involvement_per_person <- list()
+for(i in seq_len(nrow(involvement_cols))) {
+  ii <- quo(i)
+  
+  list_of_involvement_per_person[[i]] <- 
+  involvement_cols %>% 
+    slice(!!ii) %>% 
+          c(., recursive=TRUE) %>%
+          unname %>% 
+    na.omit() %>% 
+    as.vector()
+}
+
+# Tally of combinations of tools 
+involvement_combs <- 
+purrr::map_chr(list_of_involvement_per_person,
+               ~paste0(.x, collapse = " "))
+
+involvement_combs_df <- 
+involvement_combs %>% 
+  as_data_frame() %>% 
+  group_by(value) %>% 
+  tally() %>% 
+  mutate(`%` = round(n / sum(n) * 100, 1)) %>% 
+  arrange(desc(n)) %>% 
+  filter(value != "")
+
+# Matrix tool-by-tool
+
+m <- as.matrix(involvement_cols) 
+# the unique values in the matrix
+vals <- sort(unique(as.vector(m)))
+
+# rearrange the data so that each value is a column
+bigm <- t(apply(m, 1, function(row) match(vals, row, nomatch=0)))
+colnames(bigm) <- vals
+
+# count the co-occurences of each value (diagonal is total number of rows with that value)
+involvement_co_occurences  <- as.data.frame(crossprod(bigm>0))
+kable(involvement_co_occurences, row.names = TRUE, caption = "Matrix of Common Involvement")
+```
 
 ```{r include=FALSE}
+# Code chunk for whether respondents recommended a workshop
 data_recommended_tally <-
   data %>% 
   group_by(Recommended) %>% 
@@ -840,26 +1038,31 @@ data_recommended_tally <-
   filter(!is.na(Recommended)) %>% 
   arrange(desc(n))
 
+# Code chunk for in-line text
 said_yes <- data_recommended_tally[data_recommended_tally$Recommended == "Yes.", ]$n
 
+# Table for responses of recommendations
 # kable(data_recommended_tally)
 ```
 
 ```{r include=FALSE}
+# Code chunk for likelihood of recommmending a Carpentry workshop
 data_likelyrecommend_tally <-
   data %>% 
-  group_by(Likely.To.Recommend) %>% 
+  group_by(`Likely-To-Recommend`) %>% 
   tally() %>% 
-  filter(!is.na(Likely.To.Recommend)) %>% 
+  filter(!is.na(`Likely-To-Recommend`)) %>% 
   arrange(desc(n))
 
+# Table for responses
 # kable(data_likelyrecommend_tally)
 ```
 
 # Summary
-We value our learners because when they have successful experiences in our workshops, they share their experience with others. We asked respondents if they had already recommended our workshop, and `r Recommended[3]`% said yes!
+When our learners have successful experiences in our workshops, they are quick to share this positive experience with others. We asked respondents if they had already recommended our workshop, and `r Recommended[3]`% said yes!
 
-This initial look at how Carpentry workshops have impacted learners long-term has been extremely insightful. In general, our workshops are helping learners improve their efficiency with managing and analyzing data. Learners are taking advantage of online resources to improve their skills, and becoming involved with our community.
+This initial analysis of how Carpentries workshops have impacted learners long-term has been extremely insightful. In general, our workshops are helping learners improve their efficiency with managing and analyzing data. Learners are taking advantage of online resources to improve their skills, and many see value in becoming involved with our community.
 
-We will take another look at this data to compare responses of learners having taken a workshop more than a year ago versus those having taken a workshop 0 to 6 months ago and 6 months to 1 year ago. Additionally, every 6 months we will collect data using this survey from new learners to see how they're doing.
+We will revisit this data when we compare responses of learners who took a workshop more than a year ago with those who have taken a workshop 0-6 months ago and six months to one year ago. Additionally, every six months we will use this survey to collect data from new learners to monitor their progress.
+
 
