@@ -269,63 +269,63 @@ plot(postdata_agree_likert) + ggtitle(title)
 
 ```{r echo=FALSE}
 ### KLJ Code chunk for likert plot (post-workshop perception of workshop instructors/helpers)
-### KLJ This plot isn't working for some reason.
-ordered_often <-
-  c("Never", "Rarely", "Sometimes", "Often", "All of the time")
+### KLJ This plot isn't working for some reason, so I commented it out.
+#ordered_often <-
+#  c("Never", "Rarely", "Sometimes", "Often", "All of the time")
 
 # KLJ Instructors
-likert_cols_often_Inst <- 
- postdata %>% 
-   select(grep("Instructors-", names(.))) %>% 
-   mutate_if(is.character, as.factor) %>% 
-   mutate_all(funs(fct_relevel(., ordered_often))) %>% 
-   filter_all(all_vars(!is.na(.))) 
+#likert_cols_often_Inst <- 
+# postdata %>% 
+#   select(grep("Instructors-", names(.))) %>% 
+#   mutate_if(is.character, as.factor) %>% 
+#   mutate_all(funs(fct_relevel(., ordered_often))) %>% 
+#   filter_all(all_vars(!is.na(.))) 
    
-names(likert_cols_often_Inst) <- 
-  gsub("Instructors-", "", names(likert_cols_often_Inst))
+#names(likert_cols_often_Inst) <- 
+#  gsub("Instructors-", "", names(likert_cols_often_Inst))
   
-lc_often_inst <- likert(data.frame(likert_cols_often_Inst))
+#lc_often_inst <- likert(data.frame(likert_cols_often_Inst))
 
-plot(lc_often_inst) +
-  ggtitle("Perception of Workshop Instructors")
+#plot(lc_often_inst) +
+#  ggtitle("Perception of Workshop Instructors")
 
-# KLJ Double check the plot with a table:
-xx <- 
-likert_cols_often_Inst %>% 
-  gather(key, value) %>% 
-  group_by(key, value) %>% 
-  tally() %>% 
-  mutate(perc = round(n / sum(n) * 100, 1)) %>% 
-  select(-n) %>% 
-  spread(key, perc) %>% 
-  slice(match(ordered_often,
-              value))
+# KLJ Table:
+#xx <- 
+#likert_cols_often_Inst %>% 
+#  gather(key, value) %>% 
+#  group_by(key, value) %>% 
+#  tally() %>% 
+#  mutate(perc = round(n / sum(n) * 100, 1)) %>% 
+#  select(-n) %>% 
+#  spread(key, perc) %>% 
+#  slice(match(ordered_often,
+#              value))
 
 # KLJ Helpers
-likert_cols_often_h <- 
- postdata %>% 
-   select(grep("Helpers-", names(.))) %>% 
-   mutate_if(is.character, as.factor) %>% 
-   mutate_all(funs(fct_relevel(., ordered_often))) %>% 
-   filter_all(all_vars(!is.na(.))) 
+#likert_cols_often_h <- 
+# postdata %>% 
+#   select(grep("Helpers-", names(.))) %>% 
+#   mutate_if(is.character, as.factor) %>% 
+#   mutate_all(funs(fct_relevel(., ordered_often))) %>% 
+#   filter_all(all_vars(!is.na(.))) 
    
-names(likert_cols_often_h) <- 
-  gsub("Helpers-", "", names(likert_cols_often_h))
+#names(likert_cols_often_h) <- 
+#  gsub("Helpers-", "", names(likert_cols_often_h))
   
-lc_often_h <- likert(data.frame(likert_cols_often_h))
+#lc_often_h <- likert(data.frame(likert_cols_often_h))
 
-plot(lc_often_h) +
-  ggtitle("Perception of Workshop Helpers")
+#plot(lc_often_h) +
+#  ggtitle("Perception of Workshop Helpers")
 
 # KLJ Double check the plot with a table:
-xx <- 
-likert_cols_often_h %>% 
-  gather(key, value) %>% 
-  group_by(key, value) %>% 
-  tally() %>% 
-  mutate(perc = round(n / sum(n) * 100, 1)) %>% 
-  select(-n) %>% 
-  spread(key, perc) %>% 
-  slice(match(ordered_often,
-              value))
+#xx <- 
+#likert_cols_often_h %>% 
+#  gather(key, value) %>% 
+#  group_by(key, value) %>% 
+#  tally() %>% 
+#  mutate(perc = round(n / sum(n) * 100, 1)) %>% 
+#  select(-n) %>% 
+#  spread(key, perc) %>% 
+#  slice(match(ordered_often,
+#              value))
 ```
