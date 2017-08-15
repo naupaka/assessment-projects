@@ -1,5 +1,5 @@
-Link to [Rendered Report](https://kariljordan.github.io/carpentry-assessment-projects/joint-carpentry-projects/report.html)
+Link to [Rendered Report](https://carpentries.github.io/assessment-projects/joint-carpentry-projects/report.html)
 
 
 ## Source Data:
-* [Archived August 2017](https://raw.githubusercontent.com/kariljordan/carpentry-community-assessment-projects/master/joint-carpentry-projects/joint-carpentry-projects/data.csv)
+* [Archived August 2017](https://raw.githubusercontent.com/carpentries/assessment-projects/master/joint-carpentry-projects/data.csv)
