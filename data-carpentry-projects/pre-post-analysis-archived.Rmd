@@ -31,9 +31,9 @@ Community members are invited to contribute code to this analysis. Feel free to 
 
 ```{r include=FALSE}
 # KLJ Load the pre- and post-workshop data into R
-predata <- readr::read_csv("https://raw.githubusercontent.com/carpentries/assessment-projects/master/data-carpentry-projects/preworkshop-public-archived.csv")
+predata <- readr::read_csv("https://raw.githubusercontent.com/carpentries/assessment-projects/master/data-carpentry-projects/preworkshop_public_archived.csv")
 
-postdata <- readr::read_csv("https://raw.githubusercontent.com/carpentries/assessment-projects/master/data-carpentry-projects/postworkshop-public-archived.csv")
+postdata <- readr::read_csv("https://raw.githubusercontent.com/carpentries/assessment-projects/master/data-carpentry-projects/postworkshop_public_archived.csv")
 ```
 ### Pre-Workshop Survey Demographics
 
@@ -130,7 +130,7 @@ kable(data_discipline_tally)
   arrange(desc(n)) %>%
   filter(!is.na(Research))
 colnames <- c("Research (Post-Survey)", "n", "%")
-kable(data_research_tally)
+#kable(data_research_tally)
 ### KLJ How can we cut the research table off so that it doesn't show responses at 1% or less?
 ```
 
