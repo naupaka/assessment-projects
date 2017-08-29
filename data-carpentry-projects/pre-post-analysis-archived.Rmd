@@ -329,3 +329,11 @@ plot(postdata_agree_likert) + ggtitle(title)
 #  slice(match(ordered_often,
 #              value))
 ```
+
+```{r include=FALSE}
+#KLJ This line of code will add a column called Current-Tools (concatenating columns Current-Tools-1 through 7)
+predata$`Current-Tools` <- paste(predata$`Current-Tools-1`, predata$`Current-Tools-2`, predata$`Current-Tools-3`, predata$`Current-Tools-4`, predata$`Current-Tools-5`, predata$`Current-Tools-6`, predata$`Current-Tools-7`, sep=',')
+
+#KLJ This line of code will add a column called Race (concatenating columns Race-American-Indian through Other)
+postdata$`Race` <- paste(postdata$`Race-American-Indian`, postdata$`Race-Asian`, postdata$`Race-Black`, postdata$`Race-Hispanic`, postdata$`Race-Islander`, postdata$`Race-White`, postdata$`Race-Prefer-Not`, postdata$`Race-Other`, sep=',')
+```
