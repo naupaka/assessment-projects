@@ -1,119 +1,226 @@
 # Analysis of Data Carpentry's Post-Workshop Surveys
-__Author__: [Kari L. Jordan](https://github.com/kariljordan)
-__Contributor__: [Ben Marwick](https://github.com/benmarwick)
-__Published__: April 2017
+__Author__: [Kari L. Jordan](https://github.com/kariljordan) 
+__Revised__: August 2017
 
-
-A [PDF](https://github.com/kariljordan/public-survey-info/blob/master/documents/surveys/2016-10-21-DC-postworkshop-survey.pdf) of the survey questions, the data used in this analysis, and full R code are located on the [public-survey-info](https://github.com/carpentries/public-survey-info) repo on GitHub. Feel free to use the data and [tell us](mailto: kariljordan@carpentries.org) about your findings.
-
-```{r echo=FALSE}
-setwd ("/Users/kariljordan/Data_Carpentry/my-forked-repos/public-survey-info/documents/reports/Data-Carpentry-Reports")
-
-data <- read.csv("2016-11-04-DC-post-workshop-survey-data-archived.csv", na.strings = "")
-```
-### Learner Demographics
-
-```{r echo=FALSE}
-table(data$Gender)
-```
-
-The majority of Data Carpentry learners are __XX__. A breakdown of Software Carpentry's learners by __status__ is provided below.
-```{r echo=FALSE}
-table(data$Status)
-```
-
-### Learner Perception of Workshop Content and Atmosphere
-Software Carpentry has developed an interactive instructional approach that includes direct instruction (i.e. explicit teaching and demonstrations), indirect instruction (i.e. problem solving and discovery), and experiential learning.
-
-Learners were asked to rate their level of agreement on a scale of 1 (Strongly Disagree) to 5 (Strongly Agree) for the following statements regarding the atmosphere and content of the workshop they attended:  
-* __Atmosphere__: The overall atmosphere of the workshop was welcoming.     
-* __Recommend__: I would recommend this workshop to a friend/colleague.     
-* __Material__: The material presented matched the workshop description.     
-* __Worth__: The workshop was worth my time.     
-* __Skills__: I learned skills that I will be able to use in my research/work.     
-* __Information__: The amount of information covered at the workshop was reasonable for allotted time.   
-
-Learners have mixed feelings about the pace of the workshop they attended.
-```{r echo=FALSE}
-table(data$Pace)
-```
-
-Using the [Likert](http://jason.bryer.org/likert/) package, the following chart is an analysis of learner responses to the statements above. The code chunk is shown once here, and hidden for all subsequent plots.
-```{r echo=FALSE}
-library(likert)
+```{r setup, include=FALSE}
+library(knitr)
+opts_chunk$set(echo = FALSE,
+               message = FALSE,
+               warning = FALSE)
+library(tidyverse)
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(readr)
 library(purrr)
+library(tibble)
+library(DBI)
+library(ggmap)
+library(likert)
+library(mapproj)
+library(RColorBrewer)
+library(srvyr)
 ```
+A [PDF](https://github.com/carpentries/assessment-projects/blob/master/data-carpentry-projects/postsurvey.pdf) of the survey questions, the data used in this analysis, and full R code are located on the Data Carpentry [assessment-projects](https://github.com/carpentries/assessment-projects/tree/master/data-carpentry-projects) repo on GitHub. Feel free to use the data and [tell us](mailto: kariljordan@carpentries.org) about your findings.
+
+```{r echo=FALSE}
+data <- readr::read_csv("https://raw.githubusercontent.com/carpentries/assessment-projects/master/data-carpentry-projects/postworkshop_public_archived.csv")
+```
+
 ```{r}
-cols_with_Agree <- map_lgl(data, ~`%in%`("Agree", .x))
-data_agree <-  data[ , cols_with_Agree]
+# Function that makes a table of counts and percentages
+tally_and_perc <- function(df, colname, na.rm = FALSE){
+  quo_colname <- enquo(colname)
 
-data_agree <- map_if(data_agree, 
-                     is.character, 
-                     as.factor)
-title <- "Figure 1: Learner Perception of Workshop Content & Atmosphere"
-data_agree_likert <-  likert(as.data.frame(data_agree))
-theme_update(plot.title = element_text(hjust = 0.5))
-plot(data_agree_likert) + ggtitle(title)
+  df %>% 
+    group_by(!!quo_colname) %>% 
+    tally() %>% 
+    filter(if_else(rep(na.rm, nrow(.)),
+                  !is.na(!!quo_colname),
+                  as.logical(rep(1, nrow(.))))) %>% 
+    mutate(`%` = round(n / sum(n) * 100, 1)) 
+}
 ```
 
-The data strongly suggests that Software Carpentry provides a welcoming environment for its learners where the material not only matches the workshop description, but is worth the time learners spend learning it. Learners acquire skills they are able to apply to their research or job function in the time alloted over the two-day period. Lastly, learners feel impressed to recommend the workshop to a friend or colleague.
+### Demographics
+```{r}
+# Code chunk for Status
+status = c("Undergraduate student", "Graduate student", "Post-doc", "Faculty", "Industry", "Academic Research Staff", "Other (please specify)")
+status = factor(status)
 
-### Learner Perception of Workshop Instructors and Helpers
-A strength of Software Carpentry's ecosystem is its instructors and helpers. Learners who responded to Software Carpentry's post-workshop survey were asked to rate how they felt instructors and helpers worked as a team based on the following criteria:  
-* __Instructors.Communicators__: Instructors were good communicators.    
-* __Helpers.Clear.Answers__: Helpers gave clear answers to your questions.    
-* __Helpers.Communicators__: Instructors were good communicators.    
-* __Helpers Enthusiastic__: Helpers were enthusiastic.    
-* __Instructors.Clear.Answers__: Instructors gave clear answers to your questions.    
-* __Instructors.Enthusiastic__: Instructors were enthusiastic.    
-* __Helpers.Considerate__: Helpers were considerate.  
-* __Instructors.Considerate__: Instructors were considerate.
-  
-```{r echo=FALSE}
-cols_with_Often <- map_lgl(data, ~`%in%`("Often", .x))
-data_often <-  data[ , cols_with_Often]
+data$Status = factor(data$Status, levels = status)
 
-data_often <- map_if(data_often, 
-                     is.character, 
-                     as.factor)
-title <- "Figure 2: Learner Perception of Workshop Instructors and Helpers"
-data_often_likert <-  likert(as.data.frame(data_often))
-plot(data_often_likert) + ggtitle(title)
+data_status_tally <- 
+  data %>% 
+  group_by(Status) %>% 
+  tally() %>% 
+  filter(!is.na(Status)) 
+
+ggplot(data_status_tally, 
+       aes(Status, y = 100 * (n/sum(n)),
+           n)) +
+  geom_bar(stat = "identity", fill="orange") +
+  geom_text(aes(label=n), size= 4) +
+  scale_x_discrete(labels = function(x) lapply(strwrap(x, width = 10, simplify = FALSE), paste, collapse="\n")) +
+  theme_classic() +
+  xlab("Status") +
+  ylab("% Respondents") +
+  ggtitle("Majority of Respondents were Graduate Students") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  theme_classic(base_size = 14)
+
+data %>% 
+  tally_and_perc(`Status`, na.rm = TRUE) %>% 
+  kable()
 ```
 
-The data suggests that both Software Carpentry's workshop instructors and helpers create an environment where learners are able to receive clear answers to their questions. Additionally, instructors and helpers communicate clearly with learners and are both enthusiastic about the material being taught and considerate of Software Carpentry learners.
+### Perception of Workshop Involvement & Practical Knowledge
+```{r}
+# Code chunk for Involvement
+involvement = c("Somewhat involved", "Very involved", "Enthusiastically involved")
+involvement = factor(involvement)
 
-### Learner Self-Reported Knowledge of Tools Covered
-Software Carpentry workshops are self-organized, and each workshop includes the following __core topics__:  
-* automating tasks using the Unix shell;  
-* structured programming in Python, R, or MATLAB; and  
-* version control using Git or Mercurial.  
+data$Involvement = factor(data$Involvement, levels = involvement)
 
-Learners were asked to indicate their level of knowledge of the Unix shell, R, Python, Git, and SQL prior to attending a Software Carpentry workshop.
+data_involvement_tally <- 
+  data %>% 
+  group_by(Involvement) %>% 
+  tally() %>% 
+  filter(!is.na(Involvement)) 
 
-```{r echo=FALSE}
-cols_with_Little <- map_lgl(data, ~`%in%`("Little or no knowledge of topic", .x))
-data_little <-  data[ , cols_with_Little]
+ggplot(data_involvement_tally, 
+       aes(Involvement, y = 100 * (n/sum(n)),
+           n)) +
+  geom_bar(stat = "identity", fill="orange") +
+  geom_text(aes(label=n), size= 4) +
+  scale_x_discrete(labels = function(x) lapply(strwrap(x, width = 10, simplify = FALSE), paste, collapse="\n")) +
+  theme_classic() +
+  xlab("Involvement") +
+  ylab("% Respondents") +
+  ggtitle("Majority of Respondents were very involved in the workshop") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  theme_classic(base_size = 14)
 
-data_little <- map_if(data_little, 
-                      is.character, 
-                      as.factor)
-title <- "Figure 3: Learner Self-Reported Knowledge of Tools Covered"
-data_little_likert <-  likert(as.data.frame(data_little))
-plot(data_little_likert) + ggtitle(title)
+data %>% 
+  tally_and_perc(`Involvement`, na.rm = TRUE) %>% 
+  kable()
 ```
 
-Though some learners had prior knowledge of the tools covered in the workshop they attended, the majority had little to no knowledge of the topics covered, especially for SQL and Git. The following table shows a breakdown of how much information was new to learners attending a Software Carpentry workshop.
+```{r}
+# Code chunk for Practical Knowledge
+practical_knowledge = c("A great deal", "Some practical knowledge", "None")
+practical_knowledge = factor(practical_knowledge)
 
-```{r echo=FALSE}
-table(data$New.Information)
+data$`Practical-Knowledge` = factor(data$`Practical-Knowledge`, levels = practical_knowledge)
+
+data_practical_knowledge_tally <- 
+  data %>% 
+  group_by(`Practical-Knowledge`) %>% 
+  tally() %>% 
+  filter(!is.na(`Practical-Knowledge`)) 
+
+ggplot(data_practical_knowledge_tally, 
+       aes(`Practical-Knowledge`, y = 100 * (n/sum(n)),
+           n)) +
+  geom_bar(stat = "identity", fill="orange") +
+  geom_text(aes(label=n), size= 4) +
+  scale_x_discrete(labels = function(x) lapply(strwrap(x, width = 10, simplify = FALSE), paste, collapse="\n")) +
+  theme_classic() +
+  xlab("Practical Knowledge") +
+  ylab("% Respondents") +
+  ggtitle("Majority of Respondents learned a great deal") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  theme_classic(base_size = 14)
+
+data %>% 
+  tally_and_perc(`Practical-Knowledge`, na.rm = TRUE) %>% 
+  kable()
 ```
 
-Now let's take a look at learners' prior experience with the tools covered in the workshop they attended, and their knowledge and perception after the workshop. This section will be divided by tool:  
-* Unix shell  
-* Git  
-* Python  
-* R  
-* SQL  
+### Perception of Post-Workshop Skills
+```{r}
+#Subsetting a portion of the Likert items from Organize-Data to Use-command-line
+myvars <- c("Organize-Data", "Use-OpenRefine", "Import-Python", "Import-R", "Visualizations-in-Python", "Visualizations-in-R", "Construct-SQL", "Use-command-line")
+newdata <- data[myvars]
 
-### Learners' Prior Experience and Knowledge Post-Workshop: Unix Shell 
+cols_with_Agree <- map_lgl(newdata, ~`%in%`("Agree", .x))
+newdata_agree <-  newdata[ , cols_with_Agree]
+
+levels = c("Strongly disagree",
+   "Disagree",
+   "Neutral",
+   "Agree",
+   "Strongly Agree",
+   "NA/Not covered at this workshop")
+
+ factorfunction <- function(newdata, factlevel){
+  factor(newdata, 
+         levels=factlevel, 
+         ordered = TRUE)
+    fct_unify(newdata, 
+              levels=factlevel)}
+
+newdata_agree_likert <- likert(data.frame(lapply(newdata_agree, factor, levels, ordered=TRUE)))
+
+title <- "Post-workshop: Better understanding of how to..."
+ theme_update(plot.title = element_text(hjust = 0.5))
+plot(newdata_agree_likert) + ggtitle(title) 
+```
+
+### Perception of Workshop Overall
+```{r}
+#Subsetting a portion of the Likert items from Application to Recommend
+newvars <- c("Application", "Worth-My-Time", "Material", "Recommend")
+newdata2 <- data[newvars]
+
+cols_with_Agree <- map_lgl(newdata2, ~`%in%`("Agree", .x))
+newdata2_agree <-  newdata2[ , cols_with_Agree]
+
+levels = c("Strongly disagree",
+   "Disagree",
+   "Neutral",
+   "Agree",
+   "Strongly Agree")
+
+ factorfunction <- function(newdata2, factlevel){
+  factor(newdata2, 
+         levels=factlevel, 
+         ordered = TRUE)
+    fct_unify(newdata2, 
+              levels=factlevel)}
+
+newdata2_agree_likert <- likert(data.frame(lapply(newdata2_agree, factor, levels, ordered=TRUE)))
+
+title <- "Perception of Workshop Overall"
+ theme_update(plot.title = element_text(hjust = 0.5))
+plot(newdata2_agree_likert) + ggtitle(title) 
+```
+
+### Perception of Workshop Instructors
+```{r}
+#Subsetting a portion of the Likert items from Instructors-Clear-Answers to Instructors-Enthusiastic
+updatedvars <- c("Instructors-Clear-Answers", "Instructors-Considerate", "Instructors-Effective", "Instructors-Enthusiastic")
+newdata3 <- data[updatedvars]
+
+cols_with_Agree <- map_lgl(newdata3, ~`%in%`("Always", .x))
+newdata3_agree <-  newdata3[ , cols_with_Agree]
+
+levels = c("Never",
+   "Sometimes",
+   "Usually",
+   "Most of the time",
+   "Always")
+
+ factorfunction <- function(newdata3, factlevel){
+  factor(newdata3, 
+         levels=factlevel, 
+         ordered = TRUE)
+    fct_unify(newdata3, 
+              levels=factlevel)}
+
+newdata3_agree_likert <- likert(data.frame(lapply(newdata3_agree, factor, levels, ordered=TRUE)))
+
+title <- "Perception of Workshop Instructors"
+ theme_update(plot.title = element_text(hjust = 0.5))
+plot(newdata3_agree_likert) + ggtitle(title) 
+```
