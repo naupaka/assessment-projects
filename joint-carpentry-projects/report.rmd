@@ -738,7 +738,7 @@ plot(data_agree_likert) + ggtitle(title)
                      as.factor)
 ```
 
-### Behaviors Adopted
+### Behaviors Respondents Adopted
 ```{r}
 # Code for behaviors adopted
 # Responses are in columns 'Behaviors-Adopted' through 'Column32'
