@@ -81,6 +81,19 @@ Gained_Confidence_Data
 #Recommend our Workshops
 Recommended <- round(prop.table(table(data$Recommended))* 100)
 Recommended
+
+# Function that makes a table of counts and percentages
+tally_and_perc <- function(df, colname, na.rm = FALSE){
+  quo_colname <- enquo(colname)
+
+  df %>% 
+    group_by(!!quo_colname) %>% 
+    tally() %>% 
+    filter(if_else(rep(na.rm, nrow(.)),
+                  !is.na(!!quo_colname),
+                  as.logical(rep(1, nrow(.))))) %>% 
+    mutate(`%` = round(n / sum(n) * 100, 1)) 
+}
 ```
 # Highlights
 The long-term survey assessed confidence, motivation, and other outcomes **more than 6 months** after respondents attended a Carpentry workshop. Provided below are a few highlights from the data.
@@ -93,21 +106,39 @@ The long-term survey assessed confidence, motivation, and other outcomes **more 
 + `r Recommended[3]`% of our respondents have recommended our workshops to a friend or colleague.
 
 # Respondent Demographics
-Carpentry learners represent a wide range of disciplines ranging from the sciences to engineering. Respondents were asked to indicate their field of research, work, or study by checking all that apply from a list of various disciplines. A breakdown of their responses is provided in the table below. Many of the respondents work in Life Sciences.
-```{r}
+```{r include=FALSE}
 # Ben's tip to use 'gather' to go from wide to long format
 # Responses are in columns 'Field' through 'Column12'
-respondent_field <- 
+#respondent_field <- 
+#data %>%
+#  select(`Field`:Column12) %>% 
+#  gather(col, respondent_field) %>% 
+#  group_by(respondent_field) %>% 
+#  #tally() %>% 
+#  tally_and_perc(field_perc, na.rm = TRUE) %>%
+#  filter(!is.na(respondent_field)) %>% 
+#  arrange(desc(n)) %>%
+#  rename(`Field` = respondent_field) %>%
+#kable(respondent_field, format = "markdown", row.names = FALSE, 
+#      col.names = c("Field", "n"), caption = "Table 1: Breakdown of Respondents by Field")
+#The caption isn't showing
+
+field_perc <- 
 data %>%
   select(`Field`:Column12) %>% 
-  gather(col, respondent_field) %>% 
-  group_by(respondent_field) %>% 
-  tally() %>% 
-  filter(!is.na(respondent_field)) %>% 
+  gather(col, field_perc) %>% 
+  group_by(field_perc) %>% 
+  tally_and_perc(field_perc, na.rm = TRUE) %>%
+  filter(!is.na(field_perc)) %>% 
   arrange(desc(n)) %>%
-  rename(`Field` = respondent_field)
-kable(respondent_field, format = "markdown", row.names = FALSE, col.names = c("Field", "n"), caption = "Table 1: Breakdown of Respondents by Field")
-#The caption isn't showing
+  rename(`Field` = field_perc) %>%
+print(field_perc, digits = getOption("digits"), quote = FALSE,
+      na.print = "", zero.print = "0", justify = "none")
+```
+Carpentry learners represent a wide range of disciplines ranging from the sciences to engineering. Respondents were asked to indicate their field of research, work, or study by checking all that apply from a list of various disciplines. A breakdown of their responses is provided in the table below. Many of the respondents work in Life Sciences.
+```{r}
+kable(field_perc, format = "markdown", digits = getOption("digits"), row.names = NA, col.names = NA, 
+    caption = NULL, format.args = list(), escape = TRUE)
 ```
 
 ```{r}
