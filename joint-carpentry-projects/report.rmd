@@ -740,7 +740,7 @@ plot(data_agree_likert) + ggtitle(title)
 ```
 
 ### Behaviors Respondents Adopted
-```{r}
+```{r include = FALSE}
 # Code for behaviors adopted
 # Responses are in columns 'Behaviors-Adopted' through 'Column32'
 # Use 'gather' to go from wide to long format
@@ -749,10 +749,11 @@ data %>%
   select(`Behaviors-Adopted`:Column32) %>% 
   gather(col, Behaviors) %>% 
   group_by(Behaviors) %>% 
-  tally() %>% 
+  tally_and_perc(Behaviors, na.rm = TRUE) %>%
   filter(!is.na(Behaviors)) %>% 
   arrange(desc(n))
-
+print(Behaviors, digits = getOption("digits"), quote = FALSE,
+      na.print = "", zero.print = "0", justify = "none")
 # how many rate either of these?
 #- data management and project organization practices : Behaviors-Adopted
 #- used programming languages for automation : Column28
@@ -767,7 +768,8 @@ number_that_adopted_any_of_those_three <- sum(ifelse(rowSums(Behaviors_Adopted, 
 
 We asked respondents to identify the behaviors they adopted as a result of completing a Carpentries workshop. We are happy to report that more than half the respondents who answered this question (n= `r number_that_adopted_any_of_those_three`) have improved their data management and project organization practices, have used programming languages for automation, and have used version control to manage code. Additionally, respondents are __more confident__ now in using the tools than before they completed the Carpentries workshop.
 ```{r}
-kable(Behaviors, format = "markdown", row.names = FALSE, caption = "Table 4: Behaviors Adopted by Respondents")
+kable(Behaviors, format = "markdown", digits = getOption("digits"), row.names = NA, col.names = NA, 
+    caption = NULL, format.args = list(), escape = TRUE)
 ```
 The matrix below shows a count of the highest combinations of behaviors adopted. It was interesting to see that 102 respondents who reported improving their data management and project organization also use version control to manage code.
 ```{r}
@@ -1096,6 +1098,9 @@ data_likelyrecommend_tally <-
 # Table for responses
 # kable(data_likelyrecommend_tally)
 ```
+
+# Growth Opportunities
+We are very excited to know that our workshops are having an impact on learners 6 months to a year after the workshop. Though the results of this survey are compelling, we do notice areas of improvement. For example, 
 
 # Summary
 When our learners have successful experiences in our workshops, they are quick to share this positive experience with others. We asked respondents if they had already recommended our workshop, and `r Recommended[3]`% said yes!
