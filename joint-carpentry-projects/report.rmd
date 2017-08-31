@@ -364,7 +364,7 @@ MATLAB <-  workshop_tools[workshop_tools$Content == 'MATLAB', ]$n
 Mercurial <-  workshop_tools[workshop_tools$Content == 'Mercurial', ]$n
 ```
 
-A large majority of respondents learned Git (n = `r Git`), Python (n = `r Python`), and the Unix Shell (n = `r Unix_Shell`). On the low end were spreadsheets (n = `r Spreadsheets`), cloud computing (n = `r Cloud_Computing`), MATLAB (n = `r MATLAB`), and Mercurial (n = `r Mercurial`). The fact that OpenRefine, spreadsheets, and cloud computing were on the low end is an indicator that the majority of our respondents attended a Software Carpentry workshop. This makes sense as Software Carpentry has run many more workshops than Data Carpentry. 
+A large majority of respondents learned Git (n = `r Git`), Python (n = `r Python`), and the Unix Shell (n = `r Unix_Shell`). On the low end were spreadsheets (n = `r Spreadsheets`), cloud computing (n = `r Cloud_Computing`), MATLAB (n = `r MATLAB`), and Mercurial (n = `r Mercurial`). The fact that OpenRefine, spreadsheets, and cloud computing were on the low end is an indicator that the majority of our respondents attended a Software Carpentry workshop. This makes sense as Data Carpentry is a newer organization, starting in 2014, so there have been fewer workshops. 
 
 ```{r}
 # The code segment below from Ben Marwick will show the most combinations of tools 
