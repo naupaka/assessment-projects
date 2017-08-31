@@ -21,7 +21,6 @@ library(likert)
 library(mapproj)
 library(RColorBrewer)
 library(srvyr)
-library(superheat)
 ```
 
 # Introduction
@@ -402,7 +401,7 @@ tool_combs %>%
   filter(value != "")
 
 # Top combinations as entered by respondants
-colnames <- c("Tools", "n", "%")
+colnames <- c("Frequency of Tools Covered", "n", "%")
 kable(tool_combs_df[1:10, ], row.names = NA, col.names = colnames, caption = "Combination of Tools Covered")
 ```
 
@@ -856,8 +855,8 @@ ggplot(data_change.in.confidence_tally,
 ### Usage of Tools for Research and/or Work
 We identified specific outcomes directly related to research and/or work, and asked learners if they had achieved these outcomes post-workshop. Respondents reported that the tools they learned improved their overall efficiency, as well as their ability to manage and analyze data.  
 
-```{r}
-# Data are in columns 'How.Tools.Learned.Help' through 'Column37'
+```{r include=FALSE}
+# Data are in columns 'How-Tools-Learned-Help' through 'Column37'
 # Ben's tip to use 'gather' to go from wide to long format
 # I want to present this data as a percentage as opposed to count. Tips?
 
@@ -878,7 +877,7 @@ data %>%
   select(`How-Tools-Learned-Help`:Column37) %>% 
   gather(col, how_help) %>% 
   group_by(how_help) %>% 
-  tally() %>% 
+  tally() %>%
   filter(!is.na(how_help)) %>% 
   arrange(desc(n)) %>% 
   rename(`How-Tools-Learned-Help` = how_help)
@@ -892,11 +891,16 @@ data %>%
   select(`How-Tools-Learned-Help`:Column37) %>% 
   gather(col, tools_helped) %>% 
   group_by(tools_helped) %>% 
-  tally() %>% 
+  tally_and_perc(tools_helped, na.rm = TRUE) %>%  
   filter(!is.na(tools_helped)) %>% 
   arrange(desc(n)) %>%
   rename(`How Tools Covered Have Helped` = tools_helped)
 
+print(tools_helped, digits = getOption("digits"), quote = FALSE,
+      na.print = "", zero.print = "0", justify = "none")
+```
+
+```{r}
 kable(tools_helped, format = "markdown", row.names = FALSE, caption = "Table 5: Self-Reported Perception of How Tools Help Respondents")
 ```
 
@@ -909,21 +913,12 @@ Another possible outcome of attending a Carpentries workshop is in the use of to
 writing = c("No.", "Not sure.", "Yes.")
 writing = factor(writing)
 
-data$Contributed.To.Writing = factor(data$`Contributed-To-Writing`, levels = writing)
-
+data$`Contributed-To-Writing` = factor(data$`Contributed-To-Writing`, levels = writing)
 Contributed_Writing <- round(prop.table(table(data$`Contributed-To-Writing`)) * 100)
 
- data_writing_tally <- 
-   data %>% 
-   group_by(Contributed.To.Writing) %>% 
-   tally() %>% 
-   filter(!is.na(Contributed.To.Writing)) %>% 
-   arrange(desc(n))
-
-# Use the code below for a table of the count of responses.
-#kable(data_writing_tally, format = "markdown", row.names = FALSE, col.names = c("Response?", "n"), caption = "Table 6: Respondents Perception of How Tools Contributed to Academic Writing")
-
-kable(Contributed_Writing, format = "markdown", row.names = FALSE, col.names = c("Contributions to Academic Writing", "n"), caption = "Table 6: Respondents Perception of How Tools Contributed to Academic Writing")
+data %>% 
+  tally_and_perc(`Contributed-To-Writing`, na.rm = TRUE) %>% 
+  kable()
 ```
 
 `r Contributed_Writing[1]` of our respondents said that the tools they learned contributed to their academic writing.
