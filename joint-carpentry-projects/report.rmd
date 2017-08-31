@@ -21,6 +21,7 @@ library(likert)
 library(mapproj)
 library(RColorBrewer)
 library(srvyr)
+library(superheat)
 ```
 
 # Introduction
@@ -920,7 +921,7 @@ Contributed_Writing <- round(prop.table(table(data$`Contributed-To-Writing`)) * 
 # Use the code below for a table of the count of responses.
 #kable(data_writing_tally, format = "markdown", row.names = FALSE, col.names = c("Response?", "n"), caption = "Table 6: Respondents Perception of How Tools Contributed to Academic Writing")
 
-kable(Contributed_Writing, format = "markdown", row.names = FALSE, col.names = c("Response", "n"), caption = "Table 6: Respondents Perception of How Tools Contributed to Academic Writing")
+kable(Contributed_Writing, format = "markdown", row.names = FALSE, col.names = c("Contributions to Academic Writing", "n"), caption = "Table 6: Respondents Perception of How Tools Contributed to Academic Writing")
 ```
 
 `r Contributed_Writing[1]` of our respondents said that the tools they learned contributed to their academic writing.
