@@ -588,7 +588,7 @@ round(delta_pre_daily_using$perc[2] -
   delta_pre_daily_using$perc[1], 1)
 ```
 
-The most compelling (and pleasing) change in responses was a decline in the percentage of respondents who 'have not been using these tools' (`r -delta_pre_have_not_been_using`%), and an increase in the percentage of those who now use the tools on a daily basis (`r delta_pre_daily_using`%).
+The most compelling (and pleasing) change in responses was a decline in the percentage of respondents who 'have not been using these tools' (`r -delta_pre_have_not_been_using`%), and an increase in the percentage of those who now use the tools on a daily basis (`r delta_pre_daily_using`%) at least 6 months after they attended a Carpentry workshop.
 ```{r}
 # The code below from Ben provides a chi-square plot of the pre/post residuals
 pre_and_post_test <- 
@@ -654,7 +654,7 @@ ggplot(stdres,
       )
 ```
 
-A chi-square test indicates that there is a significant difference in the frequencies of the pre- and post-workshop responses about #programming use. The chi-squared standardized residuals for the post-workshop values show that significantly more respondents do #programming daily after the workshop than expected if the workshop had no effect. Similarly, significantly fewer respondents program #less than once per year after the workshop.
+A chi-square test indicates that there is a significant difference in the frequencies of the pre- and post-workshop responses about programming use. The chi-squared standardized residuals for the post-workshop values show that significantly more respondents do programming daily 6 months (or more) after the workshop than expected if the workshop had no effect. Similarly, significantly fewer respondents program less than once per year 6 months (or more) after the workshop.
 
 # Workshop Impact
 To help us measure the impact that completing a Carpentries' workshop may have had for attendees, survey respondents were asked to rate their level of agreement (1-Strongly disagree to 5-Strongly agree) with the following statements:
