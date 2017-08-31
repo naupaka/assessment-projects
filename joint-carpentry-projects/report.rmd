@@ -697,6 +697,8 @@ To help us measure the impact that completing a Carpentries' workshop may have h
 + My research productivity has improved as a result of completing the workshop.
 + I have gained confidence in working with data as a result of completing the workshop.
 
+Strategies to make analyses more reproducible and improving coding practices include, but are not limited to, keeping raw data raw, sharing source code openly, and using scripts.
+
 The following plot was created using the [Likert](http://jason.bryer.org/likert/) package, and presents an analysis of learner responses to the statements above. We see an overwhelmingly positive indication that respondents left their workshop feeling motivated to seek more knowledge and having gained confidence in working with data. Additionally, more than 80% of respondents improved their coding practices, made their analyses reproducible, improved their research productivity, and believe the skills they learned helped them advance their career. Forty percent of our respondents have received professional recognition as a result of using the tools they learned in a Carpentries workshop.
 
 ```{r echo=FALSE}
