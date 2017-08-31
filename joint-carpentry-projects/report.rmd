@@ -1,7 +1,6 @@
 # Analysis of the Carpentries' Long-Term Feedback Survey
-Project Lead: [Kari L. Jordan](https://github.com/kariljordan)  
-Editor: [Belinda Weaver](https://github.com/weaverbel)  
-__August 2017__
+Authors: [Kari L. Jordan](https://github.com/kariljordan), [Ben Marwick](https://github.com/benmarwick), [Belinda Weaver](https://github.com/weaverbel), [Naupaka Zimmerman](), [Jason Williams](https://github.com/JasonJWilliamsNY), [Tracy Teal](https://github.com/tracykteal), [Erin Becker](https://github.com/ErinBecker), [Jonah Duckles](https://github.com/jduckles)  
+__September 2017__
 
 ```{r setup, include=FALSE}
 library(knitr)
@@ -1095,7 +1094,11 @@ data_likelyrecommend_tally <-
 ```
 
 # Growth Opportunities
-We are very excited to know that our workshops are having an impact on learners 6 months to a year after the workshop. Though the results of this survey are compelling, we do notice areas of improvement. For example, 
+We are very excited to know that our workshops are having an impact on learners 6 months to a year after the workshop. Though the results of this survey are compelling, we do notice areas of improvement. For example, `r Country[22]`% of respondents completed a workshop in the United States. We are continually discussing ways to broaden participation of our workshops in communities outside of the U.S.
+
+We also realize there are some lessons that are not being taught as frequently as others, namely, the [Shell lesson](http://swcarpentry.github.io/shell-novice/) and the [SQL lesson](http://www.datacarpentry.org/sql-ecology-lesson/). We would like to understand why, and what we can do as a community to see an increase in this lesson being taught.
+
+Lastly, 39% of the respondents indicicated feeling **neutral** about receiving professional recognitioan as a result of participating in a Carpentry workshop, and 36% either disagreed or strongly disagreed to receiving professional recognition. We would like to explore community development opportunities that will be beneficial to the community's personal as well as professional endeavors.
 
 # Summary
 When our learners have successful experiences in our workshops, they are quick to share this positive experience with others. We asked respondents if they had already recommended our workshop, and `r Recommended[3]`% said yes!
