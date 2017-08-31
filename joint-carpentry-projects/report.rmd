@@ -280,7 +280,7 @@ data %>%
 Carpentry_Involvement[1,2]
 ```
 
-The majority of respondents who attended a workshop more than a year ago speaks to their level of involvement with the Carpentries (`r Carpentry_Involvement[1,2]` people responded having subscribed to the Carpentries newsletter). In survey research, it can be difficult to collect responses from participants a whole year after their involvement in an event. It is great to see that learners feel positively enough about their experience to, firstly, be receptive to our email communication and, secondly, to have taken the time to complete the survey in full.
+The majority of respondents who attended a workshop more than a year ago speaks to their level of involvement with the Carpentries (`r Carpentry_Involvement[1,2]` people responded having subscribed to the Carpentries newsletter). In survey research, it can be difficult to collect responses from participants a whole year after their involvement in an event. It is great to see that learners feel positively enough about their experience to, firstly, be receptive to our email communication and, secondly, to have taken the time to complete the survey in full. As mentioned in the introduction, this could be a potential disadvantage to self-reported data, as those who may have negative experiences may not have completed the survey.
 
 ```{r}
  data_howlong_tally <- 
