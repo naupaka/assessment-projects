@@ -701,7 +701,7 @@ Strategies to make analyses more reproducible and improving coding practices inc
 
 The following plot was created using the [Likert](http://jason.bryer.org/likert/) package, and presents an analysis of learner responses to the statements above. We see an overwhelmingly positive indication that after taking the workshop respondents feel motivated to seek more knowledge and having gained confidence in working with data. As this survey was administered to learners who had taken a workshop at least 6 months ago, this feeling of confidence persisted.
 
-Additionally, more than 80% of respondents improved their coding practices, made their analyses reproducible, improved their research productivity, and believe the skills they learned helped them advance their career. Forty percent of our respondents have received professional recognition as a result of using the tools they learned in a Carpentries workshop.
+Additionally, more than 80% of respondents agree or strongly agree to having improved their coding practices, made their analyses reproducible, improved their research productivity, and believe the skills they learned helped them advance their career. Forty percent of our respondents have received professional recognition as a result of using the tools they learned in a Carpentries workshop.
 
 ```{r echo=FALSE}
 # Jonah's fix to include the correct levels. Variable was renamed to 'levels' #because 'order' is the name of a function in R.
