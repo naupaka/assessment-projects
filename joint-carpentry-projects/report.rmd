@@ -23,19 +23,19 @@ library(srvyr)
 ```
 
 # Introduction
-Software Carpentry is a worldwide volunteer organization whose mission is to make scientists more productive, and their findings more reliable, by teaching them foundational computing skills. Established in 1998, it runs short, intensive workshops that cover task automation using the Unix shell, structured programming in Python and R, and version control using tools such as Git. Its sibling organization, Data Carpentry, teaches foundational data science skills. To date, the majority of Software and Data Carpentry workshops have been run in the United States, Canada and the UK. However, there is growing interest elsewhere, and there are active 'Carpentries' communities in Australia, New Zealand, South Africa, the Netherlands, Norway and in other countries in Africa and in Central and South America.
+Software Carpentry is a worldwide volunteer organization whose mission is to make scientists more productive, and their findings more reliable, by teaching them foundational computing skills. Established in 1998, it runs short, intensive workshops that cover task automation using the Unix shell, structured programming in Python and R, and version control using tools such as Git. Its sibling organization, Data Carpentry, teaches foundational data science skills. To date, the majority of Software and Data Carpentry workshops have been run in the United States, Canada and the UK. However, there is growing interest elsewhere, and there are active ‘Carpentries’ communities in Australia, New Zealand, South Africa, the Netherlands, Norway and in other countries in Africa and in Central and South America.
 
-While most workshops are favorably assessed by attendees at the time of delivery, no systematic, long-term follow-up study has previously been done on the efficacy of the training delivered, nor of the short or longer term impact that such training might have had on attendees’ work practices, further skills acquisition, or subsequent career paths. There has also been no useful demographic profiling of attendees.
+While most workshops are favorably assessed by learners at the time of delivery, no systematic, long-term follow-up study has previously been done on the efficacy of the training delivered, nor of the short or longer term impact that such training might have had on learners’ work practices, further skills acquisition, or subsequent career paths. There has also been no useful demographic profiling of learners.
 
-Why should that matter? We are an outcome-driven staff interested in continually improving the experience for both our learners and instructors. Additionally, we are volunteer organizations. In order to continue our valuable work of teaching skills to researchers, we need supportive funding either from grant-making bodies or from member institutions, or - ideally - from both. Our case for funding is strengthened if we can point to impartial evidence that proves our workshops have the outcomes we claim. While it is wonderful to have amassed what must now amount to container-sized loads of positive sticky note workshop feedback over the years, funders generally require more solid evidence of achievement before they cut a check. Establishing value is not just important for funding though: it is important for our growing community of trainers, instructors, lesson maintainers and helpers, all of whom volunteer their time because they believe in the importance of what we do. We owe it to them to show that their time is not wasted - that we are genuinely furthering the cause of efficiently organised, reproducible science. And, lastly, we need to demonstrate to our learners that precious time carved out to master computational and data science skills will pay off many times over in time saved further down the track.
+Why should that matter? We are outcome-driven organizations interested in continually improving the workshop experience for both our learners and our instructors. Additionally, we are largely volunteers. In order to continue our valuable work of teaching skills to researchers, we need supportive funding either from grant-making bodies or from member institutions, or - ideally - from both. Our case for funding is strengthened if we can provide impartial evidence that proves our workshops have the outcomes we claim. While it is wonderful to have amassed what must now amount to container-sized loads of positive sticky note workshop feedback over the years, funders generally require more solid evidence of achievement before they are willing to cut a check. Establishing value is not just important for funding though: it is important for our growing community of trainers, instructors, lesson maintainers and helpers, all of whom volunteer their time because they believe in the importance of what we do. We owe it to them to show that their time is not wasted - that we are genuinely furthering the cause of efficiently organised, reproducible science. And, lastly, we need to demonstrate to our learners that precious time carved out to master computational and data science skills will pay off many times over in time saved further down the track.
 
-Our post-workshop survey [results](https://carpentries.github.io/assessment-projects//data-carpentry-projects/postworkshop_analysis.html) tell us that 85% of our respondents are either very or enthusiastically involved in our workshops. Nearly 60% learn a great deal of practical knowledge, and 68% agree that they can immediately apply what they learned at the workshop. Our interest is to know, long-term, what impact workshops are having on learners confidence in the skills they learned.
+Our post-workshop survey [results](https://carpentries.github.io/assessment-projects//data-carpentry-projects/postworkshop_analysis.html) tell us that 85% of our respondents are either enthusiastically or very involved in our workshops. Nearly 60% learn a great deal of practical knowledge, and 68% agree that they can immediately apply what they learned at the workshop. Our interest is in establishing, long-term, what impact workshops are having on learners’ confidence in the skills they were taught.
 
-Therefore, thanks to the Moore Data Driven Discovery Initiative's funding, assessment work has undergone across both Carpentries to help build an evidence base to complement the overwhelming anecdotal evidence already gathered that Carpentry-style training is both useful and effective in improving researchers' work practices.
+Therefore, through the generosity of the Moore Data Driven Discovery Initiative, assessment work has been undertaken across both Carpentries to help build an evidence base to complement the large body of existing anecdotal evidence that Carpentry-style training is both useful and effective in improving researchers’ work practices.
 
-To gather the required evidence, Data and Software Carpentry launched a [long-term assessment survey](https://www.surveymonkey.com/r/carpentrieslongtermassessment) in March 2017. We first engaged in a community consultation to determine how best to design and word this survey. The responses from that consultation then guided the development of our long-term assessment strategy. You can read more about the consultation process in this [blog post](http://www.datacarpentry.org/blog/long-term-assessment-strategy/). The main goal of the resulting survey was to ask our learners to describe concrete changes they had implemented to their research practices as a result of completing a Carpentries workshop. We also asked whether they now had greater confidence in the tools they had been taught, and whether they had progressed in their careers as a result. The inclusion of multiple choice questions around programming in R or Python helped make the evidence of training efficacy more concrete, comparable and measurable, taking it out of the realm of 'opinion' or 'feeling', which, while interesting, is not as robust or reliable a marker of success as demonstrable evidence. For instance, 'I can write a FOR loop to rename and move a batch of files' is a much more reliable metric of achievement than 'I use the shell'.
+To gather the required evidence, Data and Software Carpentry launched a [long-term assessment survey](https://www.surveymonkey.com/r/carpentrieslongtermassessment) in March 2017. We first engaged in a community consultation to determine how best to design and word this survey. The responses from that consultation then guided the development of our long-term assessment strategy. You can read more about the consultation process in this [blog post](http://www.datacarpentry.org/blog/long-term-assessment-strategy/). The main goal of the resulting survey was to ask our learners to describe concrete changes they had implemented to their research practices as a result of completing a Carpentries workshop. We also asked whether they now had greater confidence in the tools they had been taught, and whether they had progressed in their careers as a result. The inclusion of multiple choice questions around programming in R or Python helped make the evidence of training efficacy more concrete, comparable and measurable, taking it out of the realm of ‘opinion’ or ‘feeling’, which, while interesting, is not as robust or reliable a marker of success as demonstrable evidence. For instance, ‘I can write a FOR loop to rename and move a batch of files’ is a much more reliable metric of achievement than ‘I use the shell’.
 
-All of the data collected in this survey was self-reported. It should be noted that there are disadvantages to self-reported surveys. For example, respondents may exaggerate their answers. Additionally, the way a respondent is feeling while taking the survey may affect her/his answers. Survey results can potentially be biased as well due to lack of responses as there may be differences unaccounted for between those who responded and those who did not. To account for this, we compare the results of the long-term survey with that of Data Carpentry's [post-workshop survey results](https://carpentries.github.io/assessment-projects//data-carpentry-projects/postworkshop_analysis.html) and Software Carpentry's [post-workshop survey results](https://carpentries.github.io/assessment-projects/software-carpentry-projects/analysis-postworkshop.html). We found consistent patterns of increased confidence and self-efficacy in our learners.
+All of the data collected in this survey was self-reported. It should be noted that there are disadvantages to self-reported surveys. For one, respondents may exaggerate their achievements. Additionally, a respondent’s state of mind while taking the survey may affect her/his answers. Survey results can potentially be biased because those feeling most positive are also those more likely to respond, while learners whose experience was less positive – or even negative - may not bother to answer. To account for this, we compared the results of the long-term survey with that of Data Carpentry’s [post-workshop survey results](https://carpentries.github.io/assessment-projects//data-carpentry-projects/postworkshop_analysis.html) and Software Carpentry's [post-workshop survey results](https://carpentries.github.io/assessment-projects/software-carpentry-projects/analysis-postworkshop.html). We found consistent patterns of increased confidence and self-efficacy in our learners.
 
 A [PDF](https://github.com/carpentries/assessment-projects/blob/master/joint-carpentry-projects/long_term_survey.pdf) of the survey questions and the data used in this analysis are located in the [join-carpentry-projects](https://github.com/carpentries/assessment-projects) folder on GitHub. We have already received several pull requests from community members interested in this data. Feel free to use the data and [tell us](mailto: kariljordan@carpentries.org) about your findings.
 
@@ -95,7 +95,7 @@ tally_and_perc <- function(df, colname, na.rm = FALSE){
 }
 ```
 # Highlights
-The long-term survey assessed confidence, motivation, and other outcomes **more than 6 months** after respondents attended a Carpentry workshop. Provided below are a few highlights from the data.
+The long-term survey assessed confidence, motivation, and other outcomes **more than six months** after respondents attended a Carpentry workshop. Provided below are a few highlights from the data.
 
 + `r Confidence_Change[3]`% of our respondents reported being more confident in the tools that were covered during their Carpentry workshop compared to before the workshop. 
 + `r Motivated_Seek_Knowledge[1] + Motivated_Seek_Knowledge[4]`% of our respondents were motivated to seek more knowledge about the tools they learned in their Carpentry workshop.
@@ -279,7 +279,7 @@ data %>%
 Carpentry_Involvement[1,2]
 ```
 
-The majority of respondents who attended a workshop more than a year ago speaks to their level of involvement with the Carpentries (`r Carpentry_Involvement[1,2]` people responded having subscribed to the Carpentries newsletter). In survey research, it can be difficult to collect responses from participants a whole year after their involvement in an event. It is great to see that learners feel positively enough about their experience to, firstly, be receptive to our email communication and, secondly, to have taken the time to complete the survey in full. As mentioned in the introduction, this could be a potential disadvantage to self-reported data, as those who may have negative experiences may not have completed the survey.
+The response rate from learners who attended a workshop more than a year ago speaks to their level of involvement with the Carpentries. `r Carpentry_Involvement[1,2]` of the survey respondents are subscribed to the Carpentries newsletter, indicating their ongoing interest in our work. In survey research, it can be difficult to collect responses from participants a whole year after their involvement in an event. It is great to see that learners feel positively enough about their experience to, firstly, be receptive to our email communication and, secondly, to have taken the time to complete the survey in full. As mentioned in the introduction, this could be a potential disadvantage to self-reported data, as those who may have negative experiences may not have completed the survey.
 
 ```{r}
  data_howlong_tally <- 
@@ -363,7 +363,7 @@ MATLAB <-  workshop_tools[workshop_tools$Content == 'MATLAB', ]$n
 Mercurial <-  workshop_tools[workshop_tools$Content == 'Mercurial', ]$n
 ```
 
-A large majority of respondents learned Git (n = `r Git`), Python (n = `r Python`), and the Unix Shell (n = `r Unix_Shell`). On the low end were spreadsheets (n = `r Spreadsheets`), cloud computing (n = `r Cloud_Computing`), MATLAB (n = `r MATLAB`), and Mercurial (n = `r Mercurial`). The fact that OpenRefine, spreadsheets, and cloud computing were on the low end is an indicator that the majority of our respondents attended a Software Carpentry workshop. This makes sense as Data Carpentry is a newer organization, starting in 2014, so there have been fewer workshops. 
+A large majority of respondents learned Git (n = `r Git`), Python (n = `r Python`), and the Unix Shell (n = `r Unix_Shell`). On the low end were spreadsheets (n = `r Spreadsheets`), cloud computing (n = `r Cloud_Computing`), MATLAB (n = `r MATLAB`), and Mercurial (n = `r Mercurial`). The fact that OpenRefine, spreadsheets, and cloud computing were on the low end is an indicator that the majority of our respondents attended a Software Carpentry workshop. This is most likely because Data Carpentry is a newer organization, starting in 2014, so there have been fewer workshops held.
 
 ```{r}
 # The code segment below from Ben Marwick will show the most combinations of tools 
@@ -404,7 +404,7 @@ colnames <- c("Frequency of Tools Covered", "n", "%")
 kable(tool_combs_df[1:10, ], row.names = NA, col.names = colnames, caption = "Combination of Tools Covered")
 ```
 
-Taking a look at which combinations of tools covered stood out in the data, we see from the matrix below that Git was frequently covered alongside Python, R, and/or the Unix Shell. Additionally, SQL was often covered with Git and/or the Unix Shell. OpenRefine, Spreadsheets, and Cloud Computing being on the low end is an indicator that the majority of our respondents attended a Software Carpentry workshop. This makes sense as Software Carpentry has offered more workshops than Data Carpentry.
+In examining which combinations of tools stood out in the data, we can see from the matrix below that Git was frequently taught alongside Python, R, and/or the Unix Shell. Additionally, SQL was often taught with Git and/or the Unix Shell. OpenRefine, Spreadsheets, and Cloud Computing were on the low end,  a clear indicator that the majority of survey respondents attended a Software Carpentry workshop, rather than a Data Carpentry workshop. 
 
 ```{r}
 # The code segment below from Ben Marwick will give a matrix of the combinations of tools used.
@@ -432,9 +432,9 @@ Programming_Usage_Since <- round(prop.table(table(data$`Programming-Usage-Since-
 Programming_Usage_Since
 ```
 ### Programming Usage Pre- and Post Workshop
-Understanding respondents' programming usage before attending a Carpentries workshop, as compared to after, was one goal for this assessment. Our hope is that the workshop attended favorably influenced attendees' use of the programming tools they learned.
+Understanding respondents’ programming usage both before and after attending a Carpentries workshop was one goal of this assessment study. Our hope is that the workshop learners attended favorably influenced their use of the programming tools they learned.
 
-`r Programming_Usage_Before[2]`% of the learners who responded to our survey had not been using the tools covered in their Carpentries workshop before the workshop. This decreased to `r Programming_Usage_Since[2]`% post-Carpentries workshop.
+`r Programming_Usage_Before[2]`% of the learners who responded to our survey had not been using the tools covered in their Carpentries workshop before they attended the workshop. This decreased to `r Programming_Usage_Since[2]`% post-workshop.
 
 The plot below is a comparison of respondents' usage of the tools covered in their workshop both pre- and post-workshop.
 
@@ -617,7 +617,8 @@ round(delta_pre_daily_using$perc[2] -
   delta_pre_daily_using$perc[1], 1)
 ```
 
-The most compelling (and pleasing) change in responses was a decline in the percentage of respondents who 'have not been using these tools' (`r -delta_pre_have_not_been_using`%), and an increase in the percentage of those who now use the tools on a daily basis (`r delta_pre_daily_using`%) at least 6 months after they attended a Carpentry workshop.
+The most compelling (and pleasing) change in responses was a decline in the percentage of respondents who 'have not been using these tools' (`r -delta_pre_have_not_been_using`%), and an increase in the percentage of those who now use the tools on a daily basis (`r delta_pre_daily_using`%) at least six months after they attended a Carpentry workshop.
+
 ```{r}
 # The code below from Ben provides a chi-square plot of the pre/post residuals
 pre_and_post_test <- 
@@ -683,10 +684,10 @@ ggplot(stdres,
       )
 ```
 
-A chi-square test indicates that there is a significant difference in the frequencies of the pre- and post-workshop responses about programming use. The chi-squared standardized residuals for the post-workshop values show that significantly more respondents do programming daily 6 months (or more) after the workshop than expected if the workshop had no effect. Similarly, significantly fewer respondents program less than once per year 6 months (or more) after the workshop.
+A chi-square test indicates that the use of programming significantly increases post-workshop. The chi-squared standardized residuals for the post-workshop values show that significantly more respondents program daily six months (or more) after the workshop than would have been expected had the workshop had no effect on their practice. Similarly, significantly fewer respondents program less than once per year six months (or more) after the workshop.
 
 # Workshop Impact
-To help us measure the impact that completing a Carpentries' workshop may have had for attendees, survey respondents were asked to rate their level of agreement (1-Strongly disagree to 5-Strongly agree) with the following statements:
+To help us measure the impact that completing a Carpentries’ workshop may have had for learners, survey respondents were asked to rate their level of agreement (1-Strongly disagree to 5-Strongly agree) with the following statements:
 
 + I have used skills I learned at the workshop to advance my career.
 + I have been motivated to seek more knowledge about the tools I learned at the workshop.
@@ -698,9 +699,9 @@ To help us measure the impact that completing a Carpentries' workshop may have h
 
 Strategies to make analyses more reproducible and improving coding practices include, but are not limited to, keeping raw data raw, sharing source code openly, and using scripts.
 
-The following plot was created using the [Likert](http://jason.bryer.org/likert/) package, and presents an analysis of learner responses to the statements above. We see an overwhelmingly positive indication that after taking the workshop respondents feel motivated to seek more knowledge and having gained confidence in working with data. As this survey was administered to learners who had taken a workshop at least 6 months ago, this feeling of confidence persisted.
+The following plot is an analysis of learner responses to the statements above. We see an overwhelmingly positive indication that, after taking the workshop, respondents feel motivated to seek more knowledge and have gained confidence in working with data. As this survey was administered to learners who had taken a workshop at least six months ago, this feeling of confidence has obviously persisted.
 
-Additionally, more than 80% of respondents agree or strongly agree to having improved their coding practices, made their analyses reproducible, improved their research productivity, and believe the skills they learned helped them advance their career. Forty percent of our respondents have received professional recognition as a result of using the tools they learned in a Carpentries workshop.
+Additionally, more than 80% of respondents agree or strongly agree that they have improved their coding practices, made their analyses reproducible, improved their research productivity. They also believe the skills they learned helped them advance their career. Forty percent of our respondents have received professional recognition as a result of using the tools they learned in a Carpentries workshop.
 
 ```{r echo=FALSE}
 # Jonah's fix to include the correct levels. Variable was renamed to 'levels' #because 'order' is the name of a function in R.
@@ -769,7 +770,8 @@ We asked respondents to identify the behaviors they adopted as a result of compl
 kable(Behaviors, format = "markdown", digits = getOption("digits"), row.names = NA, col.names = NA, 
     caption = NULL, format.args = list(), escape = TRUE)
 ```
-The matrix below shows a count of the highest combinations of behaviors adopted. It was interesting to see that 102 respondents who reported improving their data management and project organization also use version control to manage code.
+The matrix below shows a count of the highest combinations of behaviors adopted. Note that the 102 respondents who reported improving their data management and project organization also now use version control to manage code.
+
 ```{r}
 # Code for matrix of behaviors (thanks Ben for the tip!)
 # Combinations of behaviors adopted for individuals
@@ -1014,7 +1016,8 @@ data %>%
 kable(Carpentry_Involvement, row.names = FALSE, caption = "Respondents Self-Reported Inolvement in the Carpentries Post-Workshop")
 ```
 
-The matrix below is a look at the frequent combinations of involvement. For example, 16 of the respondents who became Carpentry instructors have attended at least one community call.
+The matrix below displays frequent combinations of post-workshop involvement. For example, 16 of the respondents who became Carpentry instructors have attended at least one community call.
+
 ```{r}
 # Code for matrix of involvement (thanks Ben for the tip!)
 # Combinations of tools for individual
@@ -1094,17 +1097,17 @@ data_likelyrecommend_tally <-
 ```
 
 # Growth Opportunities
-We are very excited to know that our workshops are having an impact on learners 6 months to a year after the workshop. Though the results of this survey are compelling, we do notice areas of improvement. For example, `r Country[22]`% of respondents completed a workshop in the United States. We are continually discussing ways to broaden participation of our workshops in communities outside of the U.S.
+We are very excited to know that our workshops are having an impact on learners six months to a year after their attendance. Though the results of this survey are compelling, we do recognise issues for improvement. For example, `r Country[22]`% of respondents completed a workshop in the United States. We are continually discussing ways to broaden participation of our workshops in communities outside of the U.S.
 
 We also realize there are some lessons that are not being taught as frequently as others, namely, the [Shell lesson](http://swcarpentry.github.io/shell-novice/) and the [SQL lesson](http://www.datacarpentry.org/sql-ecology-lesson/). We would like to understand why, and what we can do as a community to see an increase in this lesson being taught.
 
-Lastly, 39% of the respondents indicicated feeling **neutral** about receiving professional recognitioan as a result of participating in a Carpentry workshop, and 36% either disagreed or strongly disagreed to receiving professional recognition. We would like to explore community development opportunities that will be beneficial to the community's personal as well as professional endeavors.
+Lastly, 39% of the respondents indicicated feeling **neutral** about receiving professional recognitioan as a result of participating in a Carpentries workshop, and 36% either disagreed or strongly disagreed that they had received any professional recognition. We would like to explore community development opportunities that will benefit learners’ personal as well as professional endeavours, so that time spent acquiring important skills for research is adequately recognised and possibly even rewarded.
 
 # Summary
 When our learners have successful experiences in our workshops, they are quick to share this positive experience with others. We asked respondents if they had already recommended our workshop, and `r Recommended[3]`% said yes!
 
-This initial analysis of how Carpentries workshops have impacted learners long-term has been extremely insightful. In general, our workshops are helping learners improve their efficiency with managing and analyzing data. Learners are taking advantage of online resources to improve their skills, and many see value in becoming involved with our community.
+This initial analysis of how Carpentries workshops have impacted learners long-term has been extremely insightful. In general, our workshops are helping learners improve their efficiency with managing and analyzing data. Learners are taking advantage of online resources to improve their skills, and many see value in becoming involved longer term with our community.
 
-We will revisit this data when we compare responses of learners who took a workshop more than a year ago with those who have taken a workshop 0-6 months ago and six months to one year ago. Additionally, every six months we will use this survey to collect data from new learners to monitor their progress.
+We will revisit this data when we compare the responses of learners who took a workshop more than a year ago with those who have taken a workshop less than six months ago and from six months to one year ago. Additionally, we will continue to use this survey every six months to collect data from new learners so we can monitor their progress, and add to our growing evidence base on assessment.
 
 
