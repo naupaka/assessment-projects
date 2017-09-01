@@ -12,7 +12,7 @@ The following individuals contributed to the development of the long-term survey
 + [Erin Becker](https://github.com/ErinBecker) 
 + [Jonah Duckles](https://github.com/jduckles)   
 + [Elizabeth Wickes](https://github.com/elliewix)  
-+ [Beth Duckles]()
++ [Beth Duckles](https://github.com/bduckles)
 
 # Report
 [Report](https://carpentries.github.io/assessment-projects/joint-carpentry-projects/long-term-survey/report.html) 
