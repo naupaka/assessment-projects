@@ -728,7 +728,7 @@ data_agree_likert <- likert(data.frame(lapply(data_agree, factor, levels, ordere
 
 #print(levels(data_agree))
  
-title <- "Workshops are Welcoming & Useful"
+title <- "Perception of Workshop Impact"
  theme_update(plot.title = element_text(hjust = 0.5))
 plot(data_agree_likert) + ggtitle(title) 
 
