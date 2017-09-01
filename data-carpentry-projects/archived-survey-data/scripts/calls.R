@@ -192,3 +192,6 @@ plotByGenderStatus(newpostGS, "Post-survey-filtered")
 # Multiplot
 multiplot(plotByGender(newpreGS, "Pre-survey"),
           plotByGender(newpostGS, "Post-survey"), cols=2)
+library('rmarkdown')
+library('knitr')
+rmarkdown::render('Users/Data_Carpentry/my-forked-repos/assessment-projects/data-carpentry-projects/archived-survey-data/scripts/calls.R')

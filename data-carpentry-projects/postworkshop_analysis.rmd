@@ -1,4 +1,4 @@
-# Analysis of Data Carpentry's Post-Workshop Surveys
+# Data Carpentry's Post-Workshop Survey Summary Plots
 __Author__: [Kari L. Jordan](https://github.com/kariljordan) 
 __Revised__: August 2017
 
