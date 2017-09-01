@@ -1,5 +1,5 @@
 # Analysis of the Carpentries' Long-Term Feedback Survey
-Authors: [Kari L. Jordan](https://github.com/kariljordan), [Ben Marwick](https://github.com/benmarwick), [Belinda Weaver](https://github.com/weaverbel), [Naupaka Zimmerman](https://github.com/naupaka), [Jason Williams](https://github.com/JasonJWilliamsNY), [Tracy Teal](https://github.com/tracykteal), [Erin Becker](https://github.com/ErinBecker), [Jonah Duckles](https://github.com/jduckles)  
+Authors: [Kari L. Jordan](https://github.com/kariljordan), [Ben Marwick](https://github.com/benmarwick), [Belinda Weaver](https://github.com/weaverbel), [Naupaka Zimmerman](https://github.com/naupaka), [Jason Williams](https://github.com/JasonJWilliamsNY), [Tracy Teal](https://github.com/tracykteal), [Erin Becker](https://github.com/ErinBecker), [Jonah Duckles](https://github.com/jduckles), [Beth Duckles](https://github.com/bduckles), [Elizabeth Wickes](https://github.com/elliewix)  
 __September 2017__
 
 ```{r setup, include=FALSE}
@@ -699,7 +699,7 @@ To help us measure the impact that completing a Carpentries’ workshop may have
 
 Strategies to make analyses more reproducible and improving coding practices include, but are not limited to, keeping raw data raw, sharing source code openly, and using scripts.
 
-The following plot is an analysis of learner responses to the statements above. We see an overwhelmingly positive indication that, after taking the workshop, respondents feel motivated to seek more knowledge and have gained confidence in working with data. As this survey was administered to learners who had taken a workshop at least six months ago, this feeling of confidence has obviously persisted.
+The following plot is an analysis of learner responses to the statements above. We see an overwhelmingly positive indication that, after taking the workshop, respondents feel motivated to seek more knowledge and have gained confidence in working with data. As this survey was administered to learners who had taken a workshop at least six months ago, this feeling of confidence has obviously persisted. This is quite impactful, as both the [Data Carpentry](https://carpentries.github.io/assessment-projects//data-carpentry-projects/postworkshop_analysis.html) and [Software Carpentry](https://carpentries.github.io/assessment-projects/software-carpentry-projects/analysis-postworkshop.html) post workshop survey results show learners having self-reported improved understanding of how to import and work with data. 
 
 Additionally, more than 80% of respondents agree or strongly agree that they have improved their coding practices, made their analyses reproducible, improved their research productivity. They also believe the skills they learned helped them advance their career. Forty percent of our respondents have received professional recognition as a result of using the tools they learned in a Carpentries workshop.
 
@@ -719,11 +719,21 @@ levels = c("Strongly disagree", "Disagree", "Neutral", "Agree", "Strongly agree"
          ordered = TRUE)
     fct_unify(mydata, 
               levels=factlevel)}
-# End tip 
+ # End tip 
  
+ # Adjusting names of y axis labels
+ names(data_agree) <- 
+  c("Coding",
+    "Confidence",
+    "Career",
+    "Motivation",
+    "Reproducible",
+    "Productivity",
+    "Recognition")
+
 data_agree_likert <- likert(data.frame(lapply(data_agree, factor, levels, ordered=TRUE)))
 # Elizabeth's tip on factors
- #for(i in seq_along(data_agree)) {
+#for(i in seq_along(data_agree)) {
                 #data_agree[[i]] <- factor(data_agree[[i]], levels=order)}
 
 #print(levels(data_agree))
@@ -736,6 +746,8 @@ plot(data_agree_likert) + ggtitle(title)
  data_agree <- map_if(data_agree,
                      is.character,
                      as.factor)
+ 
+ # The plot works, but the labels are not in the correct order.
 ```
 
 ### Behaviors Respondents Adopted
@@ -753,7 +765,7 @@ data %>%
   arrange(desc(n))
 print(Behaviors, digits = getOption("digits"), quote = FALSE,
       na.print = "", zero.print = "0", justify = "none")
-# how many rate either of these?
+#  how many rate either of these?
 #- data management and project organization practices : Behaviors-Adopted
 #- used programming languages for automation : Column28
 #- used version control to manage code : Column30
