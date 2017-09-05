@@ -11,4 +11,4 @@ All of the scripts in this repo were created by Paula Andrea and are freely avai
 
 ## Contact/Contributions
 
-If you have questions about contributing please [contact Kari L. Jordan](mailto:kariljordan@carpentries.org). You may also raise an issue or pull request. If you would like to develop on top of this, please cite the source as mentioned before.
+If you have questions about contributing please contact [Kari L. Jordan](mailto:kariljordan@carpentries.org). You may also raise an issue or pull request. If you would like to develop on top of this, please cite the source as mentioned before.
