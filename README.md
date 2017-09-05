@@ -6,7 +6,7 @@ This repository contains projects lead by Kari L. Jordan, Data Carpentry's Deput
 
 + Carpentries Long-Term Assessment [report](https://carpentries.github.io/assessment-projects/joint-carpentry-projects/long-term-survey/report.html).  
 
-+ Data Carpentry post-workshop survey [summary plots](https://carpentries.github.io/assessment-projects//data-carpentry-projects/postworkshop_analysis.html).
++ Data Carpentry post-workshop survey [summary plots](https://carpentries.github.io/assessment-projects//data-carpentry-projects/only-postworkshop-analysis/postworkshop_analysis.html).
 
 # In-progress projects: 
-+ Data Carpentry Archived pre/post survey [report](https://carpentries.github.io/assessment-projects/data-carpentry-projects/pre-post-analysis-archived.html).
++ Data Carpentry Archived pre/post survey report.
