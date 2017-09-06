@@ -234,9 +234,9 @@ Australia <- data_country_tally[data_country_tally$Country == 'Australia', ]$n
 #  scale_fill_manual(values = country_colors, guide = FALSE)
 ```
 
-```{r include=FALSE}
+```{r}
 # Use code below for in-line text.
-# Country<- data_country_tally[data_country_tally$Country == 'Country', ]$n
+Country<- data_country_tally[data_country_tally$Country == 'Country', ]$n
 Country <- round(prop.table(table(data$Country))* 100)
 Country
 ```
