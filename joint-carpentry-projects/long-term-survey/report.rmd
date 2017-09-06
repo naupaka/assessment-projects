@@ -712,7 +712,8 @@ Additionally, more than 80% of respondents agree or strongly agree that they hav
 cols_with_Agree <- map_lgl(data, ~`%in%`("Agree", .x))
 data_agree <-  data[ , cols_with_Agree]
 
-levels = c("Strongly disagree", "Disagree", "Neutral", "Agree", "Strongly agree")
+# Add line breaks (\n) to wrap legend
+levels = c("Strongly \n disagree", "Disagree", "Neutral", "Agree", "Strongly \n agree")
 
 # Beth's tip to both order the factors based on levels and unify the factors
  factorfunction <- function(mydata, factlevel){
