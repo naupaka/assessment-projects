@@ -163,7 +163,7 @@ ggplot(data_position_tally,
        aes(Position, y = 100 * (n/sum(n)),
            n)) +
   geom_bar(stat = "identity", fill="orange") +
-  geom_text(aes(label=n), size= 4) +
+  geom_text(aes(label=n), size= 4, vjust=-0.25) +
   scale_x_discrete(labels = function(x) lapply(strwrap(x, width = 10, simplify = FALSE), paste, collapse="\n")) +
   theme_classic() +
   xlab("Status") +
@@ -310,7 +310,7 @@ ggplot(data_howlong_tally,
        aes(`How-Long-Ago`, y = 100 * (n/sum(n)),
            n)) +
   geom_bar(stat = "identity", fill="orange") +
-  geom_text(aes(label=n), size= 4) +
+  geom_text(aes(label=n), size= 4, vjust=-0.25) +
   scale_x_discrete(labels = function(x) lapply(strwrap(x, width = 10, simplify = FALSE), paste, collapse="\n")) +
   theme_classic() +
   xlab("Time Since Attending Carpentry Workshop") +
@@ -333,7 +333,7 @@ ggplot(data_workshops_tally,
        aes(`How-Many-Workshops`, y = 100 * (n/sum(n)),
            n)) +
   geom_bar(stat = "identity", fill="orange") +
-  geom_text(aes(label=n), size= 4) +
+  geom_text(aes(label=n), size= 4, vjust=-0.25) +
   scale_x_discrete(labels = function(x) lapply(strwrap(x, width = 10, simplify = FALSE), paste, collapse="\n")) +
   theme_classic() +
   xlab("# Workshops Attended") +
@@ -597,7 +597,7 @@ data %>%
              fill = key)) +
     geom_bar(stat = "identity", 
              position = "dodge") +
-    geom_text(aes(label=n), size= 4) +
+    geom_text(aes(label=n), size= 4, vjust=-0.25) +
     scale_x_discrete(labels = function(x) lapply(strwrap(x,
                                                          width = 10,
                                                          simplify = FALSE),
@@ -893,7 +893,7 @@ ggplot(data_change.in.confidence_tally,
        aes(`Change-In-Confidence`, y = 100 * (n/sum(n)),
            n)) +
    geom_bar(stat = "identity", fill = "orange") +
-   geom_text(aes(label=n), size= 4) +
+   geom_text(aes(label=n), size= 4, vjust=-0.25) +
    scale_x_discrete(labels = function(x) lapply(strwrap(x, width = 10, simplify = FALSE), paste, collapse="\n")) +
    theme_classic() +
    xlab("Change in Confidence") +
