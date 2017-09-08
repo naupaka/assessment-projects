@@ -847,6 +847,29 @@ behaviors_co_occurences  <- as.data.frame(crossprod(bigm>0))
 kable(behaviors_co_occurences, row.names = TRUE, caption = "Matrix of Common Behaviors Adopted Post-Workshop")
 ```
 
+```{r heatmap}
+library(tidyverse)
+library(viridis)
+library(stringr)
+wrap_width <-  30
+behaviors_co_occurences  %>% 
+  as.matrix() %>% 
+  reshape2::melt() %>% 
+  as_tibble() %>% 
+  ggplot(aes(x = Var1, 
+             y = Var2, 
+           fill = value)) +  
+  geom_tile() +
+  scale_fill_viridis() +
+  coord_equal() +
+  scale_x_discrete(labels = function(x) str_wrap(x, width = wrap_width)) +
+  scale_y_discrete(labels = function(x) str_wrap(x, width = wrap_width)) +
+  theme(axis.text.x = element_text(angle = 90, size = 10, vjust = 0.5, hjust = 1),
+        axis.text.y = element_text(size = 8))  +
+  ggtitle("Heatmap of behaviour co-occurances")
+
+```
+
 
 ### Change in Confidence 
 Our goal is for learners to leave a workshop with increased confidence about using the tools they were taught. More than 75% of the respondents are now more confident in using the tools they learned than before attending the workshop.
