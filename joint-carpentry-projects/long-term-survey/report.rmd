@@ -1128,7 +1128,7 @@ We are very excited to know that our workshops are having an impact on learners 
 
 We also realize there are some lessons that are not being taught as frequently as others, namely, the [Shell lesson](http://swcarpentry.github.io/shell-novice/) and the [SQL lesson](http://www.datacarpentry.org/sql-ecology-lesson/). We would like to understand why, and what we can do as a community to see an increase in this lesson being taught.
 
-Lastly, 39% of the respondents indicicated feeling **neutral** about receiving professional recognitioan as a result of participating in a Carpentries workshop, and 36% either disagreed or strongly disagreed that they had received any professional recognition. We would like to explore community development opportunities that will benefit learners’ personal as well as professional endeavours, so that time spent acquiring important skills for research is adequately recognised and possibly even rewarded.
+Lastly, 39% of the respondents indicated feeling **neutral** about receiving professional recognition as a result of participating in a Carpentries workshop, and 36% either disagreed or strongly disagreed that they had received any professional recognition. We would like to explore community development opportunities that will benefit learners’ personal as well as professional endeavours, so that time spent acquiring important skills for research is adequately recognised and possibly even rewarded.
 
 # Summary
 When our learners have successful experiences in our workshops, they are quick to share this positive experience with others. We asked respondents if they had already recommended our workshop, and `r Recommended[3]`% said yes!
