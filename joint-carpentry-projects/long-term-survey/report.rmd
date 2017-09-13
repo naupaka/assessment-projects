@@ -583,7 +583,7 @@ scale_x_discrete(labels = function(x) lapply(strwrap(x,
     theme_classic(base_size = 14)
 ```
 
-```{r}
+```{r, fig.cap=paste("Synopsis: Respondents were asked how often they use programing languages (R, Python, etc.), databases (Access, SQL, etc.), version control software and/or the shell before completing a Carpentries workshop, and since completing a Carpentries workshop.")}
 # The code below is for Pre/Post plots of programming usage
 # It includes tips from Ben and Naupaka 
 # Make the unique values the same
