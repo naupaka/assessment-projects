@@ -23,7 +23,7 @@ library(srvyr)
 ```
 
 # Introduction
-Software Carpentry is a worldwide volunteer organization whose mission is to make scientists more productive, and their findings more reliable, by teaching them foundational computing skills. Established in 1998, it runs short, intensive workshops that cover task automation using the Unix shell, structured programming in Python and R, and version control using tools such as Git. Its sibling organization, Data Carpentry, teaches foundational data science skills. To date, the majority of Software and Data Carpentry workshops have been run in the United States, Canada and the UK. However, there is growing interest elsewhere, and there are active ‘Carpentries’ communities in Australia, New Zealand, South Africa, the Netherlands, Norway and in other countries in Africa and in Central and South America.
+Software Carpentry is a worldwide volunteer organization whose mission is to make scientists more productive, and their findings more reliable, by teaching them fundamental computing skills. Established in 1998, it runs short, intensive workshops that cover task automation using the Unix shell, structured programming in Python and R, and version control using tools such as Git. Its sibling organization, Data Carpentry, teaches fundamental data science skills. To date, the majority of Software and Data Carpentry workshops have been run in the United States, Canada and the UK. However, there is growing interest elsewhere, and there are active ‘Carpentries’ communities in Australia, New Zealand, South Africa, the Netherlands, Norway and in other countries in Africa and in Central and South America.
 
 While most workshops are favorably assessed by learners at the time of delivery, no systematic, long-term follow-up study has previously been done on the efficacy of the training delivered, nor of the short or longer term impact that such training might have had on learners’ work practices, further skills acquisition, or subsequent career paths. There has also been no useful demographic profiling of learners.
 
@@ -1172,11 +1172,13 @@ data_likelyrecommend_tally <-
 ```
 
 # Growth Opportunities
-We are very excited to know that our workshops are having an impact on learners six months to a year after their attendance. Though the results of this survey are compelling, we do recognise issues for improvement. For example, `r USA_perc`% of respondents completed a workshop in the United States. We are continually discussing ways to broaden participation of our workshops in communities outside of the U.S.
+We are very excited to know that our workshops are having an impact on learners six months to a year after their attendance. Though the results of this survey are compelling, we do recognize issues for improvement. For example, `r USA_perc`% of respondents completed a workshop in the United States. We are continually discussing ways to broaden participation of our workshops in communities outside of the U.S.
+
+As survey respondents were not all exposed to the same curricula, the types and number of behaviors they adopted varies. This is an opportunity for us to take a look at our curricula to see how we approach promoting various data management practices.
 
 We also realize there are some lessons that are not being taught as frequently as others, namely, the [Shell lesson](http://swcarpentry.github.io/shell-novice/) and the [SQL lesson](http://www.datacarpentry.org/sql-ecology-lesson/). We would like to understand our community's perception of the value of these skills, and what we can do as a community to see an increase in these lessons being taught.
 
-Lastly, 39% of the respondents indicated feeling **neutral** about receiving professional recognition as a result of participating in a Carpentries workshop, and 36% either disagreed or strongly disagreed that they had received any professional recognition. We would like to explore community development opportunities that will benefit learners’ personal as well as professional endeavours, so that time spent acquiring important skills for research is adequately recognised and possibly even rewarded.
+Lastly, 39% of the respondents indicated feeling **neutral** about receiving professional recognition as a result of participating in a Carpentries workshop, and 36% either disagreed or strongly disagreed that they had received any professional recognition. We would like to explore community development opportunities that will benefit learners’ personal as well as professional endeavors, so that time spent acquiring important skills for research is adequately recognized and possibly even rewarded.
 
 # Summary
 When our learners have successful experiences in our workshops, they are quick to share this positive experience with others. We asked respondents if they had already recommended our workshop, and `r Recommended[3]`% said yes!
