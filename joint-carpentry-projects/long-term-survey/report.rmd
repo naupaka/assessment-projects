@@ -45,7 +45,7 @@ This analysis includes 476 observations. Not all respondents answered every one 
 
 ```{r include=FALSE}
 # Read in the data
-data <- readr::read_csv("https://raw.githubusercontent.com/carpentries/assessment-projects/master/joint-carpentry-projects/long-term-survey/data.csv")
+data <- readr:: read_csv("https://raw.githubusercontent.com/carpentries/assessment-projects/master/joint-carpentry-projects/long-term-survey/data.csv")
 ```
   
 ```{r functions, include=FALSE}
@@ -741,10 +741,8 @@ The following plot is an analysis of learner responses to the statements above. 
 
 Additionally, more than 80% of respondents agree or strongly agree that they have improved their coding practices, made their analyses reproducible, improved their research productivity. They also believe the skills they learned helped them advance their career. Forty percent of our respondents have received professional recognition as a result of using the tools they learned in a Carpentries workshop.
 
-```{r, fig.cap=paste("Synopsis: Self-reported feeling of workshop impact for career advancement, motivation to learn, practicing reproducibility, receiving professional recognition, improving coding practices, improving research productivity, and gaining confidence as a result of completing a Carpentries workshop")}
-# Jonah's fix to include the correct levels. Variable was renamed to 'levels' #because 'order' is the name of a function in R.
-# I am still not sure if this plot is 100% correct -KLJ
-
+```{r heatmap}
+# Heat map for Likert items (perception of workshop impact)
 cols_with_Agree <- map_lgl(data, ~`%in%`("Agree", .x))
 data_agree <-  data[ , cols_with_Agree]
 
@@ -759,33 +757,15 @@ levels = c("Strongly disagree", "Disagree", "Neutral", "Agree", "Strongly agree"
               levels=factlevel)}
  # End tip 
  
- # Adjusting names of y axis labels
- names(data_agree) <- 
-  c("Coding",
-    "Confidence",
-    "Career",
-    "Motivation",
-    "Reproducible",
-    "Productivity",
-    "Recognition")
-
-data_agree_likert <- likert(data.frame(lapply(data_agree, factor, levels, ordered=TRUE)))
-# Elizabeth's tip on factors
-#for(i in seq_along(data_agree)) {
-                #data_agree[[i]] <- factor(data_agree[[i]], levels=order)}
-
-#print(levels(data_agree))
+data_agree_likert <- likert(data.frame(lapply(data_agree, factor, levels, ordered=FALSE)))
  
+# Kari's code for a heat mapy of workshop impact
 title <- "Perception of Workshop Impact"
- theme_update(plot.title = element_text(hjust = 0.5))
-plot(data_agree_likert) + ggtitle(title) 
+plot(data_agree_likert, type =c("heat"), panel.arrange = NULL, panel.strip.color = "red", legend.position = "bottom") + ggtitle(title)
 
-#print(class(data_agree))
- data_agree <- map_if(data_agree,
-                     is.character,
-                     as.factor)
- ggsave("figures/workshop_impact.png")
- # The plot works, but the labels are not in the correct order.
+# The plot works, but the labels are not in the correct order.
+ggsave("figures/workshop_impact_heatmap.png")
+
 ```
 
 ### Behaviors Respondents Adopted
