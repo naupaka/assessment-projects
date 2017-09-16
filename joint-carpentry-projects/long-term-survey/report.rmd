@@ -1,6 +1,6 @@
-# Analysis of the Carpentries' Long-Term Feedback Survey
-Authors: [Kari L. Jordan](https://github.com/kariljordan), [Ben Marwick](https://github.com/benmarwick), [Belinda Weaver](https://github.com/weaverbel), [Naupaka Zimmerman](https://github.com/naupaka), [Jason Williams](https://github.com/JasonJWilliamsNY), [Tracy Teal](https://github.com/tracykteal), [Erin Becker](https://github.com/ErinBecker), [Jonah Duckles](https://github.com/jduckles), [Beth Duckles](https://github.com/bduckles), [Elizabeth Wickes](https://github.com/elliewix)  
-__September 2017__
+# Analysis of the Carpentries' Long-Term Feedback Survey 
+__Authors__: [Kari L. Jordan](https://github.com/kariljordan), [Ben Marwick](https://github.com/benmarwick), [Belinda Weaver](https://github.com/weaverbel), [Naupaka Zimmerman](https://github.com/naupaka), [Jason Williams](https://github.com/JasonJWilliamsNY), [Tracy Teal](https://github.com/tracykteal), [Erin Becker](https://github.com/ErinBecker), [Jonah Duckles](https://github.com/jduckles), [Beth Duckles](https://github.com/bduckles), [Elizabeth Wickes](https://github.com/elliewix)   
+__Published__: September 2017 
 
 ```{r setup, include=FALSE}
 library(knitr)
@@ -23,7 +23,7 @@ library(srvyr)
 ```
 
 # Introduction
-Software Carpentry is a worldwide volunteer organization whose mission is to make scientists more productive, and their findings more reliable, by teaching them foundational computing skills. Established in 1998, it runs short, intensive workshops that cover task automation using the Unix shell, structured programming in Python and R, and version control using tools such as Git. Its sibling organization, Data Carpentry, teaches foundational data science skills. To date, the majority of Software and Data Carpentry workshops have been run in the United States, Canada and the UK. However, there is growing interest elsewhere, and there are active ‘Carpentries’ communities in Australia, New Zealand, South Africa, the Netherlands, Norway and in other countries in Africa and in Central and South America.
+Software Carpentry is a worldwide volunteer organization whose mission is to make scientists more productive, and their findings more reliable, by teaching them fundamental computing skills. Established in 1998, it runs short, intensive workshops that cover task automation using the Unix shell, structured programming in Python and R, and version control using tools such as Git. Its sibling organization, Data Carpentry, teaches fundamental data science skills. To date, the majority of Software and Data Carpentry workshops have been run in the United States, Canada and the UK. However, there is growing interest elsewhere, and there are active ‘Carpentries’ communities in Australia, New Zealand, South Africa, the Netherlands, Norway and in other countries in Africa and in Central and South America.
 
 While most workshops are favorably assessed by learners at the time of delivery, no systematic, long-term follow-up study has previously been done on the efficacy of the training delivered, nor of the short or longer term impact that such training might have had on learners’ work practices, further skills acquisition, or subsequent career paths. There has also been no useful demographic profiling of learners.
 
@@ -44,7 +44,25 @@ A [PDF](https://github.com/carpentries/assessment-projects/blob/master/joint-car
 This analysis includes 476 observations. Not all respondents answered every one of the 26 questions.
 
 ```{r include=FALSE}
-data <- readr::read_csv("https://raw.githubusercontent.com/carpentries/assessment-projects/master/joint-carpentry-projects/long-term-survey/data.csv")
+# Read in the data
+data <- readr:: read_csv("https://raw.githubusercontent.com/carpentries/assessment-projects/master/joint-carpentry-projects/long-term-survey/data.csv")
+```
+  
+```{r functions, include=FALSE}
+# A function for captioning and referencing images
+fig <- local({
+    i <- 0
+    ref <- list()
+    list(
+        cap=function(refName, text) {
+            i <<- i + 1
+            ref[[refName]] <<- i
+            paste("Figure ", i, ": ", text, sep="")
+        },
+        ref=function(refName) {
+            ref[[refName]]
+        })
+})
 ```
 
 ```{r include=FALSE}
@@ -161,7 +179,7 @@ data_position_tally <-
 
 ggplot(data_position_tally, 
        aes(Position, y = 100 * (n/sum(n)),
-           n)) + 
+           n)) +
   geom_bar(stat = "identity", fill="orange") +
   geom_text(aes(label=n), size= 4, vjust=-0.25) +
   scale_x_discrete(labels = function(x) lapply(strwrap(x, width = 10, simplify = FALSE), paste, collapse="\n")) +
@@ -169,8 +187,9 @@ ggplot(data_position_tally,
   xlab("Status") +
   ylab("% Respondents") +
   ggtitle("Majority of Respondents were Graduate Students") +
-  theme(plot.title = element_text(hjust = 0.)) +
+  theme(plot.title = element_text(hjust = 0.5)) +
   theme_classic(base_size = 14)
+ggsave("figures/status.png")
 ```
 
 ```{r include=FALSE}
@@ -189,7 +208,7 @@ Provided is a breakdown of our respondents by the country in which they attended
 data_country_tally <-
 data %>%
   group_by(Country) %>%
-  tally() %>%
+  tally(sort = TRUE) %>%
   mutate(perc = round(100 * (n/sum(n)), 1)) %>% # add the % col
   filter(!is.na(Country)) %>%
   arrange(desc(n))
@@ -205,12 +224,16 @@ ggplot(data_country_tally,
   ggtitle("Carpentry Workshop Respondents by Country") +
   theme(plot.title = element_text(hjust = 0.5)) +
   theme_bw(base_size = 14)
-
-#Use code below for in-line text.
+ggsave("figures/percent_by_country.png")
+# Use code below for in-line text.
 USA <- data_country_tally[data_country_tally$Country == 'USA', ]$n
+USA_perc <- filter(data_country_tally, Country == "USA") %>% pull(perc)
 Canada <- data_country_tally[data_country_tally$Country == 'Canada', ]$n
+Canada_perc <- filter(data_country_tally, Country == "Canada") %>% pull(perc)
 UK <- data_country_tally[data_country_tally$Country == 'UK', ]$n
+UK_perc <-  filter(data_country_tally, Country == "UK") %>% pull(perc)
 Australia <- data_country_tally[data_country_tally$Country == 'Australia', ]$n
+Australia_perc <-  filter(data_country_tally, Country == "Australia") %>% pull(perc)
 
 # kable(data_country_tally, format = "markdown", row.names = FALSE, col.names = c("Country", "# Respondents"))
 
@@ -234,14 +257,23 @@ Australia <- data_country_tally[data_country_tally$Country == 'Australia', ]$n
 #  scale_fill_manual(values = country_colors, guide = FALSE)
 ```
 
-```{r include=FALSE}
-# Use code below for in-line text.
-Country<- data_country_tally[data_country_tally$Country == 'Country', ]$n
-Country <- round(prop.table(table(data$Country))* 100)
-Country
+```{r}
+# BM # why is the US proportion different in 'data_country_tally' (48.5) and 'Country' (53)?
+
+# BM #  'Country' is computing 435/231 = 0.53
+Country_table_sum <- sum(table(data$Country)) # 435
+USA_rows <- data[data$Country == "USA" & !is.na(data$Country),] # 231
+USA_Proportion_in_Country_df <- nrow(USA_rows) / Country_table_sum
+
+# BM #  Problem is that the denominator includes counts of many rows 
+# BM #  with NA in the country column
+# BM #  The in line code in the text should use values from 'data_country_tally, 
+# BM #  because it excludes the NA values. It's not good practice to plot data from one 
+# BM #  dataframe and quote values from a different data frame.
+
 ```
 
-A large portion of Carpentry learners responding to the survey attended a workshop in the United States (`r Country[22]`%), followed by Canada (`r Country[3]`%) the UK (`r Country[21]`%), and Australia (`r Country[1]`%).
+A large portion of Carpentry learners responding to the survey attended a workshop in the United States (`r USA_perc`%), followed by Canada (`r Canada_perc`%) the UK (`r UK_perc`%), and Australia (`r Australia_perc`%).
 
 ```{r include=FALSE}
 # If interested in seeing the open-ended responses for Position: Other, run this code.
@@ -305,6 +337,7 @@ ggplot(data_howlong_tally,
   ggtitle("Majority Attended Workshop Over a Year Ago") +
   theme(plot.title = element_text(hjust = 0.5)) +
   theme_classic(base_size = 14)
+ggsave("figures/time_since_attending_workshop.png")
 ```
 ```{r}
 data_workshops_tally <- 
@@ -328,6 +361,7 @@ ggplot(data_workshops_tally,
   ggtitle("Majority Attended One Carpentry Workshop") +
   theme(plot.title = element_text(hjust = 0.5)) +
   theme_classic(base_size = 14)
+ggsave("figures/number_workshops_attended.png")
 ```
 
 ### Workshop Content
@@ -553,7 +587,7 @@ scale_x_discrete(labels = function(x) lapply(strwrap(x,
     theme_classic(base_size = 14)
 ```
 
-```{r}
+```{r, fig.cap=paste("Synopsis: Respondents were asked how often they use programing languages (R, Python, etc.), databases (Access, SQL, etc.), version control software and/or the shell before completing a Carpentries workshop, and since completing a Carpentries workshop.")}
 # The code below is for Pre/Post plots of programming usage
 # It includes tips from Ben and Naupaka 
 # Make the unique values the same
@@ -584,7 +618,7 @@ data %>%
              fill = key)) +
     geom_bar(stat = "identity", 
              position = "dodge") +
-    geom_text(aes(label=n), size= 4, vjust=-0.25) +
+    geom_text(aes(label=n), size= 4, vjust=-0.25, position = "dodge") +
     scale_x_discrete(labels = function(x) lapply(strwrap(x,
                                                          width = 10,
                                                          simplify = FALSE),
@@ -598,7 +632,7 @@ data %>%
     ggtitle("Respondents' Programming Usage Increased") +
     theme(plot.title = element_text(hjust = 0.5)) +
     theme_classic(base_size = 14)
-  
+ggsave("figures/change_in_programming_usage.png")  
 # Get some % change values to use in the text
 delta_pre_have_not_been_using <- 
   pre_and_post_usage %>% 
@@ -618,6 +652,7 @@ delta_pre_daily_using <-
 round(delta_pre_daily_using$perc[2] - 
   delta_pre_daily_using$perc[1], 1)
 ```
+
 
 The most compelling (and pleasing) change in responses was a decline in the percentage of respondents who 'have not been using these tools' (`r -delta_pre_have_not_been_using`%), and an increase in the percentage of those who now use the tools on a daily basis (`r delta_pre_daily_using`%) at least six months after they attended a Carpentry workshop.
 
@@ -684,20 +719,21 @@ ggplot(stdres,
                  keyheight = 0.4,
                  default.unit = "inch")
       )
+ggsave("figures/programming_post_workshop.png")
 ```
 
 A chi-square test indicates that the use of programming significantly increases post-workshop. The chi-squared standardized residuals for the post-workshop values show that significantly more respondents program daily six months (or more) after the workshop than would have been expected had the workshop had no effect on their practice. Similarly, significantly fewer respondents program less than once per year six months (or more) after the workshop.
 
 # Workshop Impact
-To help us measure the impact that completing a Carpentries’ workshop may have had for learners, survey respondents were asked to rate their level of agreement (1-Strongly disagree to 5-Strongly agree) with the following statements:
+To help us measure the impact that completing a Carpentries’ workshop may have had for learners, survey respondents were asked to reflect on ways in which completing a workshop may have impacted them, and to rate their level of agreement (1-Strongly disagree to 5-Strongly agree) with the following statements.
 
-+ I have used skills I learned at the workshop to advance my career.
-+ I have been motivated to seek more knowledge about the tools I learned at the workshop.
-+ I have made my analyses more reproducible as a result of completing the workshop.
-+ I have received professional recognition for my work as a result of using the tools I learned at the workshop.
-+ I have improved my coding practices as a result of completing the workshop.
-+ My research productivity has improved as a result of completing the workshop.
-+ I have gained confidence in working with data as a result of completing the workshop.
++ I have used skills I learned at the workshop to advance my career. (Career)
++ I have been motivated to seek more knowledge about the tools I learned at the workshop. (Motivation)
++ I have made my analyses more reproducible as a result of completing the workshop. (Reproducible)
++ I have received professional recognition for my work as a result of using the tools I learned at the workshop. (Recognition)
++ I have improved my coding practices as a result of completing the workshop. (Coding)
++ My research productivity has improved as a result of completing the workshop. (Productivity)
++ I have gained confidence in working with data as a result of completing the workshop. (Confidence)
 
 Strategies to make analyses more reproducible and improving coding practices include, but are not limited to, keeping raw data raw, sharing source code openly, and using scripts.
 
@@ -705,15 +741,12 @@ The following plot is an analysis of learner responses to the statements above. 
 
 Additionally, more than 80% of respondents agree or strongly agree that they have improved their coding practices, made their analyses reproducible, improved their research productivity. They also believe the skills they learned helped them advance their career. Forty percent of our respondents have received professional recognition as a result of using the tools they learned in a Carpentries workshop.
 
-```{r echo=FALSE}
-# Jonah's fix to include the correct levels. Variable was renamed to 'levels' #because 'order' is the name of a function in R.
-# I am still not sure if this plot is 100% correct -KLJ
-
+```{r heatmap}
+# Heat map for Likert items (perception of workshop impact)
 cols_with_Agree <- map_lgl(data, ~`%in%`("Agree", .x))
 data_agree <-  data[ , cols_with_Agree]
 
-# Add line breaks (\n) to wrap legend
-levels = c("Strongly \n disagree", "Disagree", "Neutral", "Agree", "Strongly \n agree")
+levels = c("Strongly disagree", "Disagree", "Neutral", "Agree", "Strongly agree")
 
 # Beth's tip to both order the factors based on levels and unify the factors
  factorfunction <- function(mydata, factlevel){
@@ -724,33 +757,15 @@ levels = c("Strongly \n disagree", "Disagree", "Neutral", "Agree", "Strongly \n 
               levels=factlevel)}
  # End tip 
  
- # Adjusting names of y axis labels
- names(data_agree) <- 
-  c("Coding",
-    "Confidence",
-    "Career",
-    "Motivation",
-    "Reproducible",
-    "Productivity",
-    "Recognition")
-
-data_agree_likert <- likert(data.frame(lapply(data_agree, factor, levels, ordered=TRUE)))
-# Elizabeth's tip on factors
-#for(i in seq_along(data_agree)) {
-                #data_agree[[i]] <- factor(data_agree[[i]], levels=order)}
-
-#print(levels(data_agree))
+data_agree_likert <- likert(data.frame(lapply(data_agree, factor, levels, ordered=FALSE)))
  
+# Kari's code for a heat mapy of workshop impact
 title <- "Perception of Workshop Impact"
- theme_update(plot.title = element_text(hjust = 0.5))
-plot(data_agree_likert) + ggtitle(title) 
+plot(data_agree_likert, type =c("heat"), panel.arrange = NULL, panel.strip.color = "red", legend.position = "bottom") + ggtitle(title)
 
-#print(class(data_agree))
- data_agree <- map_if(data_agree,
-                     is.character,
-                     as.factor)
- 
- # The plot works, but the labels are not in the correct order.
+# The plot works, but the labels are not in the correct order.
+ggsave("figures/workshop_impact_heatmap.png")
+
 ```
 
 ### Behaviors Respondents Adopted
@@ -835,6 +850,30 @@ behaviors_co_occurences  <- as.data.frame(crossprod(bigm>0))
 kable(behaviors_co_occurences, row.names = TRUE, caption = "Matrix of Common Behaviors Adopted Post-Workshop")
 ```
 
+```{r heatmap}
+library(tidyverse)
+library(viridis)
+library(stringr)
+wrap_width <-  30
+behaviors_co_occurences  %>% 
+  as.matrix() %>% 
+  reshape2::melt() %>% 
+  as_tibble() %>% 
+  ggplot(aes(x = Var1, 
+             y = Var2, 
+           fill = value)) +  
+  geom_tile() +
+  scale_fill_viridis() +
+  coord_equal() +
+  scale_x_discrete(labels = function(x) str_wrap(x, width = wrap_width)) +
+  scale_y_discrete(labels = function(x) str_wrap(x, width = wrap_width)) +
+  theme(axis.text.x = element_text(angle = 90, size = 10, vjust = 0.5, hjust = 1),
+        axis.text.y = element_text(size = 8))  +
+  ggtitle("Heatmap of behaviour co-occurances")
+ggsave("figures/behaviors_heatmap.png")
+
+```
+
 
 ### Change in Confidence 
 Our goal is for learners to leave a workshop with increased confidence about using the tools they were taught. More than 75% of the respondents are now more confident in using the tools they learned than before attending the workshop.
@@ -866,6 +905,7 @@ ggplot(data_change.in.confidence_tally,
    ggtitle("Respondents are More Confident Post-Workshop") +
    theme(plot.title = element_text(hjust = 0.5)) +
    theme_bw(base_size = 14)
+ggsave("figures/change_in_confidence.png")
 ```
 
 ### Usage of Tools for Research and/or Work
@@ -940,20 +980,17 @@ data %>%
 Only `r Contributed_Writing[3]`% of our respondents said that the tools they learned contributed to their academic writing. This is an opportunity for us to explore resources we can offer the community to help use the tools for academic writing purposes.
 
 ### Continuous Learning
-```{r include=FALSE}
+```{r}
 # Code chunk for continuous learning 
 Learning_Activities <- 
 data %>%
   select(`Activities`:Column57) %>% 
   gather(col, Learning_Activities) %>% 
   group_by(Learning_Activities) %>% 
-  tally_and_perc(Learning_Activities, na.rm = TRUE) %>% 
+  tally() %>% 
   filter(!is.na(Learning_Activities)) %>% 
   arrange(desc(n)) %>% 
   rename(`Continuous Learning Post-Workshop` = Learning_Activities)
-
-print(Learning_Activities, digits = getOption("digits"), quote = FALSE,
-      na.print = "", zero.print = "0", justify = "none")
 
 # To use code for Carpentry self-guided material in-line
 #carpentry_self_guided <- Learning_Activities %>% filter(`Learning_Activities` == "Used self-guided Carpentry lesson material.") %>% 
@@ -964,7 +1001,7 @@ carpentry_self_guided <- table(data$Column56)
 A key finding is that learners continue their learning after completing a workshop. This can take many forms, including participating in short courses (in-person and online) and using self-guided material. We asked respondents to tell us which learning activities (for data management and analysis) they have participated in since completing a Carpentries workshop. The majority of respondents have used non-Carpentries, self-guided material, though `r carpentry_self_guided` responded having used Carpentries' self-guided material. Additionally, greater participation in meetups and in-person short courses has been reported by respondents.
 ```{r}
 # Code chunk for table of continuous learning activities
-kable(Learning_Activities, format = "markdown", row.names = FALSE, caption = "Continuous Learning Post-Workshop")
+kable(Learning_Activities, format = "markdown", row.names = FALSE, col.names = c("Continuous Learning", "n"), caption = "Table 7: Respondents Self-Reported Continuous Learning Activities")
 ```
 The matrix below provides a breakdown of the combination of continuous learning activities respondents participated in. For example, 35 respondents have used both Carpentry and non-Carpentry self-guided material since attending a workshop.
 ```{r}
@@ -1018,7 +1055,7 @@ kable(learning_co_occurences, row.names = TRUE, caption = "Matrix of Common Cont
 ## Involvement in the Carpentries 
 Learners often become actively involved with Software and/or Data Carpentry after completing a workshop. This involvement can take many forms - joining a mentoring group, becoming a workshop helper, or even becoming an instructor. The table provided below shows how respondents have involved themselves with the Carpentries since completing a workshop. Respondents were asked to check all that apply.
 
-```{r include=FALSE}
+```{r}
 # Code chunk for involvement with the Carpentries
 # Data in columns 'Carpentry.Involvement through Column51
 Carpentry_Involvement <- 
@@ -1026,16 +1063,12 @@ data %>%
   select(`Carpentry-Involvement`:Column51) %>% 
   gather(col, Carpentry_Involvement) %>% 
   group_by(Carpentry_Involvement) %>% 
-  tally_and_perc(Carpentry_Involvement, na.rm = TRUE) %>%  
+  tally() %>% 
   filter(!is.na(Carpentry_Involvement)) %>% 
   arrange(desc(n)) %>% 
-  rename(`Carpentry Involvement Post-Workshop` = Carpentry_Involvement)
+  rename(`Involvement Post-Workshop` = Carpentry_Involvement)
 
-print(Carpentry_Involvement, digits = getOption("digits"), quote = FALSE,
-      na.print = "", zero.print = "0", justify = "none")
-```
-```{r}
-kable(Carpentry_Involvement, format = "markdown", row.names = FALSE, caption = "Respondents Self-Reported Inolvement in the Carpentries Post-Workshop")
+kable(Carpentry_Involvement, row.names = FALSE, caption = "Respondents Self-Reported Inolvement in the Carpentries Post-Workshop")
 ```
 
 The matrix below displays frequent combinations of post-workshop involvement. For example, 16 of the respondents who became Carpentry instructors have attended at least one community call.
@@ -1119,11 +1152,13 @@ data_likelyrecommend_tally <-
 ```
 
 # Growth Opportunities
-We are very excited to know that our workshops are having an impact on learners six months to a year after their attendance. Though the results of this survey are compelling, we do recognise issues for improvement. For example, `r Country[22]`% of respondents completed a workshop in the United States. We are continually discussing ways to broaden participation of our workshops in communities outside of the U.S.
+We are very excited to know that our workshops are having an impact on learners six months to a year after their attendance. Though the results of this survey are compelling, we do recognize issues for improvement. For example, `r USA_perc`% of respondents completed a workshop in the United States. We are continually discussing ways to broaden participation of our workshops in communities outside of the U.S.
 
-We also realize there are some lessons that are not being taught as frequently as others, namely, the [Shell lesson](http://swcarpentry.github.io/shell-novice/) and the [SQL lesson](http://www.datacarpentry.org/sql-ecology-lesson/). We would like to understand why, and what we can do as a community to see an increase in this lesson being taught.
+As survey respondents were not all exposed to the same curricula, the types and number of behaviors they adopted varies. This is an opportunity for us to take a look at our curricula to see how we approach promoting various data management practices.
 
-Lastly, 39% of the respondents indicicated feeling **neutral** about receiving professional recognitioan as a result of participating in a Carpentries workshop, and 36% either disagreed or strongly disagreed that they had received any professional recognition. We would like to explore community development opportunities that will benefit learners’ personal as well as professional endeavours, so that time spent acquiring important skills for research is adequately recognised and possibly even rewarded.
+We also realize there are some lessons that are not being taught as frequently as others, namely, the [Shell lesson](http://swcarpentry.github.io/shell-novice/) and the [SQL lesson](http://www.datacarpentry.org/sql-ecology-lesson/). We would like to understand our community's perception of the value of these skills, and what we can do as a community to see an increase in these lessons being taught.
+
+Lastly, 39% of the respondents indicated feeling **neutral** about receiving professional recognition as a result of participating in a Carpentries workshop, and 36% either disagreed or strongly disagreed that they had received any professional recognition. We would like to explore community development opportunities that will benefit learners’ personal as well as professional endeavors, so that time spent acquiring important skills for research is adequately recognized and possibly even rewarded.
 
 # Summary
 When our learners have successful experiences in our workshops, they are quick to share this positive experience with others. We asked respondents if they had already recommended our workshop, and `r Recommended[3]`% said yes!
@@ -1131,5 +1166,3 @@ When our learners have successful experiences in our workshops, they are quick t
 This initial analysis of how Carpentries workshops have impacted learners long-term has been extremely insightful. In general, our workshops are helping learners improve their efficiency with managing and analyzing data. Learners are taking advantage of online resources to improve their skills, and many see value in becoming involved longer term with our community.
 
 We will revisit this data when we compare the responses of learners who took a workshop more than a year ago with those who have taken a workshop less than six months ago and from six months to one year ago. Additionally, we will continue to use this survey every six months to collect data from new learners so we can monitor their progress, and add to our growing evidence base on assessment.
-
-

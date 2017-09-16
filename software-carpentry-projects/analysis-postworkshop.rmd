@@ -95,6 +95,7 @@ ggplot(data_status_tally,
   ggtitle("Majority of Respondents were Graduate Students") +
   theme(plot.title = element_text(hjust = 0.5)) +
   theme_classic(base_size = 14)
+ggsave("figures/status.png")
 ```
 
 ```{r include=FALSE}
@@ -221,6 +222,7 @@ likert_cols %>%
   spread(key, perc) %>% 
   slice(match(ordered_agree,
               value))
+ggsave("figures/content_perception.png")
 ``` 
 
 The data strongly suggests that Software Carpentry provides a welcoming environment for its learners where the material not only matches the workshop description, but is worth the time learners spend learning it. Learners acquire skills they are able to apply to their research and/or job function in the time allotted over the two-day period. Lastly, learners feel impressed to recommend the workshop to a friend or colleague.
@@ -255,6 +257,7 @@ lc_often_inst <- likert(data.frame(likert_cols_often_Inst))
 
 plot(lc_often_inst) +
   ggtitle("Perception of Workshop Instructors")
+ggsave("figures/instructors_perception.png")
 
 # To relabel the y-axis, see the previous chunk
 
@@ -285,6 +288,7 @@ lc_often_h <- likert(data.frame(likert_cols_often_h))
 
 plot(lc_often_h) +
   ggtitle("Perception of Workshop Helpers")
+ggsave("figures/helpers_perception.png")
 
 # To relabel the y-axis, see the previous chunk
 
@@ -374,6 +378,7 @@ ggplot(data_new_information_tally,
                 "% Respondents Learned Mostly New Information")) +
   theme(plot.title = element_text(hjust = 0.5)) +
   theme_classic(base_size = 14)
+ggsave("figures/new_information.png")
 ```
 ```{r include=FALSE}
 # Code chunk to include data in markdown report
@@ -418,6 +423,7 @@ likert_cols_little %>%
   spread(key, perc) %>% 
   slice(match(ordered_little,
               value))
+ggsave("figures/pre_knowledge.png")
 ```
 ```{r include=FALSE}
 # Code chunk to include data in markdown report
@@ -471,6 +477,7 @@ likert_cols_intim %>%
   spread(key, perc) %>% 
   slice(match(ordered_intim,
               value))
+ggsave("figures/pre_intimidation.png")
 ```
 ```{r}
 # Code chunk to include data in markdown report
@@ -541,6 +548,7 @@ likert_cols_incre %>%
   spread(key, perc) %>% 
   slice(match(ordered_icre,
               value))
+ggsave("figures/knowledge_increase.png")
 ```
 ```{r}
 # Code chunk to include data in markdown report
@@ -662,6 +670,7 @@ library(gridExtra)
 grid.arrange(tools_before, 
              tools_after,
              ncol = 1)
+ggsave("figures/prepost_knowledge.png")
 ```
 
 ### Motivation to Learn Post-Workshop
@@ -712,6 +721,7 @@ data %>%
           legend.title=element_blank()) +
     guides(fill=guide_legend(nrow=2,
                              byrow=TRUE)) 
+   ggsave("figures/post_motivation.png")
 ```
 
 ### Respondent Ability to Perform Computing Tasks
@@ -822,6 +832,7 @@ library(gridExtra)
 grid.arrange(computing_before, 
              computing_after,
              ncol = 1)
+ggsave("figures/prepost_confidence.png")
 ```
 
 Let's take a closer look with a table. The data shows an increase in confidence for nearly all of the computing tasks outlined above.
