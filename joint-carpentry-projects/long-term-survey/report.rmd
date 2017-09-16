@@ -584,7 +584,7 @@ data %>%
              fill = key)) +
     geom_bar(stat = "identity", 
              position = "dodge") +
-    geom_text(aes(label=n), size= 4, vjust=-0.25) +
+    geom_text(aes(label=n), size= 4, vjust=-0.25, position = position_dodge(width = 1)) +
     scale_x_discrete(labels = function(x) lapply(strwrap(x,
                                                          width = 10,
                                                          simplify = FALSE),
